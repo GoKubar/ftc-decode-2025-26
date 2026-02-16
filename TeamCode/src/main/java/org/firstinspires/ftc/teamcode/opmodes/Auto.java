@@ -472,6 +472,7 @@ public abstract class Auto extends LinearOpMode {
         robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose);
         Constants.robot = robot;
         robot.setPose(startPose);
+        robot.setLocalizationMode(Robot.LocalizationMode.FOLLOWER);
         robot.init();
 
         generatePaths();

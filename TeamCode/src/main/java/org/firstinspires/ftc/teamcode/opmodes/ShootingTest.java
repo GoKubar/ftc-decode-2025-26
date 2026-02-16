@@ -53,7 +53,7 @@ public class ShootingTest extends LinearOpMode {
         Pose startPose = new Pose(20.8, 124.1, Math.toRadians(234));
 //        startPose = startPose.mirror();
         follower.setPose(startPose);
-        drivetrain = Drivetrains.SWERVE.build(follower, telemetry);
+        drivetrain = Drivetrains.SWERVE.build(null, follower, telemetry);
 
 
         flywheel = new Flywheel(hardwareMap);

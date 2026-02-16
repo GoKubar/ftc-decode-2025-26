@@ -4,12 +4,13 @@ import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 
 public class AngleMecanum extends Mecanum{
     //AnglePID
 
-    public AngleMecanum(Follower follower, Telemetry telemetry) {
-        super(follower, telemetry);
+    public AngleMecanum(Robot robot, Follower follower, Telemetry telemetry) {
+        super(robot, follower, telemetry);
     }
 
     @Override

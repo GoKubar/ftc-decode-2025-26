@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.shooter;
 
-import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.opmodes.Tele;
-import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.shooter.math.VelocityCompensationCalculator;
 import org.firstinspires.ftc.teamcode.util.MathHelpers;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
@@ -65,7 +63,6 @@ public class Shooter {
     Flywheel flywheel;
     Turret turret;
     ServoEx gateServo;
-    Follower follower;
     Pose goalPose;
 
     public double lastTurretAngle;
@@ -73,26 +70,30 @@ public class Shooter {
     private final VelocityCompensationCalculator.ShotParameters cachedShotParameters =
             new VelocityCompensationCalculator.ShotParameters();
 
-    public Shooter(HardwareMap hardwareMap, Follower follower, Pose goalPose) {
+    public Shooter(HardwareMap hardwareMap, Pose goalPose) {
         hood = new Hood(hardwareMap);
         flywheel = new Flywheel(hardwareMap);
         turret = new Turret(hardwareMap);
         gateServo = new ServoEx(hardwareMap, "gate");
         this.goalPose = goalPose;
-        this.follower = follower;
     }
 
     /**
      * Update shooting subsystems WITH velocity compensation
      */
-    public void updateShootingSubsystems(Pose pose, Telemetry telemetry, boolean useVelocityComp) {
+    public void updateShootingSubsystems(
+            Pose pose,
+            Vector velocity,
+            Telemetry telemetry,
+            boolean useVelocityComp
+    ) {
         if (!useVelocityComp) {
             updateShootingSubsystems(pose, telemetry);
             return;
         }
 
         VelocityCompensationCalculator.calculate(
-                pose, follower.getVelocity(),
+                pose, velocity,
                 goalPose,
                 cachedShotParameters
         );
@@ -107,14 +108,19 @@ public class Shooter {
     /**
      * Update turret only during intaking state
      */
-    public void updateTurretOnly(Pose pose, Telemetry telemetry, boolean useVelocityComp) {
+    public void updateTurretOnly(
+            Pose pose,
+            Vector velocity,
+            Telemetry telemetry,
+            boolean useVelocityComp
+    ) {
         if (!useVelocityComp) {
             updateTurretOnly(pose, telemetry);
             return;
         }
 
         VelocityCompensationCalculator.calculate(
-                pose, follower.getVelocity(),
+                pose, velocity,
                 goalPose,
                 cachedShotParameters
         );

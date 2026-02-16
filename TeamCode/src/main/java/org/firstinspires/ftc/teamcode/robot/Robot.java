@@ -11,11 +11,17 @@ import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.ivy.Command;
+import com.pedropathing.math.Vector;
 import com.pedropathing.util.Timer;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
@@ -46,7 +52,16 @@ public class Robot {
     Shooter shooter;
     ProximityIndicator proximityIndicator;
 
+    public enum LocalizationMode {
+        FOLLOWER,
+        PINPOINT
+    }
+
     Follower follower;
+    private final GoBildaPinpointDriver pinpoint;
+    private LocalizationMode localizationMode = LocalizationMode.FOLLOWER;
+    private Pose currentPose = new Pose();
+    private final Vector currentVelocity = new Vector();
 
     private Drivetrain drivetrain;
 //    private LimelightManager limelightManager;
@@ -64,7 +79,10 @@ public class Robot {
         proximityIndicator = new ProximityIndicator(hardwareMap);
 
         follower = PedroConstants.createFollower(hardwareMap);
-        shooter = new Shooter(hardwareMap, follower, goalPose);
+        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+        shooter = new Shooter(hardwareMap, goalPose);
+        currentPose = follower.getPose();
+        currentVelocity.setOrthogonalComponents(0, 0);
 
         setDrivetrain(Drivetrains.SWERVE_ANGLE);
         setState(States.NONE);
@@ -94,7 +112,7 @@ public class Robot {
     }
 
     public void loop() {
-        updateFollower();
+        updateLocalization();
         executeCurrentState();
         updateShooter();
         if (getCurrentState() == States.INTAKING) {
@@ -110,9 +128,36 @@ public class Robot {
         }
     }
 
-    public void updateFollower() {
-        follower.update();
-        Constants.lastPose = follower.getPose();
+    public void updateLocalization() {
+        if (localizationMode == LocalizationMode.PINPOINT) {
+            updatePinpoint();
+        } else {
+            follower.update();
+            currentPose = follower.getPose();
+        }
+
+        Constants.lastPose = currentPose;
+    }
+
+    private void updatePinpoint() {
+        pinpoint.update();
+        double x = pinpoint.getPosX(DistanceUnit.INCH);
+        double y = pinpoint.getPosY(DistanceUnit.INCH);
+        double heading = pinpoint.getHeading(AngleUnit.RADIANS);
+        currentPose = new Pose(x, y, heading);
+        currentVelocity.setOrthogonalComponents(
+                pinpoint.getVelX(DistanceUnit.INCH),
+                pinpoint.getVelY(DistanceUnit.INCH));
+    }
+
+    public Pose getPose() {
+        return currentPose;
+    }
+
+    public Vector getVelocity() {
+        return localizationMode == LocalizationMode.PINPOINT
+                ? currentVelocity
+                : follower.getVelocity();
     }
 
     public void clearCaches() {
@@ -170,17 +215,17 @@ public class Robot {
 
     public Command updateShootingSubsystems() {
         return infinite(() -> {
-                shooter.updateShootingSubsystems(follower.getPose(), telemetry, useVelocityComp);
+                shooter.updateShootingSubsystems(getPose(), getVelocity(), telemetry, useVelocityComp);
 //            if (!currentlyShooting) {
-//                shooter.updateShootingSubsystems(follower.getPose(), telemetry, useVelocityComp);
+//                shooter.updateShootingSubsystems(getPose(), getVelocity(), telemetry, useVelocityComp);
 //            } else {
-//                shooter.updateTurretOnly(follower.getPose(), telemetry, useVelocityComp);
+//                shooter.updateTurretOnly(getPose(), getVelocity(), telemetry, useVelocityComp);
 //            }
         });
     }
 
     public Command updateTurret() {
-        return infinite(() -> shooter.updateTurretOnly(follower.getPose(), telemetry, useVelocityComp));
+        return infinite(() -> shooter.updateTurretOnly(getPose(), getVelocity(), telemetry, useVelocityComp));
     }
 
     public boolean readyToShoot() {
@@ -263,11 +308,29 @@ public class Robot {
     }
 
     public void setDrivetrain(Drivetrains drivetrain) {
-       this.drivetrain = drivetrain.build(follower, telemetry);
+       this.drivetrain = drivetrain.build(this, follower, telemetry);
+    }
+
+    public void setLocalizationMode(LocalizationMode mode) {
+        localizationMode = mode;
+        if (localizationMode == LocalizationMode.PINPOINT) {
+            currentVelocity.setOrthogonalComponents(0, 0);
+            setPose(currentPose);
+        }
     }
 
     public void setPose(Pose pose) {
+        currentPose = pose;
         follower.setPose(pose);
+        if (pinpoint != null) {
+            pinpoint.setPosition(new Pose2D(
+                    DistanceUnit.INCH,
+                    pose.getX(),
+                    pose.getY(),
+                    AngleUnit.RADIANS,
+                    pose.getHeading()));
+        }
+        Constants.lastPose = pose;
     }
 
     public void updateDrive() {

@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.util.Vector2D;
 
 @Config
@@ -24,8 +25,8 @@ public class AngleSwerve extends Swerve {
 
     private double angle = Math.toRadians(90);
 
-    public AngleSwerve(Follower follower, Telemetry telemetry) {
-        super(follower, telemetry);
+    public AngleSwerve(Robot robot, Follower follower, Telemetry telemetry) {
+        super(robot, follower, telemetry);
     }
 
     @Override
@@ -46,7 +47,8 @@ public class AngleSwerve extends Swerve {
 
         angle = (driveVector.getMagnitude() > 0.15) ? driveVector.getTheta() : angle;
 
-        double headingPower = -calculateHeadingPower(angle, follower.getHeading());
+        double heading = robot != null ? robot.getPose().getHeading() : follower.getHeading();
+        double headingPower = -calculateHeadingPower(angle, heading);
 
         super.arcade(forward, strafe, headingPower, 0, speed, rotSpeed);
     }

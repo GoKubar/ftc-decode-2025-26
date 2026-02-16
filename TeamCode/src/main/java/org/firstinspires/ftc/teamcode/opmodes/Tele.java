@@ -47,6 +47,8 @@ public abstract class Tele extends LinearOpMode {
             robot.setPose(Constants.lastPose);
         }
 
+        robot.setLocalizationMode(Robot.LocalizationMode.PINPOINT);
+
         setColor();
 
        Constants.lastOpModeWasAuto = false;

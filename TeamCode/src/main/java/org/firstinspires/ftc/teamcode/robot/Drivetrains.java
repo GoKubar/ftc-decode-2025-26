@@ -23,7 +23,7 @@ public enum Drivetrains {
         this.supplier = supplier;
     }
 
-    public Drivetrain build(Follower follower, Telemetry telemetry) {
-        return supplier.get(follower, telemetry);
+    public Drivetrain build(Robot robot, Follower follower, Telemetry telemetry) {
+        return supplier.get(robot, follower, telemetry);
     }
 }

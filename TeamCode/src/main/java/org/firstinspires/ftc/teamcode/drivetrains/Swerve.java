@@ -5,16 +5,19 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.util.MathHelpers;
 
 public class Swerve implements Drivetrain {
     Telemetry telemetry;
     protected Follower follower;
+    protected Robot robot;
 
     private static boolean fieldCentric = true;
 
-    public Swerve(Follower follower, Telemetry telemetry) {
+    public Swerve(Robot robot, Follower follower, Telemetry telemetry) {
 
+        this.robot = robot;
         this.follower = follower;
         follower.getDrivetrain().startTeleopDrive();
         this.telemetry = telemetry;
@@ -33,12 +36,13 @@ public class Swerve implements Drivetrain {
             //TODO: Reverse to blue when needed
             double theta = 0;
 
+            double heading = robot != null ? robot.getPose().getHeading() : follower.getHeading();
             if (Constants.color == Constants.Color.RED) {
-                theta = -follower.getHeading();
+                theta = -heading;
             } else if (Constants.color == Constants.Color.BLUE) {
-                theta = MathHelpers.wrapAngleRadians(-follower.getHeading() + Math.toRadians(180));
+                theta = MathHelpers.wrapAngleRadians(-heading + Math.toRadians(180));
             } else if (Constants.color == Constants.Color.AUDIENCE) {
-                theta = MathHelpers.wrapAngleRadians(-follower.getHeading() + Math.toRadians(90));
+                theta = MathHelpers.wrapAngleRadians(-heading + Math.toRadians(90));
             }
 
             double cos = Math.cos(theta);

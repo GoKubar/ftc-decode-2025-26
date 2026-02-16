@@ -4,12 +4,13 @@ import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 
 public class Mecanum implements Drivetrain {
     private Telemetry telemetry;
     private com.pedropathing.ftc.drivetrains.Mecanum dt;
 
-    public Mecanum(Follower follower, Telemetry telemetry) {
+    public Mecanum(Robot robot, Follower follower, Telemetry telemetry) {
        dt = (com.pedropathing.ftc.drivetrains.Mecanum) follower.getDrivetrain();
        this.telemetry = telemetry;
     }
