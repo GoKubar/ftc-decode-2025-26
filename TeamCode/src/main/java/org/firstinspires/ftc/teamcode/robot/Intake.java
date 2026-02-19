@@ -7,15 +7,21 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.util.hardware.MotorEx;
 
 public class Intake {
-    private MotorEx intakeMotor;
+    private MotorEx intakeMotorR;
+    private MotorEx intakeMotorL;
 
     public Intake(HardwareMap hardwareMap) {
-        intakeMotor = new MotorEx(hardwareMap, "intake");
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        intakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intakeMotorR = new MotorEx(hardwareMap, "rightIntake");
+        intakeMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        intakeMotorL = new MotorEx(hardwareMap, "leftIntake");
+        intakeMotorL.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void setPower(double power) {
-        intakeMotor.setPower(power);
+        intakeMotorR.setPower(power);
+        intakeMotorL.setPower(power);
     }
 }
