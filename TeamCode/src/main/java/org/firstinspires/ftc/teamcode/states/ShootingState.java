@@ -51,13 +51,6 @@ public class ShootingState implements State {
             Constants.debugTelemetry = !Constants.debugTelemetry;
         }
 
-        if (gamepad2.dpadRightWasPressed() && !Constants.lastOpModeWasAuto)  {
-            Turret.turretOffset += 3;
-        } else if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto)  {
-            Turret.turretOffset -= 3;
-        }
-
-
         if (gamepad1.aWasPressed() && !transitioningState && !Constants.lastOpModeWasAuto) {
             transitioningState = true;
             schedule(

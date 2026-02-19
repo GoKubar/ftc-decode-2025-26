@@ -4,7 +4,6 @@ import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.commands.Commands.infinite;
 import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
-import static com.pedropathing.ivy.commands.Commands.waitUntil;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
 import com.outoftheboxrobotics.photoncore.PhotonCore;
@@ -30,7 +29,6 @@ import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
 
-import java.util.List;
 import java.util.function.DoubleSupplier;
 
 public class Robot {
@@ -119,14 +117,14 @@ public class Robot {
             updateProximityIndicator();
         }
         updateTelemetry();
-        updateLastTurretTicks();
+//        updateLastTurretTicks();
     }
 
-    public void updateLastTurretTicks() {
-        if (shooter.getTurretTicks() != 0 || Constants.getLastTurretTicks() == 0)  {
-            Constants.setLastTurretTicks(shooter.getTurretTicks());
-        }
-    }
+//    public void updateLastTurretTicks() {
+//        if (shooter.getTurretPos() != 0 || Constants.getLastTurretTicks() == 0)  {
+//            Constants.setLastTurretTicks(shooter.getTurretPos());
+//        }
+//    }
 
     public void updateLocalization() {
         if (localizationMode == LocalizationMode.PINPOINT) {
@@ -245,7 +243,7 @@ public class Robot {
         }
         telemetryTimer.reset();
 
-        telemetry.addData("turret offset", Turret.turretOffset);
+//        telemetry.addData("turret offset", Turret.turretOffset);
         telemetry.addData("Updated lastPose", Constants.lastPose);
         telemetry.addData("flywheel velocity", getFlywheelAngularVelocity());
         telemetry.addData("target flywheel velocity", getTargetFlywheelAngularVelocity());

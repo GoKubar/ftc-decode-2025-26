@@ -24,7 +24,7 @@ public class TurretTestNew extends LinearOpMode {
             hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
 
-        turret.activate();
+//        turret.activate();
 
         waitForStart();
 
@@ -56,12 +56,10 @@ public class TurretTestNew extends LinearOpMode {
             }
 
             turret.setTurretAngle(target);
-            turret.update(telemetry);
+//            turret.update(telemetry);
 
-            telemetry.addData("Current Angle", Math.toDegrees(turret.getCurrentAngle()));
             telemetry.addData("Target Angle", Math.toDegrees(turret.getTargetAngle()));
-            telemetry.addData("\nCurrent Ticks", turret.getCurrentPositionTicks());
-            telemetry.addData("Target Ticks", turret.getTargetTicks());
+            telemetry.addData("Target Pos", turret.getTargetPosition());
             telemetry.update();
         }
     }

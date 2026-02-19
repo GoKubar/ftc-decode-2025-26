@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.util.MathHelpers;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 import smile.interpolation.Interpolation;
-import smile.interpolation.LinearInterpolation;
 
 /**
  * Shooter class using simplified VelocityCompensationCalculator
@@ -173,14 +172,11 @@ public class Shooter {
     }
 
     public boolean readyToShoot() {
-        return Math.abs(flywheel.getTargetAngularVelocity() - flywheel.getCurrentAngularVel()) < flywheelToleranceTicks &&
-                Math.abs(turret.getTargetAngle() - turret.getCurrentAngle()) < Math.toRadians(turretToleranceDegrees) &&
-                Math.abs(hood.getTargetHoodAngle() - hood.getCurrentHoodAngle()) < Math.toRadians(hoodToleranceDegrees);
+        return Math.abs(flywheel.getTargetAngularVelocity() - flywheel.getCurrentAngularVel()) < flywheelToleranceTicks;
     }
 
     public void activate() {
         flywheel.activate();
-        turret.activate();
     }
 
     public void intakingPos() {
@@ -191,7 +187,6 @@ public class Shooter {
 
     public void deactivate() {
         flywheel.deactivate();
-        turret.deactivate();
     }
 
     public void deactivateFlywheel() {
@@ -200,19 +195,17 @@ public class Shooter {
 
     public void toggle() {
         flywheel.toggle();
-        turret.toggle();
     }
 
     public void update(Telemetry telemetry) {
         flywheel.update();
-        turret.update(telemetry);
     }
 
     public void setOpenGatePosition() { gateServo.setPosition(openGatePosition); }
     public void setCloseGatePosition() { gateServo.setPosition(closedGatePosition); }
 
-    public int getTurretTicks() { return turret.getCurrentPositionTicks(); }
-    public double getTurretAngle() { return turret.getCurrentAngle(); }
+    public double getTurretPos() { return turret.getTargetPosition(); }
+    public double getTurretAngle() { return turret.getTargetAngle(); }
     public double getFlywheelAngularVelocity() { return flywheel.getCurrentAngularVel(); }
     public double getFlywheeelTargetAngularVelocity() { return flywheel.getTargetAngularVelocity(); }
     public double getHoodAngle() { return hood.getCurrentHoodAngle(); }

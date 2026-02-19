@@ -92,13 +92,6 @@ public class IntakingState implements State {
         }
 
 
-        if (gamepad2.dpadRightWasPressed() && !Constants.lastOpModeWasAuto)  {
-            Turret.turretOffset += 3;
-        } else if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto)  {
-            Turret.turretOffset -= 3;
-        }
-
-
         if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && !transitioning) {
             transitioning = true;
             cancel(joystickToIntake);

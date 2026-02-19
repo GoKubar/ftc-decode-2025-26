@@ -116,7 +116,7 @@ public class ShootingTest extends LinearOpMode {
             flywheel.update();
             hood.setTargetPosition(hoodTarget);
             turret.setTurretAngle(turretTarget);
-            turret.update(telemetry);
+//            turret.update(telemetry);
             follower.update();
             drivetrain.update(gamepad1);
 

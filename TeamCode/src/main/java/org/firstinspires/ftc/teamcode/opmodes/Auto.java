@@ -371,7 +371,7 @@ public abstract class Auto extends LinearOpMode {
         Scheduler.reset();
 
         robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose);
-        Constants.robot = robot;
+//        Constants.robot = robot;
         robot.setPose(startPose);
         robot.setLocalizationMode(Robot.LocalizationMode.FOLLOWER);
         robot.init();

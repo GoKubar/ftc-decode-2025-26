@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.shooter;
 
-import com.ThermalEquilibrium.homeostasis.Controllers.Feedback.BasicPID;
-import com.ThermalEquilibrium.homeostasis.Parameters.PIDCoefficients;
 import com.acmerobotics.dashboard.config.Config;
-import com.pedropathing.control.PIDFCoefficients;
-import com.pedropathing.control.PIDFController;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
@@ -13,102 +9,64 @@ import smile.interpolation.LinearInterpolation;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.hardware.MotorEx;
+import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 @Config
 public class Turret {
 
-    public static int turretOffset = 0;
-
-    MotorEx turretMotor;
-
-    public static double kP = 0.01, kD = 0.01;
-    BasicPID turretPIDF = new BasicPID(new PIDCoefficients(kP, 0, kD));
-    private boolean activated = false;
-    private double targetTicks = 0;
+    ServoEx turretServoF;
+    ServoEx turretServoB;
 
     public static double MIN_TURRET_ANGLE = Math.toRadians(-90);
     public static double MAX_TURRET_ANGLE = Math.toRadians(90);
 
     double[] angleValues = new double[] {Math.toRadians(-90), Math.toRadians(90)};
-    double[] tickValues = new double[] {-453, 453};
+    double[] servoPositions = new double[] {0, 1}; //TODO: tune
 
-    LinearInterpolation angleToTicks = new LinearInterpolation(angleValues, tickValues);
-    LinearInterpolation ticksToAngle = new LinearInterpolation(tickValues, angleValues);
+    public double getAngleFromServoPos(double servoPos) {
+        return (servoPos - servoPositions[0]) *
+                (angleValues[1] - angleValues[0])/(servoPositions[1] - servoPositions[0]) //slope
+                + angleValues[0]; //intercept
+    }
 
-    public double MIN_TURRET_TICKS = angleToTicks.interpolate(MIN_TURRET_ANGLE);
-    public double MAX_TURRET_TICKS = angleToTicks.interpolate(MAX_TURRET_ANGLE);
+    public double getServoPosFromAngle(double angleRad) {
+        return (angleRad - angleValues[0]) *
+                (servoPositions[1] - servoPositions[0]) / (angleValues[1] - angleValues[0]) //slope
+                + servoPositions[0]; //intercept
+    }
+
+
+    public double MIN_SERVO_POS = getServoPosFromAngle(MIN_TURRET_ANGLE);
+    public double MAX_SERVO_POS = getServoPosFromAngle(MAX_TURRET_ANGLE);
 
     public Turret(HardwareMap hardwareMap) {
-        this.turretMotor = new MotorEx(hardwareMap, "turretMotor");
-        //make sure brake
-        turretMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        reset();
+        this.turretServoF = new ServoEx(hardwareMap, "turretServoFront");
+        this.turretServoB = new ServoEx(hardwareMap, "turretServoBack");
     }
 
-    private void reset() {
-        turretMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        turretMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-
-    public void setPower(double power) {
-        turretMotor.setPower(power);
-    }
-
-    public int getCurrentPositionTicks() {
-        return turretMotor.getCurrentPosition() + turretOffset;
+    public double getTargetPosition() {
+        return turretServoF.getPosition();
     }
 
     /**
-     * @return The current angle of the turret in radians. Note that counter clockwise is positive with 0 being straight forward.
+     * @return The target angle of the turret in radians. Note that counter clockwise is positive with 0 being straight forward.
      */
-    public double getCurrentAngle() {
-        double currentTicks = getCurrentPositionTicks();
-        return ticksToAngle.interpolate(currentTicks);
-    }
-
     public double getTargetAngle() {
-        return ticksToAngle.interpolate(targetTicks);
+        double currentPos = getTargetPosition();
+        return getAngleFromServoPos(currentPos);
     }
 
-    public double getTargetTicks() {return targetTicks;}
-
-    private void setTargetTicks(double ticks) {
-        this.targetTicks = ticks;
+    private void setTargetServoPosition(double pos) {
+        turretServoF.setPosition(pos);
+        turretServoB.setPosition(pos);
     }
 
-    public void setTurretAngle(double radians) {
-        setTargetTicks(
-                Range.clip(angleToTicks.interpolate(radians),
-                        MIN_TURRET_TICKS,
-                        MAX_TURRET_TICKS
+    public void setTurretAngle(double angleRad) {
+        setTargetServoPosition(
+                Range.clip(getServoPosFromAngle(angleRad),
+                        MIN_SERVO_POS,
+                        MAX_SERVO_POS
                 )
         );
-    }
-
-    public void activate()  {
-        activated = true;
-    }
-
-    public void deactivate() {
-        activated = false;
-        setPower(0);
-    }
-
-    public void toggle() {
-        activated = !activated;
-        if (!activated) {
-            setPower(0);
-        }
-    }
-
-
-    public void update(Telemetry telemetry) {
-        //TODO: Comment below out after tuning
-//        BasicPID turretPIDF = new BasicPID(new PIDCoefficients(kP, 0, kD));
-        if (activated) {
-            double currentTicks = getCurrentPositionTicks();
-            double power = turretPIDF.calculate(targetTicks, currentTicks);
-            setPower(power);
-        }
     }
 }
