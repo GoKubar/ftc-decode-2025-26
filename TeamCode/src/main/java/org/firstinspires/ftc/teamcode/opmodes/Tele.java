@@ -45,9 +45,9 @@ public abstract class Tele extends LinearOpMode {
        Constants.lastOpModeWasAuto = false;
 
         robot.init();
-        Scheduler.schedule(
-                infinite(robot::updateDrive)
-        );
+
+        robot.updateDriveCommand = infinite(robot::updateDrive);
+        Scheduler.schedule(robot.updateDriveCommand);
     }
 
     abstract void setPoses();

@@ -26,12 +26,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
-import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
 
 import java.util.function.DoubleSupplier;
 
 public class Robot {
+    public Command updateDriveCommand;
 
     private State currentState;
 
@@ -46,7 +46,7 @@ public class Robot {
 
     boolean currentlyShooting = false;
 
-    Intake intake;
+    PTO pto;
     Shooter shooter;
     ProximityIndicator proximityIndicator;
 
@@ -73,7 +73,7 @@ public class Robot {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
 
-        intake = new Intake(hardwareMap);
+        pto = new PTO(hardwareMap);
         proximityIndicator = new ProximityIndicator(hardwareMap);
 
         follower = PedroConstants.createFollower(hardwareMap);
@@ -184,17 +184,17 @@ public class Robot {
     }
 
     public Command setIntakePower(double power) {
-        return instant(() -> intake.setPower(power));
+        return instant(() -> pto.runIntake(power));
     }
 
     public Command joysticksToIntakePower(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
         return infinite(() -> {
             if (rightTrigger.getAsDouble() > 0.05) {
-                intake.setPower(rightTrigger.getAsDouble());
+                pto.runIntake(rightTrigger.getAsDouble());
             } else if (leftTrigger.getAsDouble() > 0.05) {
-                intake.setPower(-leftTrigger.getAsDouble());
+                pto.runIntake(-leftTrigger.getAsDouble());
             } else {
-                intake.setPower(0.4);
+                pto.runIntake(0.4);
             }
         });
     }
@@ -386,6 +386,20 @@ public class Robot {
     public String drivetrainName() {
         return drivetrain.name();
     }
+
+
+    public Command setPtoToIntaking() {
+        return instant(() -> pto.setIntaking());
+    }
+
+    public Command setPtoToLifting() {
+        return instant(() -> pto.setLifting());
+    }
+
+    public void runLift() {
+        pto.runLift();
+    }
+
 
 //    public void setPipeline(Pipelines pipeline) {
 //        limelightManager.setPipeline(pipeline);

@@ -49,6 +49,7 @@ public class IntakingState implements State {
     public void initialize(Robot robot, State prevState) {
         schedule(robot.closeGate());
         schedule(robot.deactivateFlywheel());
+        schedule(robot.setPtoToIntaking());
 
 //        transition = bind(() -> gamepad1.a).and(() -> !Constants.lastOpModeWasAuto).and(() -> !transitioning)
 //                .rise(
@@ -82,6 +83,14 @@ public class IntakingState implements State {
     public void execute(Robot robot) {
         //length = 15.39
         //width = 15.12
+        if (!Constants.lastOpModeWasAuto && gamepad1.left_bumper && gamepad1.right_bumper && gamepad2.left_bumper && gamepad2.right_bumper) {
+            transitioning = true;
+            cancel(joystickToIntake);
+            cancel(updateShooter);
+            schedule(
+                    instant(() -> robot.setState(States.LIFTING))
+            );
+        }
 
         if (gamepad2.dpadDownWasPressed()) {
             Constants.debugTelemetry = !Constants.debugTelemetry;
