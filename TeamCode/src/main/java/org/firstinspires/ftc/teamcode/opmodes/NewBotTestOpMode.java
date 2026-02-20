@@ -24,11 +24,11 @@ public class NewBotTestOpMode extends OpMode {
         intake2.setPower(0);
 
         pto = hardwareMap.get(Servo.class, "pto");
-        pto.setPosition(.65);
+        pto.setPosition(.65); //intaking
 
 
         gate = hardwareMap.get(Servo.class, "gate");
-        gate.setPosition(.502);
+        gate.setPosition(.502);//open
 
 
 
@@ -54,7 +54,7 @@ public class NewBotTestOpMode extends OpMode {
         if(gamepad1.dpadRightWasPressed()) {
             double newPosition =  gate.getPosition()+.01;
             newPosition = newPosition > 1 ? 1 : newPosition;
-            gate.setPosition(.537);
+            gate.setPosition(.537);//closed
         }
 
         if(gamepad1.dpadLeftWasPressed()) {

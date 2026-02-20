@@ -54,8 +54,8 @@ public class Shooter {
     public static double hoodToleranceDegrees = 2;
 
     // Gate positions
-    public static double openGatePosition = 0.3;
-    public static double closedGatePosition = 0.09;
+    public static double openGatePosition = 0.502;
+    public static double closedGatePosition = 0.537;
 
     // Hardware
     Hood hood;
