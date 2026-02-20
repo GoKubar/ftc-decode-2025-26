@@ -49,13 +49,13 @@ public class PedroConstants {
             // )
             .centripetalScaling(0.002).mass(12.531); // TODO: actually weigh the robot, in kg
 
-    public static PinpointConstants localizerConstants =
-            new PinpointConstants().forwardPodY(6.4390354331) // 163.5515 mm
-                    .strafePodX(-0.0749409449) // -1.9035 mm
-                    .distanceUnit(DistanceUnit.INCH).hardwareMapName("pinpoint")
-                    .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-                    .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
-                    .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+    public static PinpointConstants localizerConstants = new PinpointConstants()
+            .forwardPodY(-2.9350393701) //-74.5mm
+            .strafePodX(-5.9133858268) //-150.2
+            .distanceUnit(DistanceUnit.INCH).hardwareMapName("pinpoint")
+            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static SwerveConstants swerveConstants =
             new SwerveConstants().velocity(83.93).useBrakeModeInTeleOp(true);
@@ -69,10 +69,13 @@ public class PedroConstants {
     private static double kFFront = 0.0130;
     private static double kFBack = 0.0190;
 
+    private static double dtLength = 271.148;
+    private static double dtWidth = 270.7;
+
     private static CoaxialPod leftFront(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm2", "ss2", "se2",
                 new PIDFCoefficients(kP, 0, kD, kFFront), DcMotorSimple.Direction.REVERSE,
-                DcMotorSimple.Direction.REVERSE, Math.toRadians(353.1), new Pose(305.86624, 311.4),
+                DcMotorSimple.Direction.REVERSE, Math.toRadians(353.1), new Pose(dtLength, dtWidth),
                 0.025, 3.290, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
@@ -82,7 +85,7 @@ public class PedroConstants {
     private static CoaxialPod rightFront(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm1", "ss1", "se1",
                 new PIDFCoefficients(kP, 0, kD, kFFront), DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE, Math.toRadians(348.2), new Pose(305.86624, -311.4),
+                DcMotorSimple.Direction.REVERSE, Math.toRadians(348.2), new Pose(dtLength, -dtWidth),
                 0.018, 3.288, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
@@ -92,7 +95,7 @@ public class PedroConstants {
     private static CoaxialPod leftBack(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm3", "ss3", "se3",
                 new PIDFCoefficients(kP, 0, kD, kFBack), DcMotorSimple.Direction.REVERSE,
-                DcMotorSimple.Direction.REVERSE, Math.toRadians(179.3), new Pose(-305.86624, 311.4),
+                DcMotorSimple.Direction.REVERSE, Math.toRadians(179.3), new Pose(-dtLength, dtWidth),
                 0.029, 3.307, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
@@ -102,8 +105,8 @@ public class PedroConstants {
     private static CoaxialPod rightBack(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm0", "ss0", "se0",
                 new PIDFCoefficients(kP, 0, kD, kFBack), DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE, Math.toRadians(289.5),
-                new Pose(-305.86624, -311.4), 0.014, 3.301, false);
+                DcMotorSimple.Direction.REVERSE, Math.toRadians(289.5), new Pose(-dtLength, -dtWidth),
+                0.014, 3.301, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
         return pod;

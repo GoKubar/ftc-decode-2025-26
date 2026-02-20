@@ -82,7 +82,7 @@ public class PTO {
         }
         ptoServo.setPosition(ptoServoTarget);
         double power = Range.clip(liftPid.calculate(liftTarget, intakeMotorR.getCurrentPosition()),
-                -1,
+                0,
                 1);
 
         intakeMotorR.setPower(power);
