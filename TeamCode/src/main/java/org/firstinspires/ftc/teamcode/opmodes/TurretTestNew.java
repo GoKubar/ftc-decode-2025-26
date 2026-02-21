@@ -55,7 +55,28 @@ public class TurretTestNew extends LinearOpMode {
                 target = Math.toRadians(0);
             }
 
+            if (gamepad1.dpadLeftWasPressed()) {
+                if (gamepad1.left_bumper) {
+                    target += Math.toRadians(1);
+//                    target += 0.01;
+                } else {
+                    target += Math.toRadians(10);
+//                    target += 0.05;
+                }
+            }
+
+            if (gamepad1.dpadRightWasPressed()) {
+                if (gamepad1.left_bumper) {
+                    target -= Math.toRadians(1);
+//                    target -= 0.01;
+                } else {
+                    target -= Math.toRadians(10);
+//                    target -= 0.05;
+                }
+            }
+
             turret.setTurretAngle(target);
+//            turret.setTargetServoPosition(target);
 //            turret.update(telemetry);
 
             telemetry.addData("Target Angle", Math.toDegrees(turret.getTargetAngle()));

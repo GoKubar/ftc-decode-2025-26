@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Drivetrains;
-import org.firstinspires.ftc.teamcode.robot.Intake;
+import org.firstinspires.ftc.teamcode.robot.PTO;
 import org.firstinspires.ftc.teamcode.shooter.Flywheel;
 import org.firstinspires.ftc.teamcode.shooter.Hood;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
@@ -28,7 +28,7 @@ public class ShootingTest extends LinearOpMode {
 
     Flywheel flywheel;
     Hood hood;
-    Intake intake;
+    PTO pto;
     Turret turret;
 
     double flywheelTarget = 1000;
@@ -58,7 +58,7 @@ public class ShootingTest extends LinearOpMode {
 
         flywheel = new Flywheel(hardwareMap);
 
-        intake = new Intake(hardwareMap);
+        pto = new PTO(hardwareMap);
         turret = new Turret(hardwareMap);
 
         hood = new Hood(hardwareMap);
@@ -77,11 +77,11 @@ public class ShootingTest extends LinearOpMode {
             flywheelTarget -= gamepad1.left_trigger;
 
             if (gamepad1.left_bumper) {
-                intake.setPower(-1);
+                pto.runIntake(-1);
             } else if (gamepad1.right_bumper) {
-                intake.setPower(1);
+                pto.runIntake(1);
             } else {
-                intake.setPower(0);
+                pto.runIntake(0);
             }
 
             if (gamepad1.aWasPressed()) {

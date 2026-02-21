@@ -47,18 +47,20 @@ public class PedroConstants {
             // 0,//0.38735914623969386,
             // 0.002)
             // )
-            .centripetalScaling(0.002).mass(12.531); // TODO: actually weigh the robot, in kg
+            .centripetalScaling(0.002).
+            mass(14.795); // TODO: actually weigh the robot, in kg
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(-2.9350393701) //-74.5mm
             .strafePodX(-5.9133858268) //-150.2
             .distanceUnit(DistanceUnit.INCH).hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
-    public static SwerveConstants swerveConstants =
-            new SwerveConstants().velocity(83.93).useBrakeModeInTeleOp(true);
+    public static SwerveConstants swerveConstants = new SwerveConstants()
+            .velocity(83.93)
+            .useBrakeModeInTeleOp(true);
 
     // F - front: .130, back: .190
     // P=0.00645 D=0.00019

@@ -28,7 +28,7 @@ public class PTO {
 
     private Mode mode = Mode.INTAKING;
 
-    private double ptoIntakingPos = 0.65;
+    private double ptoIntakingPos = 0.68;
     private double ptoLiftingPos = 0.6;
 
     private MotorEx intakeMotorR;
@@ -42,11 +42,11 @@ public class PTO {
 
     public PTO(HardwareMap hardwareMap) {
         intakeMotorR = new MotorEx(hardwareMap, "rightIntake");
-        intakeMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotorR.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotorR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         intakeMotorL = new MotorEx(hardwareMap, "leftIntake");
-        intakeMotorL.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         ptoServo = new ServoEx(hardwareMap, "pto");

@@ -22,12 +22,12 @@ public class VelocityCompensationCalculator {
     private static final double g = 386.0885; // in / s^2
 
     /** Shooter offset from robot center (inches) */
-    private static final double SHOOTER_OFFSET_X = -2.42;
+    private static final double SHOOTER_OFFSET_X = -1.346;
     private static final double SHOOTER_OFFSET_Y = 0.0;
 
     /** HOOD ANGLE LIMITS */
-    public static final double MIN_HOOD_ANGLE = Math.toRadians(40);
-    public static final double MAX_HOOD_ANGLE = Math.toRadians(74);
+    public static final double MIN_HOOD_ANGLE = Math.toRadians(35);
+    public static final double MAX_HOOD_ANGLE = Math.toRadians(62.7983);
 
 
     public static final double[] DISTANCES = new double[] {

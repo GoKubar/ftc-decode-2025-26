@@ -1,14 +1,10 @@
 package org.firstinspires.ftc.teamcode.shooter;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-import smile.interpolation.LinearInterpolation;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.util.hardware.MotorEx;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 @Config
@@ -17,11 +13,11 @@ public class Turret {
     ServoEx turretServoF;
     ServoEx turretServoB;
 
-    public static double MIN_TURRET_ANGLE = Math.toRadians(-90);
-    public static double MAX_TURRET_ANGLE = Math.toRadians(90);
+    public static double MIN_TURRET_ANGLE = Math.toRadians(-140);
+    public static double MAX_TURRET_ANGLE = Math.toRadians(140);
 
     double[] angleValues = new double[] {Math.toRadians(-90), Math.toRadians(90)};
-    double[] servoPositions = new double[] {0, 1}; //TODO: tune
+    double[] servoPositions = new double[] {0.25, 0.74}; //TODO: tune
 
     public double getAngleFromServoPos(double servoPos) {
         return (servoPos - servoPositions[0]) *
@@ -40,8 +36,12 @@ public class Turret {
     public double MAX_SERVO_POS = getServoPosFromAngle(MAX_TURRET_ANGLE);
 
     public Turret(HardwareMap hardwareMap) {
-        this.turretServoF = new ServoEx(hardwareMap, "turretServoFront");
-        this.turretServoB = new ServoEx(hardwareMap, "turretServoBack");
+        this.turretServoF = new ServoEx(hardwareMap, "turretFront");
+//        turretServoF = hardwareMap.get(Servo.class, "turretFront");
+        turretServoF.setDirection(Servo.Direction.FORWARD);
+        this.turretServoB = new ServoEx(hardwareMap, "turretBack");
+//        turretServoB = hardwareMap.get(Servo.class, "turretBack");
+        turretServoB.setDirection(Servo.Direction.FORWARD);
     }
 
     public double getTargetPosition() {
@@ -56,7 +56,7 @@ public class Turret {
         return getAngleFromServoPos(currentPos);
     }
 
-    private void setTargetServoPosition(double pos) {
+    public void setTargetServoPosition(double pos) {
         turretServoF.setPosition(pos);
         turretServoB.setPosition(pos);
     }

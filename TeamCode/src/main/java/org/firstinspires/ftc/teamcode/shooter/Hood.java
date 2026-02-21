@@ -18,7 +18,7 @@ public class Hood {
     }
 
     // Servo position 0 -> 0.83 maps to hood angle min -> max
-    private double[] servoPositions = new double[] {0, 0.83};
+    private double[] servoPositions = new double[] {0, 0.77};
     private double[] hoodAngles = new double[] {
             VelocityCompensationCalculator.getMinHoodAngle(),
             VelocityCompensationCalculator.getMaxHoodAngle()

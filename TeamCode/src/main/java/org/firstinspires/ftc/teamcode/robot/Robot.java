@@ -91,7 +91,7 @@ public class Robot {
         // Setup in your Robot class if you have one, or in init at start of opMode
         PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        PhotonCore.experimental.setMaximumParallelCommands(9); // Can be adjusted based on user preference - but raising this number further can cause issues
+        PhotonCore.experimental.setMaximumParallelCommands(10); // Can be adjusted based on user preference - but raising this number further can cause issues
         PhotonCore.enable();
     }
 
