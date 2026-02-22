@@ -18,23 +18,23 @@ public class Hood {
     }
 
     // Servo position 0 -> 0.83 maps to hood angle min -> max
-    private double[] servoPositions = new double[] {0, 0.77};
-    private double[] hoodAngles = new double[] {
+    private static double[] servoPositions = new double[] {0, 0.77};
+    private static double[] hoodAngles = new double[] {
             VelocityCompensationCalculator.getMinHoodAngle(),
             VelocityCompensationCalculator.getMaxHoodAngle()
     };
 
 
-    private double[] launchAngles = new double[] {
+    private static double[] launchAngles = new double[] {
             VelocityCompensationCalculator.hoodAngleToLaunchAngle(VelocityCompensationCalculator.getMinHoodAngle()),
             VelocityCompensationCalculator.hoodAngleToLaunchAngle(VelocityCompensationCalculator.getMaxHoodAngle())
     };
 
-    LinearInterpolation hoodAngleToServo = new LinearInterpolation(hoodAngles, servoPositions);
-    LinearInterpolation servoToHoodAngle = new LinearInterpolation(servoPositions, hoodAngles);
+    public static LinearInterpolation hoodAngleToServo = new LinearInterpolation(hoodAngles, servoPositions);
+    public static LinearInterpolation servoToHoodAngle = new LinearInterpolation(servoPositions, hoodAngles);
 
-    LinearInterpolation launchAngleToServo = new LinearInterpolation(launchAngles, servoPositions);
-    LinearInterpolation servoToLaunchAngle = new LinearInterpolation(servoPositions, launchAngles);
+    public static LinearInterpolation launchAngleToServo = new LinearInterpolation(launchAngles, servoPositions);
+    public static LinearInterpolation servoToLaunchAngle = new LinearInterpolation(servoPositions, launchAngles);
 
     public void setTargetPosition(double position) {
         position = Range.clip(position, 0, 0.83);

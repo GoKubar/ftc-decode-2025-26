@@ -17,7 +17,7 @@ public class Turret {
     public static double MAX_TURRET_ANGLE = Math.toRadians(140);
 
     double[] angleValues = new double[] {Math.toRadians(-90), Math.toRadians(90)};
-    double[] servoPositions = new double[] {0.25, 0.74}; //TODO: tune
+    double[] servoPositions = new double[] {0.28, 0.725}; //TODO: tune
 
     public double getAngleFromServoPos(double servoPos) {
         return (servoPos - servoPositions[0]) *
@@ -39,9 +39,11 @@ public class Turret {
         this.turretServoF = new ServoEx(hardwareMap, "turretFront");
 //        turretServoF = hardwareMap.get(Servo.class, "turretFront");
         turretServoF.setDirection(Servo.Direction.FORWARD);
+        turretServoF.setCachingTolerance(0.0025);
         this.turretServoB = new ServoEx(hardwareMap, "turretBack");
 //        turretServoB = hardwareMap.get(Servo.class, "turretBack");
         turretServoB.setDirection(Servo.Direction.FORWARD);
+        turretServoB.setCachingTolerance(0.0025);
     }
 
     public double getTargetPosition() {

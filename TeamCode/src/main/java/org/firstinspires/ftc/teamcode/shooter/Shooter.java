@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.shooter.math.VelocityCompensationCalculato
 import org.firstinspires.ftc.teamcode.util.MathHelpers;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
+import smile.interpolation.BilinearInterpolation;
 import smile.interpolation.Interpolation;
 
 /**
@@ -45,8 +46,8 @@ public class Shooter {
 //    private double[] farSpeeds = new double[] { 1712, 1712 };
 //    private double[] farAngles = new double[] { Math.toRadians(64.17), Math.toRadians(61.71) };
 
-    Interpolation flywheelSpeeds = VelocityCompensationCalculator.speedLerp;
-    Interpolation hoodAngles = VelocityCompensationCalculator.hoodLerp;
+    BilinearInterpolation flywheelSpeeds = VelocityCompensationCalculator.speedInterpolation;
+    BilinearInterpolation hoodAngles = VelocityCompensationCalculator.hoodServoInterpolation;
 
     // Tolerances
     public static int flywheelToleranceTicks = 60;
@@ -54,8 +55,8 @@ public class Shooter {
     public static double hoodToleranceDegrees = 2;
 
     // Gate positions
-    public static double openGatePosition = 0.502;
-    public static double closedGatePosition = 0.537;
+    public static double openGatePosition = 0.4617;
+    public static double closedGatePosition = 0.4917;
 
     // Hardware
     Hood hood;
@@ -142,12 +143,14 @@ public class Shooter {
      * Update shooting subsystems WITHOUT velocity compensation (fallback/simple mode)
      */
     public void updateShootingSubsystems(Pose pose, Telemetry telemetry) {
-        Interpolation flywheelInterpolation = flywheelSpeeds;
-        Interpolation hoodAngleInterpolation = hoodAngles;
+        BilinearInterpolation flywheelInterpolation = flywheelSpeeds;
+        BilinearInterpolation hoodAngleInterpolation = hoodAngles;
 
-        double dist = distance(pose, goalPose);
-        double flywheelSpeed = flywheelInterpolation.interpolate(dist);
-        double hoodAngle = hoodAngleInterpolation.interpolate(dist);
+        double dx = Math.abs(goalPose.getX() - pose.getX());
+        double dy = Math.abs(goalPose.getY() - pose.getY());
+
+        double flywheelSpeed = flywheelInterpolation.interpolate(dx, dy);
+        double hoodAngle = hoodAngleInterpolation.interpolate(dx, dy);
         double turretAngle = getTargetTurretAngle(pose);
 
         lastTurretAngle = turretAngle;

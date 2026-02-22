@@ -7,6 +7,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.math.MathFunctions;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.robot.Constants;
@@ -40,7 +41,7 @@ public class AngleSwerve extends Swerve {
 
         if (Constants.color == Constants.Color.RED) {
             driveVector.rotateVector(Math.toRadians(-90));
-        } else {
+        } else if (Constants.color == Constants.Color.BLUE){
             driveVector.rotateVector(Math.toRadians(90));
         }
 

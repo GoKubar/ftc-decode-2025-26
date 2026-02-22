@@ -83,7 +83,7 @@ public class IntakingState implements State {
     public void execute(Robot robot) {
         //length = 15.39
         //width = 15.12
-        if (!Constants.lastOpModeWasAuto && gamepad1.left_bumper && gamepad1.right_bumper && gamepad2.left_bumper && gamepad2.right_bumper) {
+        if (!Constants.lastOpModeWasAuto && gamepad1.y && gamepad1.dpad_up && gamepad2.y && gamepad2.dpad_up) {
             transitioning = true;
             cancel(joystickToIntake);
             cancel(updateShooter);
@@ -101,7 +101,7 @@ public class IntakingState implements State {
         }
 
 
-        if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && !transitioning) {
+        if (gamepad1.rightBumperWasPressed() && !Constants.lastOpModeWasAuto && !transitioning) {
             transitioning = true;
             cancel(joystickToIntake);
             cancel(updateShooter);

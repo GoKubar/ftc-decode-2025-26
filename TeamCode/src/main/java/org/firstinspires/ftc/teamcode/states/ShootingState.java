@@ -51,7 +51,7 @@ public class ShootingState implements State {
             Constants.debugTelemetry = !Constants.debugTelemetry;
         }
 
-        if (gamepad1.aWasPressed() && !transitioningState && !Constants.lastOpModeWasAuto) {
+        if (gamepad1.rightBumperWasPressed() && !transitioningState && !Constants.lastOpModeWasAuto) {
             transitioningState = true;
             schedule(
                     sequential(

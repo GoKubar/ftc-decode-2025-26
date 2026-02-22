@@ -60,6 +60,7 @@ public class PedroConstants {
 
     public static SwerveConstants swerveConstants = new SwerveConstants()
             .velocity(83.93)
+            .zeroPowerBehavior(SwerveConstants.ZeroPowerBehavior.IGNORE_ANGLE_CHANGES)
             .useBrakeModeInTeleOp(true);
 
     // F - front: .130, back: .190

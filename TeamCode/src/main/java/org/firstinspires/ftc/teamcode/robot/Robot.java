@@ -48,7 +48,7 @@ public class Robot {
 
     PTO pto;
     Shooter shooter;
-    ProximityIndicator proximityIndicator;
+//    ProximityIndicator proximityIndicator;
 
     public enum LocalizationMode {
         FOLLOWER,
@@ -74,7 +74,7 @@ public class Robot {
         this.gamepad2 = gamepad2;
 
         pto = new PTO(hardwareMap);
-        proximityIndicator = new ProximityIndicator(hardwareMap);
+//        proximityIndicator = new ProximityIndicator(hardwareMap);
 
         follower = PedroConstants.createFollower(hardwareMap);
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
@@ -113,9 +113,9 @@ public class Robot {
         updateLocalization();
         executeCurrentState();
         updateShooter();
-        if (getCurrentState() == States.INTAKING) {
-            updateProximityIndicator();
-        }
+//        if (getCurrentState() == States.INTAKING) {
+//            updateProximityIndicator();
+//        }
         updateTelemetry();
 //        updateLastTurretTicks();
     }
@@ -203,9 +203,9 @@ public class Robot {
         shooter.update(telemetry);
     }
 
-    public void updateProximityIndicator() {
-        proximityIndicator.update();
-    }
+//    public void updateProximityIndicator() {
+////        proximityIndicator.update();
+//    }
 
     public Command setTurretPos(double angle) {
         return instant(() -> shooter.setTurretAngle(angle));
@@ -356,7 +356,7 @@ public class Robot {
     }
 
     public Command shootMotif() {
-        return shootMotif(1000);
+        return shootMotif(500);
     }
 
     public Command shootMotif(int shootingTime) {

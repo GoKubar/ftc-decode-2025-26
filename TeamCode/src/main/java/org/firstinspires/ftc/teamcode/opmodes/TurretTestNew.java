@@ -58,7 +58,7 @@ public class TurretTestNew extends LinearOpMode {
             if (gamepad1.dpadLeftWasPressed()) {
                 if (gamepad1.left_bumper) {
                     target += Math.toRadians(1);
-//                    target += 0.01;
+//                    target += 0.005;
                 } else {
                     target += Math.toRadians(10);
 //                    target += 0.05;
@@ -68,7 +68,7 @@ public class TurretTestNew extends LinearOpMode {
             if (gamepad1.dpadRightWasPressed()) {
                 if (gamepad1.left_bumper) {
                     target -= Math.toRadians(1);
-//                    target -= 0.01;
+//                    target -= 0.005;
                 } else {
                     target -= Math.toRadians(10);
 //                    target -= 0.05;
