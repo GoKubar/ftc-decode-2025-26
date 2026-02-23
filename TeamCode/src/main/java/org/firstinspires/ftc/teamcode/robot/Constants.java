@@ -28,7 +28,7 @@ public class Constants {
     public static boolean lastOpModeWasAuto = false;
     public static boolean debugTelemetry = false;
 
-    /** Thresholds for caching wrappers. */
+    // thresholds for caching wrappers
     public static double MOTOR_CACHING_TOLERANCE = 0.05;
     public static double CRSERVO_CACHING_TOLERANCE = 0.05;
     public static double SERVO_CACHING_TOLERANCE = 0.01;

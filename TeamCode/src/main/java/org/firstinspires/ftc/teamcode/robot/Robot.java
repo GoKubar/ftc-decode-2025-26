@@ -212,14 +212,7 @@ public class Robot {
     }
 
     public Command updateShootingSubsystems() {
-        return infinite(() -> {
-                shooter.updateShootingSubsystems(getPose(), getVelocity(), telemetry, useVelocityComp);
-//            if (!currentlyShooting) {
-//                shooter.updateShootingSubsystems(getPose(), getVelocity(), telemetry, useVelocityComp);
-//            } else {
-//                shooter.updateTurretOnly(getPose(), getVelocity(), telemetry, useVelocityComp);
-//            }
-        });
+        return infinite(() -> shooter.updateShootingSubsystems(getPose(), getVelocity(), telemetry, useVelocityComp));
     }
 
     public Command updateTurret() {
@@ -356,7 +349,7 @@ public class Robot {
     }
 
     public Command shootMotif() {
-        return shootMotif(500);
+        return shootMotif(750);
     }
 
     public Command shootMotif(int shootingTime) {

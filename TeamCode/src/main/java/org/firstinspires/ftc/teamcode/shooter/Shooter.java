@@ -47,7 +47,7 @@ public class Shooter {
 //    private double[] farAngles = new double[] { Math.toRadians(64.17), Math.toRadians(61.71) };
 
     BilinearInterpolation flywheelSpeeds = VelocityCompensationCalculator.speedInterpolation;
-    BilinearInterpolation hoodAngles = VelocityCompensationCalculator.hoodServoInterpolation;
+    BilinearInterpolation hoodServoInterpolation = VelocityCompensationCalculator.hoodServoInterpolation;
 
     // Tolerances
     public static int flywheelToleranceTicks = 60;
@@ -138,14 +138,11 @@ public class Shooter {
      * Update shooting subsystems WITHOUT velocity compensation (fallback/simple mode)
      */
     public void updateShootingSubsystems(Pose pose, Telemetry telemetry) {
-        BilinearInterpolation flywheelInterpolation = flywheelSpeeds;
-        BilinearInterpolation hoodAngleInterpolation = hoodAngles;
-
         double dx = Math.abs(goalPose.getX() - pose.getX());
         double dy = Math.abs(goalPose.getY() - pose.getY());
 
-        double flywheelSpeed = flywheelInterpolation.interpolate(dx, dy);
-        double hoodAngle = hoodAngleInterpolation.interpolate(dx, dy);
+        double flywheelSpeed = flywheelSpeeds.interpolate(dx, dy);
+        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dx, dy));
         double turretAngle = getTargetTurretAngle(pose);
 
         lastTurretAngle = turretAngle;

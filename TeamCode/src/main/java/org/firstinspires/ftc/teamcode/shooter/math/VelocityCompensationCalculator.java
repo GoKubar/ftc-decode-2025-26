@@ -37,30 +37,29 @@ public class VelocityCompensationCalculator {
     public static double[] xDistances = IntStream.range(0, xPositions.length)
             .mapToDouble(i -> getXDistance(Constants.BLUE_GOAL_POSE, xPositions[i])).toArray();
 
-    public static double[] yPositions = {11.375, 22.75, 46.75, 70.75, 94.75, 118.75};
+    public static double[] yPositions = {118.75, 94.75, 70.75, 46.75, 22.75, 11.375};
     public static double[] yDistances = IntStream.range(0, yPositions.length)
             .mapToDouble(i -> getYDistance(Constants.BLUE_GOAL_POSE, yPositions[i])).toArray();
 
     public static double[][] flywheelSpeeds = {
-            {1839, 1753, 1612, 1497, 1434, 1434},  // x=22.75
-            {1903, 1862, 1676, 1541, 1420, 1370},  // x=46.75
-            {1973, 1892, 1799, 1558, 1410, 1443},  // x=58.75
-            {2120, 1960, 1815, 1579, 1496, 1475},  // x=70.75
-            {2215, 2039, 1848, 1631, 1544, 1473},  // x=82.75
-            {2201, 2016, 1889, 1734, 1612, 1584},  // x=94.75
-            {2320, 2266, 2075, 1912, 1810, 1772},  // x=118.75
+            {1434, 1434, 1497, 1612, 1753, 1839},  // x=22.75
+            {1370, 1420, 1541, 1676, 1862, 1903},  // x=46.75
+            {1443, 1410, 1558, 1799, 1892, 1973},  // x=58.75
+            {1475, 1496, 1579, 1815, 1960, 2120},  // x=70.75
+            {1473, 1544, 1631, 1848, 2039, 2215},  // x=82.75
+            {1584, 1612, 1734, 1889, 2016, 2201},  // x=94.75
+            {1772, 1810, 1912, 2075, 2266, 2320},  // x=118.75
     };
 
     public static double[][] hoodServoPositions = {
-            {0.27, 0.24, 0.19, 0.13, 0,    0   },  // x=22.75
-            {0.43, 0.39, 0.29, 0.17, 0.05, 0   },  // x=46.75
-            {0.48, 0.45, 0.41, 0.15, 0.06, 0   },  // x=58.75
-            {0.6,  0.46, 0.43, 0.26, 0.14, 0.06},  // x=70.75
-            {0.63, 0.5,  0.45, 0.27, 0.13, 0.09},  // x=82.75
-            {0.66, 0.53, 0.45, 0.25, 0.14, 0.11},  // x=94.75
-            {0.66, 0.61, 0.55, 0.42, 0.31, 0.21},  // x=118.75
+            {0,    0,    0.13, 0.19, 0.24, 0.27},  // x=22.75
+            {0,    0.05, 0.17, 0.29, 0.39, 0.43},  // x=46.75
+            {0,    0.06, 0.15, 0.41, 0.45, 0.48},  // x=58.75
+            {0.06, 0.14, 0.26, 0.43, 0.46, 0.6 },  // x=70.75
+            {0.09, 0.13, 0.27, 0.45, 0.5,  0.63},  // x=82.75
+            {0.11, 0.14, 0.25, 0.45, 0.53, 0.66},  // x=94.75
+            {0.21, 0.31, 0.42, 0.55, 0.61, 0.66},  // x=118.75
     };
-
     // Interpolators
     public static BilinearInterpolation speedInterpolation = new BilinearInterpolation(xDistances, yDistances, flywheelSpeeds);
     public static BilinearInterpolation hoodServoInterpolation = new BilinearInterpolation(xDistances, yDistances, hoodServoPositions);
@@ -189,11 +188,8 @@ public class VelocityCompensationCalculator {
         double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dx, dy));
         double turretAngle = MathHelpers.wrapAngleRadians(angleToGoal - futurePose.getHeading());
 
-        return new ShotParameters(
-                hoodAngle,
-                turretAngle,
-                flywheelSpeed
-        );
+        output.set(hoodAngle, turretAngle, flywheelSpeed);
+        return output;
     }
 
 

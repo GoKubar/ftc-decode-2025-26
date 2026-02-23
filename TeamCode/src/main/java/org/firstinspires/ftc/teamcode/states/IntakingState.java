@@ -46,7 +46,7 @@ public class IntakingState implements State {
     public void initialize(Robot robot, State prevState) {
         schedule(robot.closeGate());
 //        schedule(robot.deactivateFlywheel());
-        schedule(robot.deactivateFlywheel());
+        schedule(robot.activateShooter());
         schedule(robot.setPtoToIntaking());
 
 //        transition = bind(() -> gamepad1.a).and(() -> !Constants.lastOpModeWasAuto).and(() -> !transitioning)
