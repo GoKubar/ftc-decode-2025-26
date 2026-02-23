@@ -58,7 +58,7 @@ public class Robot {
     Follower follower;
     private final GoBildaPinpointDriver pinpoint;
     private LocalizationMode localizationMode = LocalizationMode.FOLLOWER;
-    private Pose currentPose = new Pose();
+    private Pose currentPose;
     private final Vector currentVelocity = new Vector();
 
     private Drivetrain drivetrain;
@@ -189,12 +189,12 @@ public class Robot {
 
     public Command joysticksToIntakePower(DoubleSupplier leftTrigger, DoubleSupplier rightTrigger) {
         return infinite(() -> {
-            if (rightTrigger.getAsDouble() > 0.05) {
+            if (rightTrigger.getAsDouble() > 0.02) {
                 pto.runIntake(rightTrigger.getAsDouble());
-            } else if (leftTrigger.getAsDouble() > 0.05) {
+            } else if (leftTrigger.getAsDouble() > 0.02) {
                 pto.runIntake(-leftTrigger.getAsDouble());
             } else {
-                pto.runIntake(0.4);
+                pto.runIntake(0);
             }
         });
     }

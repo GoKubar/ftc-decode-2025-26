@@ -36,14 +36,26 @@ public class ShootingState implements State {
     public void initialize(Robot robot, State prevState) {
         schedule(robot.setIntakePower(0));
         schedule(robot.activateShooter());
-        schedule(robot.openGate());
+        schedule(robot.closeGate());
         updateShooter = robot.updateShootingSubsystems();
 
         if (!Constants.lastOpModeWasAuto) {
             schedule(updateShooter);
         }
 
-        transitioningState = false;
+//        transitioningState = false;
+        transitioningState = true;
+
+        schedule(
+                sequential(
+//                            waitUntil(robot::readyToShoot).raceWith(infinite(() -> {
+//                                telemetry.addData("Waiting to shoot...", "");
+//                            })).raceWith(waitMs(300)),
+                        robot.shootMotif(),
+                        instant(() -> cancel(updateShooter)),
+                        instant(() -> robot.setState(States.INTAKING))
+                )
+        );
     }
 
     public void execute(Robot robot) {

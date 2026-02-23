@@ -81,12 +81,7 @@ public class Shooter {
     /**
      * Update shooting subsystems WITH velocity compensation
      */
-    public void updateShootingSubsystems(
-            Pose pose,
-            Vector velocity,
-            Telemetry telemetry,
-            boolean useVelocityComp
-    ) {
+    public void updateShootingSubsystems(Pose pose, Vector velocity, Telemetry telemetry, boolean useVelocityComp) {
         if (!useVelocityComp) {
             updateShootingSubsystems(pose, telemetry);
             return;

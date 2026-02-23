@@ -22,10 +22,7 @@ import org.firstinspires.ftc.teamcode.shooter.Turret;
 
 public class IntakingState implements State {
 
-    double length = 15.39;
-    double width = 15.12;
-
-    Pose redResetPose = new Pose(length/2, width/2, 0);
+    Pose redResetPose = new Pose( 8.7863775591,6.0059158661, 0);
 
     Telemetry telemetry;
     private Gamepad gamepad1;
@@ -48,6 +45,7 @@ public class IntakingState implements State {
 
     public void initialize(Robot robot, State prevState) {
         schedule(robot.closeGate());
+//        schedule(robot.deactivateFlywheel());
         schedule(robot.deactivateFlywheel());
         schedule(robot.setPtoToIntaking());
 
