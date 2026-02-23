@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 @Config
 public class Turret {
+    public static double turretOffsetRad = 0;
 
     ServoEx turretServoF;
     ServoEx turretServoB;
@@ -65,7 +66,7 @@ public class Turret {
 
     public void setTurretAngle(double angleRad) {
         setTargetServoPosition(
-                Range.clip(getServoPosFromAngle(angleRad),
+                Range.clip(getServoPosFromAngle(angleRad + turretOffsetRad),
                         MIN_SERVO_POS,
                         MAX_SERVO_POS
                 )

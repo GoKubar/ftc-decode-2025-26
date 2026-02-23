@@ -4,24 +4,25 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 public class NewBotTestOpMode extends OpMode {
-    private DcMotor intake;
-    private DcMotor intake2;
+    private DcMotorEx intakeR;
+    private DcMotorEx intakeL;
     private Servo pto;
 
     private Servo gate;
 
     @Override
     public void init() {
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        intake.setPower(0);
+        intakeR = hardwareMap.get(DcMotorEx.class, "rightIntake");
+        intakeR.setPower(0);
 
-        intake2 = hardwareMap.get(DcMotor.class, "intake2");
-        intake2.setPower(0);
+        intakeL = hardwareMap.get(DcMotorEx.class, "leftIntake");
+        intakeL.setPower(0);
 
         pto = hardwareMap.get(Servo.class, "pto");
         pto.setPosition(.65); //intaking
@@ -38,6 +39,11 @@ public class NewBotTestOpMode extends OpMode {
     public void loop() {
 
         pto.setPosition(0);
+
+        if (gamepad1.aWasPressed()) {
+            intakeR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            intakeL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
 
         if(gamepad1.rightBumperWasPressed()) {
             double newPosition =  pto.getPosition()+.05;
@@ -65,14 +71,16 @@ public class NewBotTestOpMode extends OpMode {
 //            gate.setPosition(.502);
         }
 
-        intake.setPower(gamepad1.right_trigger);
-        intake2.setPower(-gamepad1.right_trigger);
+        intakeR.setPower(gamepad1.right_trigger);
+        intakeL.setPower(-gamepad1.right_trigger);
 
         if(pto.getPosition() >= .65) {
-            intake.setPower(-gamepad1.left_trigger);
-            intake2.setPower(+gamepad1.left_trigger);
+            intakeR.setPower(-gamepad1.left_trigger);
+            intakeL.setPower(+gamepad1.left_trigger);
         }
+        telemetry.addData("intake encoder", intakeR.getCurrentPosition());
 
+        telemetry.addData("\npto pos", pto.getPosition());
         telemetry.addData("gate pos", gate.getPosition());
         telemetry.update();
     }

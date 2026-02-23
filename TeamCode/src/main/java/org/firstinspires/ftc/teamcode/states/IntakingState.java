@@ -108,6 +108,14 @@ public class IntakingState implements State {
                     instant(() -> robot.setState(States.SHOOTING))
             );
         }
+
+        if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto) {
+            Turret.turretOffsetRad += Math.toRadians(3);
+        }
+
+        if (gamepad2.dpadRightWasPressed() && !Constants.lastOpModeWasAuto) {
+            Turret.turretOffsetRad -= Math.toRadians(3);
+        }
     }
 
     public String name(){

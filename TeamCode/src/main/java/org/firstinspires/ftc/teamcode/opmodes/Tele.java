@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.States;
+import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.util.telemetry.FastTelemetry;
 
 public abstract class Tele extends LinearOpMode {
@@ -33,6 +34,7 @@ public abstract class Tele extends LinearOpMode {
             robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose);
             robot.setPose(startPose);
         } else {
+            Turret.turretOffsetRad = 0;
             wasLastOpModeAuto = true;
             robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose);
             robot.setPose(Constants.lastPose);

@@ -26,6 +26,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
+import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
 
 import java.util.function.DoubleSupplier;
@@ -236,7 +237,7 @@ public class Robot {
         }
         telemetryTimer.reset();
 
-//        telemetry.addData("turret offset", Turret.turretOffset);
+        telemetry.addData("turret offset (deg)", Math.toDegrees(Turret.turretOffsetRad));
         telemetry.addData("Updated lastPose", Constants.lastPose);
         telemetry.addData("flywheel velocity", getFlywheelAngularVelocity());
         telemetry.addData("target flywheel velocity", getTargetFlywheelAngularVelocity());
@@ -349,7 +350,7 @@ public class Robot {
     }
 
     public Command shootMotif() {
-        return shootMotif(750);
+        return shootMotif(800);
     }
 
     public Command shootMotif(int shootingTime) {

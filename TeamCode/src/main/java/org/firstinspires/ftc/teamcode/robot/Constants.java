@@ -21,6 +21,7 @@ public class Constants {
     public static Pose lastPose = null;
 
     public static void reset() {
+        Turret.turretOffsetRad = 0;
 //        robot = null;
         lastPose = null;
     }
