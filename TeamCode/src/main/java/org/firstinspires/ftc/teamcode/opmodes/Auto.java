@@ -89,12 +89,12 @@ public abstract class Auto extends LinearOpMode {
                 updateShooter,
                 sequential(
                         shootPreloads(),
-                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 100),
+                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 350),
                         gateCycle(shootTime),
-                        runCycle(pickupClose, shootClose, shootTime, 750, 200),
+                        runCycle(pickupClose, shootClose, shootTime, 750, 500),
                         gateCycle(shootTime),
-                        runCycle(pickupFar, shootFar, shootTime + 125, 700, 1000),
-                        cornerCycle(shootTime + 150, 1000, 1000),
+                        runCycle(pickupFar, shootFar, shootTime + 125, 700, 1500),
+                        cornerCycle(shootTime + 150, 1000, 1500),
                         shootAndSetIntaking(),
 
                         robot.setIntakePower(0)
@@ -139,7 +139,7 @@ public abstract class Auto extends LinearOpMode {
                 parallel(
                         follow(robot.getFollower(), shootPath),
                         sequential(
-                                waitMs(shootingDelayMs+250),
+                                waitMs(shootingDelayMs),
                                 robot.setIntakePower(0)
 //                                setShooting()
                         )
@@ -166,7 +166,7 @@ public abstract class Auto extends LinearOpMode {
                 parallel(
                         follow(robot.getFollower(), shootGate),
                         sequential(
-                                waitMs(500),
+                                waitMs(1000),
                                 robot.setIntakePower(0)
 //                                setShooting()
                         )
@@ -397,10 +397,9 @@ public abstract class Auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
 
-        createAutoCommands();
-
         waitForStart();
         robot.setState(States.INTAKING);
+        createAutoCommands();
         while (opModeIsActive()) {
             robot.clearCaches();
             Scheduler.execute();
