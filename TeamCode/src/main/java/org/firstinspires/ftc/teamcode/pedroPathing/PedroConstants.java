@@ -19,12 +19,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class PedroConstants {
-    public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.75, 0, 0.03, 0);
+    public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.8, 0, 0.015, 0);
 
-    public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(1.5, 0, 0.003, 0);
+    public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(1.75, 0, 0.003, 0);
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .forwardZeroPowerAcceleration(-97.41126).lateralZeroPowerAcceleration(-97.41126)
+            .forwardZeroPowerAcceleration(-197.1)
+            .lateralZeroPowerAcceleration(-197.1)
             .useSecondaryDrivePIDF(true).useSecondaryHeadingPIDF(true)
             .useSecondaryTranslationalPIDF(true)
 
@@ -47,8 +48,8 @@ public class PedroConstants {
             // 0,//0.38735914623969386,
             // 0.002)
             // )
-            .centripetalScaling(0.002).
-            mass(14.795); // TODO: actually weigh the robot, in kg
+            .centripetalScaling(0.0005).
+            mass(13.732);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(-2.9350393701) //-74.5mm
@@ -59,8 +60,8 @@ public class PedroConstants {
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static SwerveConstants swerveConstants = new SwerveConstants()
-            .velocity(83.93)
-            .zeroPowerBehavior(SwerveConstants.ZeroPowerBehavior.IGNORE_ANGLE_CHANGES)
+            .velocity(73.9)
+//            .zeroPowerBehavior(SwerveConstants.ZeroPowerBehavior.IGNORE_ANGLE_CHANGES)
             .useBrakeModeInTeleOp(true);
 
     // F - front: .130, back: .190

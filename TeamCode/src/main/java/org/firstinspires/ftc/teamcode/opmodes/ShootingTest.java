@@ -13,9 +13,11 @@ import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Drivetrains;
 import org.firstinspires.ftc.teamcode.robot.PTO;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.shooter.Flywheel;
 import org.firstinspires.ftc.teamcode.shooter.Hood;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
+import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 import org.firstinspires.ftc.teamcode.util.telemetry.FastTelemetry;
 
 import java.util.List;
@@ -31,6 +33,8 @@ public class ShootingTest extends LinearOpMode {
     PTO pto;
     Turret turret;
 
+    ServoEx gatePusher;
+
     double flywheelTarget = 1000;
     double hoodTarget = 0;
     double turretTarget = 0;
@@ -43,6 +47,9 @@ public class ShootingTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        gatePusher = new ServoEx(hardwareMap, "gatePush");
+        gatePusher.setPosition(Robot.BLUE_SIDE_OUT);
+
         telemetry = new FastTelemetry(telemetry);
         Constants.color = Constants.Color.AUDIENCE;
 

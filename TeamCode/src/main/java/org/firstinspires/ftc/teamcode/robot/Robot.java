@@ -28,10 +28,16 @@ import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
+import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 import java.util.function.DoubleSupplier;
 
 public class Robot {
+
+    public ServoEx gatePusher;
+    public static double BLUE_SIDE_OUT = 0.33;
+    public static double BLUE_SIDE_IN = 0.93;
+
     public Command updateDriveCommand;
 
     private State currentState;
@@ -84,7 +90,10 @@ public class Robot {
         currentVelocity.setOrthogonalComponents(0, 0);
 
         setDrivetrain(Drivetrains.SWERVE_ANGLE);
-        setState(States.NONE);
+        setState(States.INTAKING);
+
+        gatePusher = new ServoEx(hardwareMap, "gatePush");
+        gatePusher.setPosition(BLUE_SIDE_OUT);
 
 //        limelightManager = new LimelightManager(hardwareMap, telemetry);
 //        setPipeline(Pipelines.APRIL_TAG);

@@ -81,14 +81,15 @@ public class IntakingState implements State {
     public void execute(Robot robot) {
         //length = 15.39
         //width = 15.12
-        if (!Constants.lastOpModeWasAuto && gamepad1.y && gamepad1.dpad_up && gamepad2.y && gamepad2.dpad_up) {
-            transitioning = true;
-            cancel(joystickToIntake);
-            cancel(updateShooter);
-            schedule(
-                    instant(() -> robot.setState(States.LIFTING))
-            );
-        }
+
+//        if (!Constants.lastOpModeWasAuto && gamepad1.y && gamepad1.dpad_up && gamepad2.y && gamepad2.dpad_up) {
+//            transitioning = true;
+//            cancel(joystickToIntake);
+//            cancel(updateShooter);
+//            schedule(
+//                    instant(() -> robot.setState(States.LIFTING))
+//            );
+//        }
 
         if (gamepad2.dpadDownWasPressed()) {
             Constants.debugTelemetry = !Constants.debugTelemetry;

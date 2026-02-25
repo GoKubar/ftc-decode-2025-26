@@ -15,7 +15,6 @@ public class RedAuto21 extends Auto{
         gateClearPose = gateClearPose.mirror();
         gateClearControlPoint = gateClearControlPoint.mirror();
         gatePickupPose = gatePickupPose.mirror();
-        gatePickupControlPoint = gatePickupControlPoint.mirror();
         closePickupPose = closePickupPose.mirror();
         farPickupPose = farPickupPose.mirror();
         farPickupControlPoint = farPickupControlPoint.mirror();
