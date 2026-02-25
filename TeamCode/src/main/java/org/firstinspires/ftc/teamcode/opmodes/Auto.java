@@ -397,9 +397,10 @@ public abstract class Auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
 
-        waitForStart();
-
         createAutoCommands();
+
+        waitForStart();
+        robot.setState(States.INTAKING);
         while (opModeIsActive()) {
             robot.clearCaches();
             Scheduler.execute();

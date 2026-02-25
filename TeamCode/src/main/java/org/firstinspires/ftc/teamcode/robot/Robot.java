@@ -34,9 +34,9 @@ import java.util.function.DoubleSupplier;
 
 public class Robot {
 
-    public ServoEx gatePusher;
-    public static double BLUE_SIDE_OUT = 0.33;
-    public static double BLUE_SIDE_IN = 0.93;
+//    public ServoEx gatePusher;
+//    public static double BLUE_SIDE_OUT = 0.33;
+//    public static double BLUE_SIDE_IN = 0.93;
 
     public Command updateDriveCommand;
 
@@ -90,10 +90,10 @@ public class Robot {
         currentVelocity.setOrthogonalComponents(0, 0);
 
         setDrivetrain(Drivetrains.SWERVE_ANGLE);
-        setState(States.INTAKING);
+        setState(States.NONE);
 
-        gatePusher = new ServoEx(hardwareMap, "gatePush");
-        gatePusher.setPosition(BLUE_SIDE_OUT);
+//        gatePusher = new ServoEx(hardwareMap, "gatePush");
+//        gatePusher.setPosition(BLUE_SIDE_OUT);
 
 //        limelightManager = new LimelightManager(hardwareMap, telemetry);
 //        setPipeline(Pipelines.APRIL_TAG);
