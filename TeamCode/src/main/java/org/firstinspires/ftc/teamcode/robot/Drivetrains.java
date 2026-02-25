@@ -9,10 +9,12 @@ import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.drivetrains.DrivetrainSupplier;
 import org.firstinspires.ftc.teamcode.drivetrains.Mecanum;
 import org.firstinspires.ftc.teamcode.drivetrains.Swerve;
+import org.firstinspires.ftc.teamcode.drivetrains.SwerveHeadingLock;
 
 public enum Drivetrains {
     SWERVE(Swerve::new),
     SWERVE_ANGLE(AngleSwerve::new),
+    SWERVE_HEADING_LOCK(SwerveHeadingLock::new),
     MECANUM(Mecanum::new),
     MECANUM_ANGLE(AngleMecanum::new);
 

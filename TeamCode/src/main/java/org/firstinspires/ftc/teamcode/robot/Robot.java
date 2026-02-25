@@ -21,6 +21,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
@@ -89,7 +90,7 @@ public class Robot {
         currentPose = follower.getPose();
         currentVelocity.setOrthogonalComponents(0, 0);
 
-        setDrivetrain(Drivetrains.SWERVE_ANGLE);
+        setDrivetrain(Drivetrains.SWERVE);
         setState(States.NONE);
 
 //        gatePusher = new ServoEx(hardwareMap, "gatePush");
@@ -166,6 +167,12 @@ public class Robot {
         return localizationMode == LocalizationMode.PINPOINT
                 ? currentVelocity
                 : follower.getVelocity();
+    }
+
+    public double getAngularVelocity() {
+        return localizationMode == LocalizationMode.PINPOINT
+                ? pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS)
+                : follower.getAngularVelocity();
     }
 
     public void clearCaches() {

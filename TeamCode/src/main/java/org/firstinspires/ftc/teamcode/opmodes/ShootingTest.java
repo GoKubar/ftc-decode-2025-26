@@ -48,7 +48,7 @@ public class ShootingTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         gatePusher = new ServoEx(hardwareMap, "gatePush");
-        gatePusher.setPosition(Robot.BLUE_SIDE_OUT);
+//        gatePusher.setPosition(Robot.BLUE_SIDE_OUT);
 
         telemetry = new FastTelemetry(telemetry);
         Constants.color = Constants.Color.AUDIENCE;
