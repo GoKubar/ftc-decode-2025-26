@@ -20,8 +20,9 @@ import java.util.stream.IntStream;
 @Config
 public class VelocityCompensationCalculator {
 
-    public static double kRad = 15;
-    public static double kTan = 13;
+    public static double kRadIn = 7;
+    public static double kRadOut = 15;
+    public static double kTan = 11;
 
     private static final double g = 386.0885; // in / s^2
 
@@ -162,7 +163,8 @@ public class VelocityCompensationCalculator {
         double vRad = robotVel.dot(shootingVector);
         double vTan = robotVel.dot(tangentVector);
 
-        double scaledVRad = vRad * tof * kRad;
+        double radialGain = vRad >= 0 ? kRadIn : kRadOut;
+        double scaledVRad = vRad * tof * radialGain;
         double scaledVTan = vTan * tof * kTan;
 
         Vector correctionVector = new Vector();
