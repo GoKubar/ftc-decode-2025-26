@@ -15,7 +15,7 @@ public class SwerveHeadingLock extends Swerve {
     private static final double HEADING_POWER_MIN = -1.0;
     private static final double HEADING_POWER_MAX = 1.0;
 
-    public static double ROTATE_STICK_THRESHOLD = 0.1;
+    public static double ROTATE_STICK_THRESHOLD = 0.025;
     public static double ANGULAR_VELOCITY_THRESHOLD = 0.2;
 
     private final PIDFController headingPIDF =

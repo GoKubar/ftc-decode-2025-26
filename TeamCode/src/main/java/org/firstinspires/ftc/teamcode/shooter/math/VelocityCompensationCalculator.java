@@ -20,8 +20,8 @@ import java.util.stream.IntStream;
 @Config
 public class VelocityCompensationCalculator {
 
-    public static double kRad = 5;
-    public static double kTan = 5;
+    public static double kRad = 15;
+    public static double kTan = 13;
 
     private static final double g = 386.0885; // in / s^2
 

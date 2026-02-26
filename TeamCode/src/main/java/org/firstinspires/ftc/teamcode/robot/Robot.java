@@ -90,7 +90,7 @@ public class Robot {
         currentPose = follower.getPose();
         currentVelocity.setOrthogonalComponents(0, 0);
 
-        setDrivetrain(Drivetrains.SWERVE);
+        setDrivetrain(Drivetrains.SWERVE_HEADING_LOCK);
         setState(States.NONE);
 
 //        gatePusher = new ServoEx(hardwareMap, "gatePush");
@@ -211,7 +211,7 @@ public class Robot {
             } else if (leftTrigger.getAsDouble() > 0.02) {
                 pto.runIntake(-leftTrigger.getAsDouble());
             } else {
-                pto.runIntake(0);
+                pto.runIntake(0.4);
             }
         });
     }

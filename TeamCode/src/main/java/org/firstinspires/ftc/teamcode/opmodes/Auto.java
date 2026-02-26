@@ -44,17 +44,17 @@ public abstract class Auto extends LinearOpMode {
     protected Pose startPose = new Pose(17.745, 110.88, Math.toRadians(180));
 
     protected Pose shootingPose = new Pose(54, 81, Math.toRadians(180));
-    protected Pose middlePickupPose = new Pose(16, 55.35, Math.toRadians(180));
+    protected Pose middlePickupPose = new Pose(15, 55.35, Math.toRadians(180));
     protected Pose middlePickupControlPoint = new Pose(58.1, 48.35);
     protected Pose closePickupPose = new Pose(20.6, 85.35, Math.toRadians(180));
     protected Pose gateClearControlPoint = new Pose(56.1, 61.35);
-    protected Pose gateClearPose = new Pose(19.05, 63, Math.toRadians(180));
+    protected Pose gateClearPose = new Pose(19.3, 63.4, Math.toRadians(180));
 //    protected Pose gatePickupControlPoint = new Pose(24.6, 57.35);
     protected Pose gatePickupPose = new Pose(13, 52, Math.toRadians(120));
     protected Pose farPickupPose = new Pose(11.6, 35.35, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(71.1, 20.35);
     protected Pose cornerPose = new Pose(11.1, 17.35, Math.toRadians(210));
-    protected Pose cornerBackupPose = new Pose(13, 11, Math.toRadians(180));
+    protected Pose cornerBackupPose = new Pose(11.7, 10.5, Math.toRadians(180));
     protected Pose parkPose = new Pose(53, 101, Math.toRadians(180));
     protected Pose goalPose = Constants.BLUE_GOAL_POSE;
 
@@ -89,7 +89,7 @@ public abstract class Auto extends LinearOpMode {
                 updateShooter,
                 sequential(
                         shootPreloads(),
-                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 350),
+                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
                         gateCycle(shootTime),
                         runCycle(pickupClose, shootClose, shootTime, 750, 500),
                         gateCycle(shootTime),
@@ -282,9 +282,9 @@ public abstract class Auto extends LinearOpMode {
                         gateClearPose
                 )).setConstantHeadingInterpolation(shootingPose.getHeading())
                 .setConstraints(
-                        new PathConstraints(0.75,
-                                2,
-                                1.5,
+                        new PathConstraints(0.8,
+                                1,
+                                0.75,
                                 0.03,
                                 50,
                                 1,
@@ -369,6 +369,16 @@ public abstract class Auto extends LinearOpMode {
         backupCorner = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(cornerPose, cornerBackupPose))
                 .setLinearHeadingInterpolation(cornerPose.getHeading(), cornerBackupPose.getHeading())
+                .setConstraints(
+                        new PathConstraints(0.8,
+                                2,
+                                2,
+                                0.03,
+                                50,
+                                1,
+                                10,
+                                1)
+                )
                 .build();
 
         shootCorner = robot.getFollower().pathBuilder()
