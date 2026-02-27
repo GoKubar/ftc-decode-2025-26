@@ -14,6 +14,7 @@ public class RedAutoCompatibility extends CompatabilityAuto {
         middlePickupControlPoint = middlePickupControlPoint.mirror();
         gateClearPose = gateClearPose.mirror();
         gateClearControlPoint = gateClearControlPoint.mirror();
+        gatePickupControlPoint = gatePickupControlPoint.mirror();
         gatePickupPose = gatePickupPose.mirror();
         closePickupPose = closePickupPose.mirror();
         farPickupPose = farPickupPose.mirror();

@@ -44,12 +44,12 @@ public abstract class Auto extends LinearOpMode {
     protected Pose startPose = new Pose(17.745, 110.88, Math.toRadians(180));
 
     protected Pose shootingPose = new Pose(54, 81, Math.toRadians(180));
-    protected Pose middlePickupPose = new Pose(15, 55.35, Math.toRadians(180));
+    protected Pose middlePickupPose = new Pose(14, 55.35, Math.toRadians(180));
     protected Pose middlePickupControlPoint = new Pose(58.1, 48.35);
     protected Pose closePickupPose = new Pose(20.6, 85.35, Math.toRadians(180));
     protected Pose gateClearControlPoint = new Pose(56.1, 61.35);
-    protected Pose gateClearPose = new Pose(19.3, 63.4, Math.toRadians(180));
-//    protected Pose gatePickupControlPoint = new Pose(24.6, 57.35);
+    protected Pose gateClearPose = new Pose(19.6, 63.4, Math.toRadians(180));
+    protected Pose gatePickupControlPoint = new Pose(20.6, 57.4);
     protected Pose gatePickupPose = new Pose(13, 52, Math.toRadians(120));
     protected Pose farPickupPose = new Pose(11.6, 35.35, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(71.1, 20.35);
@@ -307,6 +307,7 @@ public abstract class Auto extends LinearOpMode {
 
         pickupGate = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(gateClearPose, gatePickupPose))
+//                .addPath(new BezierCurve(gateClearPose, gatePickupControlPoint, gatePickupPose))
                 .setLinearHeadingInterpolation(gateClearPose.getHeading(), gatePickupPose.getHeading())
                 .build();
 

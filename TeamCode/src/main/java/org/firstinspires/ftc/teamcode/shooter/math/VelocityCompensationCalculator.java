@@ -22,7 +22,8 @@ public class VelocityCompensationCalculator {
 
     public static double kRadIn = 7;
     public static double kRadOut = 15;
-    public static double kTan = 11;
+    public static double kTan = 10.5;
+    public static int NUM_ITERATIONS = 2;
 
     private static final double g = 386.0885; // in / s^2
 
@@ -64,24 +65,6 @@ public class VelocityCompensationCalculator {
     // Interpolators
     public static BilinearInterpolation speedInterpolation = new BilinearInterpolation(xDistances, yDistances, flywheelSpeeds);
     public static BilinearInterpolation hoodServoInterpolation = new BilinearInterpolation(xDistances, yDistances, hoodServoPositions);
-//    public static LinearInterpolation vxToDistanceLerp;
-//
-//    public static final double[] VXS = IntStream.range(0, SPEEDS.length)
-//            .mapToDouble(i -> SPEEDS[i] * Math.sin(HOODS[i])).toArray();
-//
-//    public static final double[] SORTED_VXS;
-//    public static final double[] SORTED_VX_DISTANCES;
-//
-//    static {
-//        // Sort VXS and corresponding DISTANCES by VX for the vxToDistance lerp
-//        Integer[] vxIndices = IntStream.range(0, VXS.length).boxed().toArray(Integer[]::new);
-//        java.util.Arrays.sort(vxIndices, java.util.Comparator.comparingDouble(i -> VXS[i]));
-//        SORTED_VXS = java.util.Arrays.stream(vxIndices).mapToDouble(i -> VXS[i]).toArray();
-//        SORTED_VX_DISTANCES =
-//                java.util.Arrays.stream(vxIndices).mapToDouble(i -> DISTANCES[i]).toArray();
-//
-//        vxToDistanceLerp = new LinearInterpolation(SORTED_VXS, SORTED_VX_DISTANCES);
-//    }
 
     public static double getXDistance(Pose goalPose, double xPos) {
         return Math.abs(goalPose.getX() - (xPos + 1.062));
@@ -133,64 +116,54 @@ public class VelocityCompensationCalculator {
         double shooterX = robotPose.getX() + SHOOTER_OFFSET_X * cosH - SHOOTER_OFFSET_Y * sinH;
         double shooterY = robotPose.getY() + SHOOTER_OFFSET_X * sinH + SHOOTER_OFFSET_Y * cosH;
 
-
         //distance to goal with offset
         double dx = goalPose.getX() - shooterX;
         double dy = goalPose.getY() - shooterY;
-        double distance = Math.sqrt(dx * dx + dy * dy);
+        double dist = Math.sqrt(dx * dx + dy * dy);
         double angleToGoal = Math.atan2(dy, dx);
-
-        dx = Math.abs(dx);
-        dy = Math.abs(dy);
 
         Vector shootingVector = new Vector(1, angleToGoal);
         Vector tangentVector = new Vector(1, angleToGoal + Math.PI/2);
 
-        double baseFlywheelTicks = speedInterpolation.interpolate(dx, dy);
-        double baseHoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dx, dy));
-
-        double launchAngle = hoodAngleToLaunchAngle(baseHoodAngle);
-        double baseVx = baseFlywheelTicks * Math.cos(launchAngle);
-//        double baseVy = baseFlywheelTicks * Math.sin(launchAngle);
-
-
-        double tof = distance / baseVx;
-
-        // pose + tof * (v_rad * k_rad * v_tan * k_tan)
-        //it doesn't matter that tof has the wrong units because of hte scaling factors k_tan and k_rad
-
-        //get components relative to goal for scaling
+        //velocity decomposition (constant across iterations)
         double vRad = robotVel.dot(shootingVector);
         double vTan = robotVel.dot(tangentVector);
-
         double radialGain = vRad >= 0 ? kRadIn : kRadOut;
-        double scaledVRad = vRad * tof * radialGain;
-        double scaledVTan = vTan * tof * kTan;
 
-        Vector correctionVector = new Vector();
-        correctionVector.setOrthogonalComponents(scaledVRad, scaledVTan);
+        //initial TOF estimate from base parameters
+        double flywheelTicks = speedInterpolation.interpolate(Math.abs(dx), Math.abs(dy));
+        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(Math.abs(dx), Math.abs(dy)));
+        double launchAngle = hoodAngleToLaunchAngle(hoodAngle);
+        double tof = dist / (flywheelTicks * Math.cos(launchAngle));
 
-        //convert back to field space
-        correctionVector.rotateVector(angleToGoal);
+        // iteratively refine: correction → virtual pose → new params → revised TOF
+        for (int i = 0; i < NUM_ITERATIONS; i++) {
+            double scaledVRad = vRad * tof * radialGain;
+            double scaledVTan = vTan * tof * kTan;
 
-        Pose futurePose = getFuturePose(robotPose, correctionVector);
+            Vector correctionVector = new Vector();
+            correctionVector.setOrthogonalComponents(scaledVRad, scaledVTan);
+            correctionVector.rotateVector(angleToGoal);
 
-        shooterX = futurePose.getX() + SHOOTER_OFFSET_X * cosH - SHOOTER_OFFSET_Y * sinH;
-        shooterY = futurePose.getY() + SHOOTER_OFFSET_X * sinH + SHOOTER_OFFSET_Y * cosH;
+            Pose futurePose = getFuturePose(robotPose, correctionVector);
 
-        //distance to goal including velocity and offset
-        dx = goalPose.getX() - shooterX;
-        dy = goalPose.getY() - shooterY;
-        angleToGoal = Math.atan2(dy, dx);
+            double futureShooterX = futurePose.getX() + SHOOTER_OFFSET_X * cosH - SHOOTER_OFFSET_Y * sinH;
+            double futureShooterY = futurePose.getY() + SHOOTER_OFFSET_X * sinH + SHOOTER_OFFSET_Y * cosH;
 
-        dx = Math.abs(dx);
-        dy = Math.abs(dy);
+            dx = goalPose.getX() - futureShooterX;
+            dy = goalPose.getY() - futureShooterY;
+            dist = Math.sqrt(dx * dx + dy * dy);
 
-        double flywheelSpeed = speedInterpolation.interpolate(dx, dy);
-        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dx, dy));
-        double turretAngle = MathHelpers.wrapAngleRadians(angleToGoal - futurePose.getHeading());
+            flywheelTicks = speedInterpolation.interpolate(Math.abs(dx), Math.abs(dy));
+            hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(Math.abs(dx), Math.abs(dy)));
+            launchAngle = hoodAngleToLaunchAngle(hoodAngle);
+            tof = dist / (flywheelTicks * Math.cos(launchAngle));
+        }
 
-        output.set(hoodAngle, turretAngle, flywheelSpeed);
+        // dx/dy are still signed here for correct angle
+        double turretAngle = MathHelpers.wrapAngleRadians(Math.atan2(dy, dx) - robotPose.getHeading());
+
+        output.set(hoodAngle, turretAngle, flywheelTicks);
         return output;
     }
 
