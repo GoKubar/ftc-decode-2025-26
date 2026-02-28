@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 @Config
 public class Turret {
-    public static double turretOffsetRad = 0;
+    public static double turretOffsetRad = Math.toRadians(5);
 
     ServoEx turretServoF;
     ServoEx turretServoB;
