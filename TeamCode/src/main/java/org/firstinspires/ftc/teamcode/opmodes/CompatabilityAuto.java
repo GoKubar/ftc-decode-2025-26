@@ -16,11 +16,11 @@ public abstract class CompatabilityAuto extends Auto{
         schedule(
                 sequential(
                         shootPreloads(),
-                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 100),
+                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
                         gateCycle(shootTime),
                         gateCycle(shootTime),
                         gateCycle(shootTime),
-                        runCycle(pickupClose, shootClose, shootTime, 750, 200),
+                        runCycle(pickupClose, shootCloseAndPark, shootTime, 750, 500),
                         shootAndSetIntaking(),
                         robot.setIntakePower(0)
 //                        robot.setTurretPos(0)

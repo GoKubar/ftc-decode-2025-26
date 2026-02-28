@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.shooter.Turret;
 
 public class IntakingState implements State {
 
-    Pose redResetPose = new Pose( 8.7863775591,6.0059158661, 0);
+    Pose redResetPose = new Pose( 8.7863775591,6.0059158661+ 0.5511811024, 0);
 
     Telemetry telemetry;
     private Gamepad gamepad1;
@@ -108,6 +108,20 @@ public class IntakingState implements State {
                     robot.setIntakePower(0),
                     instant(() -> robot.setState(States.SHOOTING))
             );
+        }
+
+        if (gamepad1.leftBumperWasPressed() && !Constants.lastOpModeWasAuto && !transitioning) {
+            transitioning = true;
+            schedule(sequential(
+                    instant(() -> {
+                        cancel(joystickToIntake);
+                    }),
+                    robot.shoot(),
+                    instant(() -> transitioning = false),
+                    instant(() -> {
+                        schedule(joystickToIntake);
+                    })
+            ));
         }
 
         if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto) {

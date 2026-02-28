@@ -6,6 +6,8 @@ import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.configurables.annotations.Configurable;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -33,8 +35,10 @@ import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 import java.util.function.DoubleSupplier;
 
+@Config
 public class Robot {
 
+    public static int singleShootTimeMillis = 250;
 //    public ServoEx gatePusher;
 //    public static double BLUE_SIDE_OUT = 0.33;
 //    public static double BLUE_SIDE_IN = 0.93;
@@ -358,9 +362,9 @@ public class Robot {
                 openGate(),
                 instant(() -> currentlyShooting = true),
                 setIntakePower(1),
-                waitMs(200),
+                waitMs(singleShootTimeMillis),
                 closeGate(),
-                waitMs(200),
+                waitMs(150),
                 instant(() -> currentlyShooting = false)
         );
     }
