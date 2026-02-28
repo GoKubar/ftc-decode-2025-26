@@ -19,6 +19,7 @@ import java.util.stream.IntStream;
 
 @Config
 public class VelocityCompensationCalculator {
+    public static double kAuto = 5;
 
     public static double kRadIn = 7;
     public static double kRadOut = 15;
@@ -129,6 +130,11 @@ public class VelocityCompensationCalculator {
         double vRad = robotVel.dot(shootingVector);
         double vTan = robotVel.dot(tangentVector);
         double radialGain = vRad >= 0 ? kRadIn : kRadOut;
+        double tangentialGain = kTan;
+        if (Constants.lastOpModeWasAuto) {
+            radialGain = kAuto;
+            tangentialGain = kAuto;
+        }
 
         //initial TOF estimate from base parameters
         double flywheelTicks = speedInterpolation.interpolate(Math.abs(dx), Math.abs(dy));
@@ -139,7 +145,7 @@ public class VelocityCompensationCalculator {
         // iteratively refine: correction → virtual pose → new params → revised TOF
         for (int i = 0; i < NUM_ITERATIONS; i++) {
             double scaledVRad = vRad * tof * radialGain;
-            double scaledVTan = vTan * tof * kTan;
+            double scaledVTan = vTan * tof * tangentialGain;
 
             Vector correctionVector = new Vector();
             correctionVector.setOrthogonalComponents(scaledVRad, scaledVTan);

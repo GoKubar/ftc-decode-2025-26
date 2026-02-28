@@ -46,7 +46,7 @@ public abstract class Auto extends LinearOpMode {
     protected Pose shootingPose = new Pose(54, 81, Math.toRadians(180));
     protected Pose middlePickupPose = new Pose(14, 55.35, Math.toRadians(180));
     protected Pose middlePickupControlPoint = new Pose(58.1, 48.35);
-    protected Pose closePickupPose = new Pose(20.6, 85.35, Math.toRadians(180));
+    protected Pose closePickupPose = new Pose(20.6, 84, Math.toRadians(180));
     protected Pose gateClearControlPoint = new Pose(56.1, 61.35);
     protected Pose gateClearPose = new Pose(19.6, 63.4, Math.toRadians(180));
     protected Pose gatePickupControlPoint = new Pose(20.6, 57.4);
@@ -93,8 +93,8 @@ public abstract class Auto extends LinearOpMode {
                         gateCycle(shootTime),
                         runCycle(pickupClose, shootClose, shootTime, 750, 500),
                         gateCycle(shootTime),
-                        runCycle(pickupFar, shootFar, shootTime + 125, 700, 1500),
-                        cornerCycle(shootTime + 150, 1000, 1500),
+                        runCycle(pickupFar, shootFar, shootTime + 125, 700, 1250),
+                        cornerCycle(shootTime + 150, 1000, 1250),
                         shootAndSetIntaking(),
 
                         robot.setIntakePower(0)
