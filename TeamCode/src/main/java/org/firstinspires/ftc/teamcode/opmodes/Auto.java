@@ -97,7 +97,7 @@ public abstract class Auto extends LinearOpMode {
                         gateCycle(shootTime),
                         runCycle(pickupFar, shootFar, shootTime + 125, 700, 1250),
                         cornerCycle(shootTime + 150, 1000, 1250),
-                        shootAndSetIntaking(),
+//                        shootAndSetIntaking(),
 
                         robot.setIntakePower(0)
 //                        robot.setTurretPos(0)
