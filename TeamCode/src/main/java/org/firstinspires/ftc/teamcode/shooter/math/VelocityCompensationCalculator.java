@@ -21,9 +21,14 @@ import java.util.stream.IntStream;
 public class VelocityCompensationCalculator {
     public static double kAuto = 5;
 
-    public static double kRadIn = 7;
-    public static double kRadOut = 15;
-    public static double kTan = 10.5;
+//    public static double kRadIn = 7;
+//    public static double kRadOut = 15;
+//    public static double kTan = 10.5;
+
+    public static double kRadIn = 0;
+    public static double kRadOut = 0;
+    public static double kTan = 0;
+
     public static int NUM_ITERATIONS = 2;
 
     private static final double g = 386.0885; // in / s^2

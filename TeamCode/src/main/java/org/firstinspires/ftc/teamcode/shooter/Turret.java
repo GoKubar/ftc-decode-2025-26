@@ -9,13 +9,14 @@ import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 @Config
 public class Turret {
-    public static double turretOffsetRad = Math.toRadians(5);
+    public static double turretOffsetRad = 0;
 
     ServoEx turretServoF;
     ServoEx turretServoB;
 
     public static double MIN_TURRET_ANGLE = Math.toRadians(-140);
-    public static double MAX_TURRET_ANGLE = Math.toRadians(140);
+//    public static double MAX_TURRET_ANGLE = Math.toRadians(140);
+    public static double MAX_TURRET_ANGLE = Math.toRadians(100);
 
     double[] angleValues = new double[] {Math.toRadians(-90), Math.toRadians(90)};
     double[] servoPositions = new double[] {0.269, 0.725}; //TODO: tune

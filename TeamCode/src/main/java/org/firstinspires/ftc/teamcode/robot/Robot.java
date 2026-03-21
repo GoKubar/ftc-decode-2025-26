@@ -30,6 +30,7 @@ import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
+import org.firstinspires.ftc.teamcode.shooter.math.VelocityCompensationCalculator;
 import org.firstinspires.ftc.teamcode.states.State;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
@@ -215,7 +216,7 @@ public class Robot {
             } else if (leftTrigger.getAsDouble() > 0.02) {
                 pto.runIntake(-leftTrigger.getAsDouble());
             } else {
-                pto.runIntake(0.4);
+                pto.runIntake(0);
             }
         });
     }
@@ -374,11 +375,12 @@ public class Robot {
     }
 
     public Command shootMotif(int shootingTime) {
+        boolean close = getPose().getY() > Shooter.transitionYValue;
         return sequential(
                 openGate(),
                 instant(() -> currentlyShooting = true),
-                setIntakePower(1),
-                waitMs(shootingTime),
+                setIntakePower((close) ? 1 : 0.7),
+                waitMs((close) ? shootingTime : shootingTime+400),
                 closeGate(),
                 instant(() -> currentlyShooting = false)
         );
