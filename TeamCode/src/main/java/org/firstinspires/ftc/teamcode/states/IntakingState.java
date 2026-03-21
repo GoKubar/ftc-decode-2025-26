@@ -15,6 +15,7 @@ import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drivetrains.SwerveHeadingLock;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.States;
@@ -122,6 +123,13 @@ public class IntakingState implements State {
                         schedule(joystickToIntake);
                     })
             ));
+        }
+
+        if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof SwerveHeadingLock) {
+            double heading = Constants.color == Constants.Color.RED
+                    ? Math.toRadians(30)
+                    : Math.toRadians(150);
+            ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
         if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto) {

@@ -87,6 +87,11 @@ public class SwerveHeadingLock extends Swerve {
                 HEADING_POWER_MAX);
     }
 
+    public void setTargetHeading(double radians) {
+        targetHeading = radians;
+        headingLockActive = true;
+    }
+
     @Override
     public String name() {
         return "Swerve Heading Lock";
