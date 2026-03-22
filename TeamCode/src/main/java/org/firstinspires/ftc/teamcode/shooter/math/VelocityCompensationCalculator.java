@@ -10,8 +10,6 @@ import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.shooter.Hood;
 import org.firstinspires.ftc.teamcode.util.MathHelpers;
 
-import kotlin.ranges.IntRange;
-import smile.interpolation.BilinearInterpolation;
 import smile.interpolation.LinearInterpolation;
 
 import java.util.Arrays;
@@ -41,43 +39,29 @@ public class VelocityCompensationCalculator {
     public static final double MIN_HOOD_ANGLE = Math.toRadians(35);
     public static final double MAX_HOOD_ANGLE = Math.toRadians(62.7983);
 
-    public static double[] xPositions = {22.75, 46.75, 58.75, 70.75, 82.75, 94.75,	118.75};
-    public static double[] xDistances = IntStream.range(0, xPositions.length)
-            .mapToDouble(i -> getXDistance(Constants.BLUE_GOAL_POSE, xPositions[i])).toArray();
-
-    public static double[] yPositions = {118.75, 94.75, 70.75, 46.75, 22.75, 11.375};
-    public static double[] yDistances = IntStream.range(0, yPositions.length)
-            .mapToDouble(i -> getYDistance(Constants.BLUE_GOAL_POSE, yPositions[i])).toArray();
-
-    public static double[][] flywheelSpeeds = {
-            {1434, 1434, 1497, 1612, 1753, 1839},  // x=22.75
-            {1370, 1420, 1541, 1676, 1862, 1903},  // x=46.75
-            {1443, 1410, 1558, 1799, 1892, 1973},  // x=58.75
-            {1475, 1496, 1579, 1815, 1960, 2120},  // x=70.75
-            {1473, 1544, 1631, 1848, 2039, 2215},  // x=82.75
-            {1584, 1612, 1734, 1889, 2016, 2201},  // x=94.75
-            {1772, 1810, 1912, 2075, 2266, 2320},  // x=118.75
+    // Anti-diagonal data points: positions where x + y ≈ 141.5
+    public static Pose[] tablePositions = {
+            new Pose(93.36, 91.62),
+            new Pose(84.01, 79.585),
+            new Pose(78.59, 74.21),
+            new Pose(72.23, 65.34),
+            new Pose(60.01, 77.11),
+            new Pose(46.6, 92.75),
+            new Pose(37.03, 101.04)
     };
+    public static double[] distances = IntStream.range(0, tablePositions.length)
+            .mapToDouble(i -> distance(tablePositions[i], Constants.BLUE_GOAL_POSE.mirror()))
+            .toArray();
 
-    public static double[][] hoodServoPositions = {
-            {0,    0,    0.13, 0.19, 0.24, 0.27},  // x=22.75
-            {0,    0.05, 0.17, 0.29, 0.39, 0.43},  // x=46.75
-            {0,    0.06, 0.15, 0.41, 0.45, 0.48},  // x=58.75
-            {0.06, 0.14, 0.26, 0.43, 0.46, 0.6 },  // x=70.75
-            {0.09, 0.13, 0.27, 0.45, 0.5,  0.63},  // x=82.75
-            {0.11, 0.14, 0.25, 0.45, 0.53, 0.66},  // x=94.75
-            {0.21, 0.31, 0.42, 0.55, 0.61, 0.66},  // x=118.75
-    };
+    public static double[] flywheelSpeedValues = {1380, 1442, 1524, 1565, 1579, 1601, 1656};
+    public static double[] hoodServoValues      = {0, 0, 0.07, 0.13, 0.14, 0.13, 0.12};
+
     // Interpolators
-    public static BilinearInterpolation speedInterpolation = new BilinearInterpolation(xDistances, yDistances, flywheelSpeeds);
-    public static BilinearInterpolation hoodServoInterpolation = new BilinearInterpolation(xDistances, yDistances, hoodServoPositions);
+    public static LinearInterpolation speedInterpolation = new LinearInterpolation(distances, flywheelSpeedValues);
+    public static LinearInterpolation hoodServoInterpolation = new LinearInterpolation(distances, hoodServoValues);
 
-    public static double getXDistance(Pose goalPose, double xPos) {
-        return Math.abs(goalPose.getX() - (xPos + 1.062));
-    }
-
-    public static double getYDistance(Pose goalPose, double yPos) {
-        return Math.abs(goalPose.getY() - (yPos + SHOOTER_OFFSET_X - 1.436)); //offset to account for how it was tuned
+    private static double distance(Pose a, Pose b) {
+        return Math.hypot(-SHOOTER_OFFSET_X + b.getX() - a.getX(), b.getY() - a.getY());
     }
 
     public static class ShotParameters {
@@ -142,8 +126,8 @@ public class VelocityCompensationCalculator {
         }
 
         //initial TOF estimate from base parameters
-        double flywheelTicks = speedInterpolation.interpolate(Math.abs(dx), Math.abs(dy));
-        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(Math.abs(dx), Math.abs(dy)));
+        double flywheelTicks = speedInterpolation.interpolate(dist);
+        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
         double launchAngle = hoodAngleToLaunchAngle(hoodAngle);
         double tof = dist / (flywheelTicks * Math.cos(launchAngle));
 
@@ -165,8 +149,9 @@ public class VelocityCompensationCalculator {
             dy = goalPose.getY() - futureShooterY;
             dist = Math.sqrt(dx * dx + dy * dy);
 
-            flywheelTicks = speedInterpolation.interpolate(Math.abs(dx), Math.abs(dy));
-            hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(Math.abs(dx), Math.abs(dy)));
+            flywheelTicks = speedInterpolation.interpolate(dist);
+            flywheelTicks = Math.min(flywheelTicks, Arrays.stream(flywheelSpeedValues).max().getAsDouble());
+            hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
             launchAngle = hoodAngleToLaunchAngle(hoodAngle);
             tof = dist / (flywheelTicks * Math.cos(launchAngle));
         }

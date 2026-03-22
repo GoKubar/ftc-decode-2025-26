@@ -18,10 +18,13 @@ public class SwerveHeadingLock extends Swerve {
     public static double ROTATE_STICK_THRESHOLD = 0.025;
     public static double ANGULAR_VELOCITY_THRESHOLD = 0.2;
 
+    PIDFCoefficients anglePID = new PIDFCoefficients(1.2, 0, 0.015, 0);
+
+
     private final PIDFController headingPIDF =
-            new PIDFController(PedroConstants.secondaryHeadingCoeffs);
+            new PIDFController(anglePID);
     private final PIDFController secondaryHeadingPIDF =
-            new PIDFController(PedroConstants.secondaryHeadingCoeffs);
+            new PIDFController(anglePID);
 
     private boolean headingLockActive = false;
     private double targetHeading = 0.0;

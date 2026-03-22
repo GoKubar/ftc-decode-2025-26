@@ -38,25 +38,24 @@ public abstract class Auto extends LinearOpMode {
     protected Command updateShooter;
 //    private Command updateTurret;
 
-//    originally Pose(20.8, 124.1, Math.toRadians(234));
-    //moved over -0.9 on x, +0.35 on y
-//    protected Pose startPose = new Pose(19.90, 124.45, Math.toRadians(234));
-    protected Pose startPose = new Pose(17.745, 110.88, Math.toRadians(180));
+//    originally Pose startPose = new Pose(17.745, 110.88, Math.toRadians(180));
+    //moved over +1.12 on x, +3.34 on y
+    Pose startPose = new Pose(18.865, 114.22, Math.toRadians(180));
 
-    protected Pose shootingPose = new Pose(54, 81, Math.toRadians(180));
-    protected Pose middlePickupPose = new Pose(14, 55.35, Math.toRadians(180));
-    protected Pose middlePickupControlPoint = new Pose(58.1, 48.35);
-    protected Pose closePickupPose = new Pose(20.6, 84, Math.toRadians(180));
-    protected Pose gateClearControlPoint = new Pose(56.1, 61.35);
-    protected Pose gateClearPose = new Pose(19.6, 63.4, Math.toRadians(180));
-    protected Pose gatePickupControlPoint = new Pose(20.6, 57.4);
-    protected Pose gatePickupPose = new Pose(13, 52, Math.toRadians(120));
-    protected Pose farPickupPose = new Pose(11.6, 35.35, Math.toRadians(180));
-    protected Pose farPickupControlPoint = new Pose(71.1, 20.35);
-//    protected Pose cornerPose = new Pose(11.1, 17.35, Math.toRadians(210));
-    protected Pose cornerPose = new Pose(14, 20, Math.toRadians(210));
-    protected Pose cornerBackupPose = new Pose(11.7, 10.5, Math.toRadians(180));
-    protected Pose parkPose = new Pose(57, 105, Math.toRadians(180));
+    protected Pose shootingPose = new Pose(55.12, 84.34, Math.toRadians(180));
+    protected Pose middlePickupPose = new Pose(15.12, 58.69, Math.toRadians(180));
+    protected Pose middlePickupControlPoint = new Pose(59.22, 51.69);
+    protected Pose closePickupPose = new Pose(21.72, 87.34, Math.toRadians(180));
+    protected Pose gateClearControlPoint = new Pose(57.22, 64.69);
+    protected Pose gateClearPose = new Pose(20.72, 66.74, Math.toRadians(180));
+    protected Pose gatePickupControlPoint = new Pose(21.72, 60.74);
+    protected Pose gatePickupPose = new Pose(14.12, 55.34, Math.toRadians(120));
+    protected Pose farPickupPose = new Pose(12.72, 38.69, Math.toRadians(180));
+    protected Pose farPickupControlPoint = new Pose(72.22, 23.69);
+//    protected Pose cornerPose = new Pose(12.22, 20.69, Math.toRadians(210));
+    protected Pose cornerPose = new Pose(15.12, 23.34, Math.toRadians(210));
+    protected Pose cornerBackupPose = new Pose(12.82, 13.84, Math.toRadians(180));
+    protected Pose parkPose = new Pose(58.12, 108.34, Math.toRadians(180));
     protected Pose goalPose = Constants.BLUE_GOAL_POSE;
 
     protected PathChain shootPreloads;
