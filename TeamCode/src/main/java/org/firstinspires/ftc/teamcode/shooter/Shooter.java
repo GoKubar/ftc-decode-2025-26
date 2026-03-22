@@ -41,8 +41,8 @@ public class Shooter {
 //    private double[] farSpeeds = new double[] { 1712, 1712 };
 //    private double[] farAngles = new double[] { Math.toRadians(64.17), Math.toRadians(61.71) };
 
-    LinearInterpolation flywheelSpeeds = VelocityCompensationCalculator.speedInterpolation;
-    LinearInterpolation hoodServoInterpolation = VelocityCompensationCalculator.hoodServoInterpolation;
+//    LinearInterpolation flywheelSpeeds = VelocityCompensationCalculator.speedInterpolation;
+//    LinearInterpolation hoodServoInterpolation = VelocityCompensationCalculator.hoodServoInterpolation;
 
     // Tolerances
     public static int flywheelToleranceTicks = 60;
@@ -79,7 +79,7 @@ public class Shooter {
             return;
         }
 
-        ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
+        VelocityCompensationCalculator.ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
                 pose, velocity,
                 goalPose
         );
@@ -105,7 +105,7 @@ public class Shooter {
             return;
         }
 
-        ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
+        VelocityCompensationCalculator.ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
                 pose, velocity,
                 goalPose
         );
@@ -130,9 +130,13 @@ public class Shooter {
     public void updateShootingSubsystems(Pose pose, Telemetry telemetry) {
         double dist = distance(pose, goalPose);
 
-        double flywheelSpeed = flywheelSpeeds.interpolate(dist);
-        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
-        double turretAngle = getTargetTurretAngle(pose);
+//        double flywheelSpeed = flywheelSpeeds.interpolate(dist);
+//        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
+//        double turretAngle = getTargetTurretAngle(pose);
+
+        double flywheelSpeed = 0;
+        double hoodAngle = 0;
+        double turretAngle = 0;
 
         lastTurretAngle = turretAngle;
 
@@ -166,7 +170,7 @@ public class Shooter {
     public void intakingPos() {
         flywheel.deactivate();
         turret.setTurretAngle(0);
-        hood.setHoodAngle(VelocityCompensationCalculator.getMinHoodAngle());
+        hood.setHoodAngle(Hood.MIN_HOOD_ANGLE);
     }
 
     public void deactivate() {

@@ -84,5 +84,9 @@ public class VelocityCompensationCalculator {
     public static double launchAngleToHoodAngle(double launchAngle) {
         return Math.PI/2 - launchAngle;
     }
+
+    public static double hoodAngleToLaunchAngle(double hoodAngle) {
+        return Math.PI/2 - hoodAngle;
+    }
 }
 

@@ -10,6 +10,9 @@ import smile.interpolation.LinearInterpolation;
 public class Hood {
     private ServoEx hoodServo;
 
+    public static double MIN_HOOD_ANGLE = Math.toRadians(35); //TODO: find
+    public static double MAX_HOOD_ANGLE = Math.toRadians(60); //TODO: find
+
     private double targetHoodAngle;
 
     public Hood(HardwareMap hardwareMap) {
@@ -19,14 +22,14 @@ public class Hood {
     // Servo position 0 -> 0.83 maps to hood angle min -> max
     private static double[] servoPositions = new double[] {0, 0.77};
     private static double[] hoodAngles = new double[] {
-            VelocityCompensationCalculator.getMinHoodAngle(),
-            VelocityCompensationCalculator.getMaxHoodAngle()
+            MIN_HOOD_ANGLE,
+            MAX_HOOD_ANGLE
     };
 
 
     private static double[] launchAngles = new double[] {
-            VelocityCompensationCalculator.hoodAngleToLaunchAngle(VelocityCompensationCalculator.getMinHoodAngle()),
-            VelocityCompensationCalculator.hoodAngleToLaunchAngle(VelocityCompensationCalculator.getMaxHoodAngle())
+            VelocityCompensationCalculator.hoodAngleToLaunchAngle(MIN_HOOD_ANGLE),
+            VelocityCompensationCalculator.hoodAngleToLaunchAngle(MAX_HOOD_ANGLE)
     };
 
     public static LinearInterpolation hoodAngleToServo = new LinearInterpolation(hoodAngles, servoPositions);
