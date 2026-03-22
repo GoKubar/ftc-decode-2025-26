@@ -81,7 +81,7 @@ public class Shooter {
 
         ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
                 pose, velocity,
-                goalPose,
+                goalPose
         );
 
         lastTurretAngle = shotParameters.turretAngle;
@@ -107,7 +107,7 @@ public class Shooter {
 
         ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
                 pose, velocity,
-                goalPose,
+                goalPose
         );
 
         lastTurretAngle = shotParameters.turretAngle;

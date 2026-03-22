@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.shooter.math;
+package org.firstinspires.ftc.teamcode.shooter;
 
 import static org.firstinspires.ftc.teamcode.shooter.Shooter.distance;
 
@@ -6,28 +6,20 @@ import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 
-import org.firstinspires.ftc.teamcode.robot.Constants;
-import org.firstinspires.ftc.teamcode.shooter.Hood;
-import org.firstinspires.ftc.teamcode.util.MathHelpers;
-
 import smile.interpolation.LinearInterpolation;
-
-import java.util.Arrays;
-import java.util.stream.IntStream;
 
 @Config
 public class VelocityCompensationCalculator {
-    public double[] flywheelTicksPerSecond = {0, 0, 0, 0};
-    public double[] calculatedVelocitiesInPerSecond = {0, 0, 0, 0};
-
-    public LinearInterpolation inchesToFlywheelTicks =
+    public static double[] flywheelTicksPerSecond = {0, 0.1, 0.2, 0.3};
+    public static double[] calculatedVelocitiesInPerSecond = {0, 0.1, 0.2, 0.3};
+    public static LinearInterpolation inchesToFlywheelTicks =
             new LinearInterpolation(calculatedVelocitiesInPerSecond, flywheelTicksPerSecond);
 
-    public double flywheelBaseHeight = 12; // TODO: actually measure on new shooter,
+    public static double flywheelBaseHeight = 12; // TODO: actually measure on new shooter,
     // maybe account for different heights do to hood angle somehow
 
-    public double passthroughPointHeight = 40; // TODO: measure and tune
-    public double passthroughAngle = -Math.toRadians(60);
+    public static double passthroughPointHeight = 40; // TODO: measure and tune
+    public static double passthroughAngle = -Math.toRadians(60);
 
 
     private static final double SHOOTER_OFFSET_X = -1.346; //TODO: double check that these are still accurate
@@ -35,7 +27,7 @@ public class VelocityCompensationCalculator {
 
     private static final double g = 386.0886; //g in in/s^2
 
-    public class ShotParameters {
+    public static class ShotParameters {
         public double flywheelTicks;
         public double hoodAngle;
         public double turretAngle;
@@ -47,7 +39,7 @@ public class VelocityCompensationCalculator {
         }
     }
 
-    public ShotParameters calculate(Pose robotPose, Vector velocity, Pose goalPose) {
+    public static ShotParameters calculate(Pose robotPose, Vector velocity, Pose goalPose) {
         //Adjust pose to be the shooter pose rather than the robot pose
         double cosH = Math.cos(robotPose.getHeading());
         double sinH = Math.sin(robotPose.getHeading());
@@ -72,8 +64,6 @@ public class VelocityCompensationCalculator {
         double desiredLateralVelocity = desiredVelocity * Math.cos(launchAngle);
         double desiredVerticalVelocity = desiredVelocity * Math.sin(launchAngle);
 
-        double timeOfFlight = lateralDistance / desiredLateralVelocity;
-
         //Compensation for robot velocity
         double angleToGoal = Math.atan2(goalPose.getY() - robotPose.getY(), goalPose.getX() - robotPose.getX());
         Vector desiredLateralShootingVector = new Vector(desiredLateralVelocity, angleToGoal);
@@ -86,16 +76,12 @@ public class VelocityCompensationCalculator {
 
         return new ShotParameters(
                 inchesToFlywheelTicks.interpolate(desiredVelocity), //flywheel speed
-                launchAngletoHoodAngle(launchAngle), //hood angle
+                launchAngleToHoodAngle(launchAngle), //hood angle
                 compensatedLateralShootingVector.getTheta() //turret angle
         );
     }
 
-    public double distance(Pose pose1, Pose pose2) {
-        return Math.hypot(pose1.getX() - pose2.getX(), pose1.getY() - pose2.getY());
-    }
-
-    public double launchAngletoHoodAngle(double launchAngle) {
+    public static double launchAngleToHoodAngle(double launchAngle) {
         return Math.PI/2 - launchAngle;
     }
 }
