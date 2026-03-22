@@ -5,15 +5,11 @@ import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.shooter.math.VelocityCompensationCalculator;
 import org.firstinspires.ftc.teamcode.util.MathHelpers;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 import smile.interpolation.LinearInterpolation;
 
-/**
- * Shooter class using simplified VelocityCompensationCalculator
- */
 public class Shooter {
 
     public static double transitionYValue = 40;
@@ -66,9 +62,6 @@ public class Shooter {
 
     public double lastTurretAngle;
 
-    private final VelocityCompensationCalculator.ShotParameters cachedShotParameters =
-            new VelocityCompensationCalculator.ShotParameters();
-
     public Shooter(HardwareMap hardwareMap, Pose goalPose) {
         hood = new Hood(hardwareMap);
         flywheel = new Flywheel(hardwareMap);
@@ -86,17 +79,16 @@ public class Shooter {
             return;
         }
 
-        VelocityCompensationCalculator.calculate(
+        ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
                 pose, velocity,
                 goalPose,
-                cachedShotParameters
         );
 
-        lastTurretAngle = cachedShotParameters.turretAngle;
+        lastTurretAngle = shotParameters.turretAngle;
 
-        flywheel.setTargetAngularVelocity(cachedShotParameters.flywheelTicks);
-        hood.setHoodAngle(cachedShotParameters.hoodAngle);
-        turret.setTurretAngle(cachedShotParameters.turretAngle);
+        flywheel.setTargetAngularVelocity(shotParameters.flywheelTicks);
+        hood.setHoodAngle(shotParameters.hoodAngle);
+        turret.setTurretAngle(shotParameters.turretAngle);
     }
 
     /**
@@ -113,15 +105,14 @@ public class Shooter {
             return;
         }
 
-        VelocityCompensationCalculator.calculate(
+        ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
                 pose, velocity,
                 goalPose,
-                cachedShotParameters
         );
 
-        lastTurretAngle = cachedShotParameters.turretAngle;
+        lastTurretAngle = shotParameters.turretAngle;
 
-        turret.setTurretAngle(cachedShotParameters.turretAngle);
+        turret.setTurretAngle(shotParameters.turretAngle);
         flywheel.setPower(0);
     }
 

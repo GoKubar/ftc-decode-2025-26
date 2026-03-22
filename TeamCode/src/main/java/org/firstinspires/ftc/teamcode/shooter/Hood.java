@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.shooter;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.shooter.math.VelocityCompensationCalculator;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 
 import smile.interpolation.LinearInterpolation;
