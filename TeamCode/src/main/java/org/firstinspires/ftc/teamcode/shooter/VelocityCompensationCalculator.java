@@ -6,91 +6,168 @@ import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 
+import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.util.MathHelpers;
+
 import smile.interpolation.LinearInterpolation;
+
+import java.util.Arrays;
+import java.util.stream.IntStream;
 
 @Config
 public class VelocityCompensationCalculator {
-    public static double[] flywheelTicksPerSecond =
-            {800.00, 900.00, 1000.00, 1100.00, 1200.00, 1300.00, 1400.00};
-    public static double[] calculatedVelocitiesInPerSecond =
-            {165.77, 181.93, 203.48, 217.67, 233.57, 248.37, 264.85};
-    public static LinearInterpolation inchesToFlywheelTicks =
-            new LinearInterpolation(calculatedVelocitiesInPerSecond, flywheelTicksPerSecond);
+    public static double kAuto = 5;
 
-    public static double MAX_FLYWHEEL_TPS = 1450;
+//    public static double kRadIn = 7;
+//    public static double kRadOut = 15;
+//    public static double kTan = 10.5;
 
-    public static double flywheelBaseHeight = 11.746346063 + (3.7295275591*Math.sin(Hood.MIN_HOOD_ANGLE));
-    // maybe account for different heights do to hood angle somehow
+    public static double kRadIn = 0;
+    public static double kRadOut = 0;
+    public static double kTan = 0;
 
-    public static double passthroughPointHeight = 41;
-    public static double passthroughAngle = -Math.toRadians(30);
+    public static int NUM_ITERATIONS = 2;
 
+    private static final double g = 386.0885; // in / s^2
 
-    private static final double SHOOTER_OFFSET_X = -1.346; //TODO: double check that these are still accurate
+    /** Shooter offset from robot center (inches) */
+    private static final double SHOOTER_OFFSET_X = -1.346;
     private static final double SHOOTER_OFFSET_Y = 0.0;
 
-    private static final double g = 386.0886; //g in in/s^2
+    // Anti-diagonal data points: positions where x + y ≈ 141.5
+    public static Pose[] tablePositions = {
+            new Pose(93.36, 91.62),
+            new Pose(84.01, 79.585),
+            new Pose(78.59, 74.21),
+            new Pose(72.23, 65.34),
+            new Pose(60.01, 77.11),
+            new Pose(46.6, 92.75),
+            new Pose(37.03, 101.04)
+    };
+    public static double[] distances = IntStream.range(0, tablePositions.length)
+            .mapToDouble(i -> distance(tablePositions[i], Constants.BLUE_GOAL_POSE.mirror()))
+            .toArray();
+
+    public static double[] flywheelSpeedValues = {1000, 1000, 1000, 1000, 1000, 1000, 1000};
+    public static double[] hoodServoValues      = {0, 0, 0.07, 0.13, 0.14, 0.13, 0.12};
+
+    // Interpolators
+    public static LinearInterpolation speedInterpolation = new LinearInterpolation(distances, flywheelSpeedValues);
+    public static LinearInterpolation hoodServoInterpolation = new LinearInterpolation(distances, hoodServoValues);
+
+    private static double distance(Pose a, Pose b) {
+        return Math.hypot(-SHOOTER_OFFSET_X + b.getX() - a.getX(), b.getY() - a.getY());
+    }
 
     public static class ShotParameters {
-        public double flywheelTicks;
-        public double hoodAngle;
-        public double turretAngle;
+        public double hoodAngle; // radians
+        public double turretAngle; // radians (robot frame)
+        public double flywheelTicks; // motor ticks/s
 
-        public ShotParameters(double flywheelTicks, double hoodAngle, double turretAngle) {
-            this.flywheelTicks = flywheelTicks;
+        public ShotParameters(double hoodAngle, double turretAngle, double flywheelTicks) {
             this.hoodAngle = hoodAngle;
             this.turretAngle = turretAngle;
+            this.flywheelTicks = flywheelTicks;
+        }
+
+        public ShotParameters() {
+            this(0, 0, 0);
+        }
+
+        public void set(double hoodAngle, double turretAngle, double flywheelTicks) {
+            this.hoodAngle = hoodAngle;
+            this.turretAngle = turretAngle;
+            this.flywheelTicks = flywheelTicks;
         }
     }
 
-    public static ShotParameters calculate(Pose robotPose, Vector velocity, Pose goalPose) {
-        //Adjust pose to be the shooter pose rather than the robot pose
+    /**
+     * Calculate shot parameters with velocity compensation.
+     *
+     * @param robotPose Robot position (x, y, heading)
+     * @param robotVel Robot velocity (vx, vy in in/s, omega in rad/s)
+     * @param goalPose Goal Position (x,y)
+     */
+    public static ShotParameters calculate(Pose robotPose, Vector robotVel, Pose goalPose) {
+        return calculate(robotPose, robotVel, goalPose, new ShotParameters());
+    }
+
+    public static ShotParameters calculate(Pose robotPose, Vector robotVel, Pose goalPose, ShotParameters output) {
+
+        //shooter offset
         double cosH = Math.cos(robotPose.getHeading());
         double sinH = Math.sin(robotPose.getHeading());
 
         double shooterX = robotPose.getX() + SHOOTER_OFFSET_X * cosH - SHOOTER_OFFSET_Y * sinH;
         double shooterY = robotPose.getY() + SHOOTER_OFFSET_X * sinH + SHOOTER_OFFSET_Y * cosH;
 
-        robotPose = new Pose(shooterX, shooterY, robotPose.getHeading());
+        //distance to goal with offset
+        double dx = goalPose.getX() - shooterX;
+        double dy = goalPose.getY() - shooterY;
+        double dist = Math.sqrt(dx * dx + dy * dy);
+        double angleToGoal = Math.atan2(dy, dx);
 
-        //Calculate the distances
-        double lateralDistance = distance(robotPose, goalPose);
-        double verticalDistance = passthroughPointHeight - flywheelBaseHeight;
+        Vector shootingVector = new Vector(1, angleToGoal);
+        Vector tangentVector = new Vector(1, angleToGoal + Math.PI/2);
 
-        //Calculate launch angle (creating a parabola with 2 known points and a known derivative at the second point to solve for derivative at first point)
-        double launchAngle = Math.atan((2*verticalDistance) / lateralDistance - Math.tan(passthroughAngle));
+        //velocity decomposition (constant across iterations)
+        double vRad = robotVel.dot(shootingVector);
+        double vTan = robotVel.dot(tangentVector);
+        double radialGain = vRad >= 0 ? kRadIn : kRadOut;
+        double tangentialGain = kTan;
+        if (Constants.lastOpModeWasAuto) {
+            radialGain = kAuto;
+            tangentialGain = kAuto;
+        }
 
-        //Calculate desired net velocity given the launch angle
-        double desiredVelocity = Math.sqrt(
-            (g * lateralDistance * lateralDistance) / (2 * Math.cos(launchAngle) * Math.cos(launchAngle) * (lateralDistance * Math.tan(launchAngle) - verticalDistance))
-        );
+        //initial TOF estimate from base parameters
+        double flywheelTicks = speedInterpolation.interpolate(dist);
+        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
+        double launchAngle = hoodAngleToLaunchAngle(hoodAngle);
+        double tof = dist / (flywheelTicks * Math.cos(launchAngle));
 
-        double desiredLateralVelocity = desiredVelocity * Math.cos(launchAngle);
-        double desiredVerticalVelocity = desiredVelocity * Math.sin(launchAngle);
+        // iteratively refine: correction → virtual pose → new params → revised TOF
+        for (int i = 0; i < NUM_ITERATIONS; i++) {
+            double scaledVRad = vRad * tof * radialGain;
+            double scaledVTan = vTan * tof * tangentialGain;
 
-        //Compensation for robot velocity
-        double angleToGoal = Math.atan2(goalPose.getY() - robotPose.getY(), goalPose.getX() - robotPose.getX());
-        Vector desiredLateralShootingVector = new Vector(desiredLateralVelocity, angleToGoal);
+            Vector correctionVector = new Vector();
+            correctionVector.setOrthogonalComponents(scaledVRad, scaledVTan);
+            correctionVector.rotateVector(angleToGoal);
 
-        Vector compensatedLateralShootingVector = desiredLateralShootingVector.minus(velocity);
+            Pose futurePose = getFuturePose(robotPose, correctionVector);
 
-        //adjust launch angle given the new compensated velocity
-        launchAngle = Math.atan2(desiredVerticalVelocity, compensatedLateralShootingVector.getMagnitude());
-        desiredVelocity = Math.hypot(compensatedLateralShootingVector.getMagnitude(), desiredVerticalVelocity);
+            double futureShooterX = futurePose.getX() + SHOOTER_OFFSET_X * cosH - SHOOTER_OFFSET_Y * sinH;
+            double futureShooterY = futurePose.getY() + SHOOTER_OFFSET_X * sinH + SHOOTER_OFFSET_Y * cosH;
 
-        return new ShotParameters(
-                Math.min(inchesToFlywheelTicks.interpolate(desiredVelocity), MAX_FLYWHEEL_TPS), //flywheel speed
-                launchAngleToHoodAngle(launchAngle), //hood angle
-                compensatedLateralShootingVector.getTheta() - robotPose.getHeading()//turret angle
-        );
+            dx = goalPose.getX() - futureShooterX;
+            dy = goalPose.getY() - futureShooterY;
+            dist = Math.sqrt(dx * dx + dy * dy);
+
+            flywheelTicks = speedInterpolation.interpolate(dist);
+            flywheelTicks = Math.min(flywheelTicks, Arrays.stream(flywheelSpeedValues).max().getAsDouble());
+            hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
+            launchAngle = hoodAngleToLaunchAngle(hoodAngle);
+            tof = dist / (flywheelTicks * Math.cos(launchAngle));
+        }
+
+        // dx/dy are still signed here for correct angle
+        double turretAngle = MathHelpers.wrapAngleRadians(Math.atan2(dy, dx) - robotPose.getHeading());
+
+        output.set(hoodAngle, turretAngle, flywheelTicks);
+        return output;
     }
 
-    public static double launchAngleToHoodAngle(double launchAngle) {
-        return Math.PI/2 - launchAngle;
-    }
 
     public static double hoodAngleToLaunchAngle(double hoodAngle) {
-        return Math.PI/2 - hoodAngle;
+        return Math.PI / 2 - hoodAngle;
+    }
+
+    public static Pose getFuturePose(Pose currentPose, Vector velocityCompensation) {
+        return new Pose(
+                currentPose.getX() + velocityCompensation.getXComponent(),
+                currentPose.getY() + velocityCompensation.getYComponent(),
+                currentPose.getHeading()
+        );
     }
 }
-
