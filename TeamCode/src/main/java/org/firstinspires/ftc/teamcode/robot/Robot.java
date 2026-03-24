@@ -32,6 +32,10 @@ import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
+import org.firstinspires.ftc.teamcode.vision.LimelightManager;
+import org.firstinspires.ftc.teamcode.vision.Pipelines;
+import org.firstinspires.ftc.teamcode.vision.VisionPipeline;
+import org.firstinspires.ftc.teamcode.vision.VisionResult;
 
 import java.util.function.DoubleSupplier;
 
@@ -74,7 +78,7 @@ public class Robot {
     private final Vector currentVelocity = new Vector();
 
     private Drivetrain drivetrain;
-//    private LimelightManager limelightManager;
+    private LimelightManager limelightManager;
 
     Gamepad gamepad1;
     Gamepad gamepad2;
@@ -100,8 +104,11 @@ public class Robot {
 //        gatePusher = new ServoEx(hardwareMap, "gatePush");
 //        gatePusher.setPosition(BLUE_SIDE_OUT);
 
-//        limelightManager = new LimelightManager(hardwareMap, telemetry);
-//        setPipeline(Pipelines.APRIL_TAG);
+        try {
+            limelightManager = new LimelightManager(hardwareMap, telemetry);
+        } catch (Exception e) {
+            limelightManager = null; // limelight hardware not present in this config
+        }
 
         // Setup in your Robot class if you have one, or in init at start of opMode
         PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
@@ -126,6 +133,7 @@ public class Robot {
 
     public void loop() {
         updateLocalization();
+        if (limelightManager != null) limelightProcess();
         executeCurrentState();
         updateShooter();
 //        if (getCurrentState() == States.INTAKING) {
@@ -278,11 +286,10 @@ public class Robot {
         telemetry.update();
     }
 
-//    public void limelightProcess() {
-//        telemetry.addData("State:", getCurrentState().name());
-//        telemetry.addData("Pipeline:", limelightManager.getCurrentPipelineName());
-//        limelightManager.process(this);
-//    }
+    public void limelightProcess() {
+        telemetry.addData("Pipeline:", limelightManager.getCurrentPipelineName());
+        limelightManager.process(this);
+    }
 
     public void executeCurrentState() {
         currentState.execute(this);
@@ -416,31 +423,31 @@ public class Robot {
     }
 
 
-//    public void setPipeline(Pipelines pipeline) {
-//        limelightManager.setPipeline(pipeline);
-//    }
-//
-//    public void cycleNextPipeline() {
-//        limelightManager.cycleNext();
-//    }
-//
-//    public void cyclePreviousPipeline() {
-//        limelightManager.cyclePrevious();
-//    }
-//
-//    public Pipelines getCurrentPipeline() {
-//        return limelightManager.getCurrentPipelineEnum();
-//    }
-//
-//    public VisionPipeline getVisionPipeline() {
-//        return limelightManager.getCurrentPipeline();
-//    }
-//
-//    public LimelightManager getLimelightManager() {
-//        return limelightManager;
-//    }
-//
-//    public VisionResult getVisionResult() {
-//        return limelightManager.getResult();
-//    }
+    public void setPipeline(Pipelines pipeline) {
+        if (limelightManager != null) limelightManager.setPipeline(pipeline);
+    }
+
+    public void cycleNextPipeline() {
+        if (limelightManager != null) limelightManager.cycleNext();
+    }
+
+    public void cyclePreviousPipeline() {
+        if (limelightManager != null) limelightManager.cyclePrevious();
+    }
+
+    public Pipelines getCurrentPipeline() {
+        return limelightManager != null ? limelightManager.getCurrentPipelineEnum() : Pipelines.NONE;
+    }
+
+    public VisionPipeline getVisionPipeline() {
+        return limelightManager != null ? limelightManager.getCurrentPipeline() : null;
+    }
+
+    public LimelightManager getLimelightManager() {
+        return limelightManager;
+    }
+
+    public VisionResult getVisionResult() {
+        return limelightManager != null ? limelightManager.getResult() : new VisionResult();
+    }
 }

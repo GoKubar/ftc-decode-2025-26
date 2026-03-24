@@ -4,6 +4,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.vision.pipelines.AprilTagPipeline;
 import org.firstinspires.ftc.teamcode.vision.pipelines.ColorPipeline;
 import org.firstinspires.ftc.teamcode.vision.pipelines.LocalizationPipeline;
+import org.firstinspires.ftc.teamcode.vision.pipelines.RelocalizationPipeline;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ public enum Pipelines {
     APRIL_TAG(AprilTagPipeline::new),
     COLOR(ColorPipeline::new),
     LOCALIZATION(LocalizationPipeline::new),
+    RELOCALIZATION(RelocalizationPipeline::new),
     NONE;
 
     private final VisionPipelineSupplier supplier;
@@ -38,6 +40,6 @@ public enum Pipelines {
     }
 
     public static Pipelines[] getActivePipelines() {
-        return new Pipelines[] { APRIL_TAG, COLOR, LOCALIZATION};
+        return new Pipelines[] { APRIL_TAG, COLOR, LOCALIZATION, RELOCALIZATION };
     }
 }
