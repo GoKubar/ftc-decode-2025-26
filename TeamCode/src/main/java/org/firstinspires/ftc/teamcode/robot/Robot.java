@@ -378,26 +378,18 @@ public class Robot {
     }
 
     public Command shootMotif(int shootingTime) {
-        boolean close = getPose().getY() > Shooter.transitionYValue;
-        return (close) ? sequential(
+//        boolean close = getPose().getY() > Shooter.transitionYValue;
+        return sequential(
                 openGate(),
                 instant(() -> currentlyShooting = true),
                 setIntakePower(1),
-                waitMs((close) ? shootingTime : shootingTime+400),
+                waitMs(shootingTime),
                 closeGate(),
                 instant(() -> currentlyShooting = false)
-        ) : sequential(
-                shoot(),
-                shoot(),
-                shoot()
         );
-//        boolean close = follower.getPose().getY() > Shooter.transitionYValue;
-//        boolean close = true;
-//        return sequential(
+//        : sequential(
 //                shoot(),
-//                waitUntil(() -> readyToShoot()).raceWith(waitMs(150)),
 //                shoot(),
-//                waitUntil(() -> readyToShoot()).raceWith(waitMs(150)),
 //                shoot()
 //        );
     }

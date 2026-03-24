@@ -11,9 +11,9 @@ import org.firstinspires.ftc.teamcode.util.telemetry.FastTelemetry;
 import java.util.List;
 
 @TeleOp
-public class TurretTestNew extends LinearOpMode {
+public class TurretTestPosition extends LinearOpMode {
     Turret turret;
-    double target = 0;
+    double target = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -33,50 +33,50 @@ public class TurretTestNew extends LinearOpMode {
                 hub.clearBulkCache();
             }
 
-            if (gamepad1.aWasPressed()) {
-                target = Math.toRadians(45);
-            }
-
-            if (gamepad1.bWasPressed()) {
-                target = Math.toRadians(90);
-            }
-
-
-            if (gamepad1.xWasPressed()) {
-                target = Math.toRadians(-45);
-            }
-
-
-            if (gamepad1.yWasPressed()) {
-                target = Math.toRadians(-90);
-            }
-
-            if (gamepad1.dpadDownWasPressed()) {
-                target = Math.toRadians(0);
-            }
+//            if (gamepad1.aWasPressed()) {
+//                target = Math.toRadians(45);
+//            }
+//
+//            if (gamepad1.bWasPressed()) {
+//                target = Math.toRadians(90);
+//            }
+//
+//
+//            if (gamepad1.xWasPressed()) {
+//                target = Math.toRadians(-45);
+//            }
+//
+//
+//            if (gamepad1.yWasPressed()) {
+//                target = Math.toRadians(-90);
+//            }
+//
+//            if (gamepad1.dpadDownWasPressed()) {
+//                target = Math.toRadians(0);
+//            }
 
             if (gamepad1.dpadLeftWasPressed()) {
                 if (gamepad1.left_bumper) {
-                    target += Math.toRadians(1);
-//                    target += 0.005;
+//                    target += Math.toRadians(1);
+                    target += 0.005;
                 } else {
-                    target += Math.toRadians(10);
-//                    target += 0.05;
+//                    target += Math.toRadians(10);
+                    target += 0.05;
                 }
             }
 
             if (gamepad1.dpadRightWasPressed()) {
                 if (gamepad1.left_bumper) {
-                    target -= Math.toRadians(1);
-//                    target -= 0.005;
+//                    target -= Math.toRadians(1);
+                    target -= 0.005;
                 } else {
-                    target -= Math.toRadians(10);
-//                    target -= 0.05;
+//                    target -= Math.toRadians(10);
+                    target -= 0.05;
                 }
             }
 
-            turret.setTurretAngle(target);
-//            turret.setTargetServoPosition(target);
+//            turret.setTurretAngle(target);
+            turret.setTargetServoPosition(target);
 
             telemetry.addData("Target Angle", Math.toDegrees(turret.getTargetAngle()));
             telemetry.addData("Target Pos", turret.getTargetPosition());

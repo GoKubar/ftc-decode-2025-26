@@ -10,17 +10,19 @@ import smile.interpolation.LinearInterpolation;
 public class Hood {
     private ServoEx hoodServo;
 
-    public static double MIN_HOOD_ANGLE = Math.toRadians(35); //TODO: find
-    public static double MAX_HOOD_ANGLE = Math.toRadians(60); //TODO: find
+    public static double MIN_HOOD_ANGLE = Math.toRadians(38.2843201864); //TODO: find
+    public static double MAX_HOOD_ANGLE = Math.toRadians(68.742078); //TODO: find
 
     private double targetHoodAngle;
 
     public Hood(HardwareMap hardwareMap) {
         hoodServo = new ServoEx(hardwareMap, "hood");
+        hoodServo.setCachingTolerance(0.005);
     }
 
     // Servo position 0 -> 0.83 maps to hood angle min -> max
-    private static double[] servoPositions = new double[] {0, 0.77};
+    //1.4440677966 hood angle change per 0.01 change in servo
+    private static double[] servoPositions = new double[] {0.04, 0.250916398006};
     private static double[] hoodAngles = new double[] {
             MIN_HOOD_ANGLE,
             MAX_HOOD_ANGLE
@@ -39,7 +41,7 @@ public class Hood {
     public static LinearInterpolation servoToLaunchAngle = new LinearInterpolation(servoPositions, launchAngles);
 
     public void setTargetPosition(double position) {
-        position = Range.clip(position, 0, 0.83);
+        position = Range.clip(position, servoPositions[0], servoPositions[1]);
         targetHoodAngle = servoToHoodAngle.interpolate(position);
         hoodServo.setPosition(position);
     }

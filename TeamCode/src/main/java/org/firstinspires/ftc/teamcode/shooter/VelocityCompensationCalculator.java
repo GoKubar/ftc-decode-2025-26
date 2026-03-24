@@ -10,16 +10,20 @@ import smile.interpolation.LinearInterpolation;
 
 @Config
 public class VelocityCompensationCalculator {
-    public static double[] flywheelTicksPerSecond = {0, 0.1, 0.2, 0.3};
-    public static double[] calculatedVelocitiesInPerSecond = {0, 0.1, 0.2, 0.3};
+    public static double[] flywheelTicksPerSecond =
+            {800.00, 900.00, 1000.00, 1100.00, 1200.00, 1300.00, 1400.00};
+    public static double[] calculatedVelocitiesInPerSecond =
+            {165.77, 181.93, 203.48, 217.67, 233.57, 248.37, 264.85};
     public static LinearInterpolation inchesToFlywheelTicks =
             new LinearInterpolation(calculatedVelocitiesInPerSecond, flywheelTicksPerSecond);
 
-    public static double flywheelBaseHeight = 12; // TODO: actually measure on new shooter,
+    public static double MAX_FLYWHEEL_TPS = 1450;
+
+    public static double flywheelBaseHeight = 11.746346063 + (3.7295275591*Math.sin(Hood.MIN_HOOD_ANGLE));
     // maybe account for different heights do to hood angle somehow
 
-    public static double passthroughPointHeight = 40; // TODO: measure and tune
-    public static double passthroughAngle = -Math.toRadians(60);
+    public static double passthroughPointHeight = 41;
+    public static double passthroughAngle = -Math.toRadians(30);
 
 
     private static final double SHOOTER_OFFSET_X = -1.346; //TODO: double check that these are still accurate
@@ -75,9 +79,9 @@ public class VelocityCompensationCalculator {
         desiredVelocity = Math.hypot(compensatedLateralShootingVector.getMagnitude(), desiredVerticalVelocity);
 
         return new ShotParameters(
-                inchesToFlywheelTicks.interpolate(desiredVelocity), //flywheel speed
+                Math.min(inchesToFlywheelTicks.interpolate(desiredVelocity), MAX_FLYWHEEL_TPS), //flywheel speed
                 launchAngleToHoodAngle(launchAngle), //hood angle
-                compensatedLateralShootingVector.getTheta() //turret angle
+                compensatedLateralShootingVector.getTheta() - robotPose.getHeading()//turret angle
         );
     }
 

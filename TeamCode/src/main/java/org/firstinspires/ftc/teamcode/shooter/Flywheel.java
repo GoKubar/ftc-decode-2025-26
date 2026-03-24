@@ -14,7 +14,7 @@ public class Flywheel {
     private MotorEx shooterMotorL;
     private MotorEx shooterMotorR;
 
-    public static double kS = 0.08, kV = 0.000355, kP = 0.01; //TODO: TUNE VALUES
+    public static double kS = 0.13, kV = 0.000445, kP = 0.015; //TODO: TUNE VALUES
 
     private double target = 0;
     private boolean activated = false;
@@ -23,7 +23,7 @@ public class Flywheel {
         shooterMotorL = new MotorEx(hardwareMap, "leftFlywheel");
         shooterMotorR = new MotorEx(hardwareMap, "rightFlywheel");
 
-        shooterMotorL.setDirection(DcMotorSimple.Direction.FORWARD);
+        shooterMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         shooterMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
