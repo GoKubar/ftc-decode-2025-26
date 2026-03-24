@@ -57,7 +57,7 @@ public class ShootingTest extends LinearOpMode {
         dashboardTelem = dashboard.getTelemetry();
 
         follower =  PedroConstants.createFollower(hardwareMap);
-        Pose startPose = new Pose(17.745, 110.88, Math.toRadians(180));
+        Pose startPose = new Pose(16.988, 110.641, Math.toRadians(180));
         startPose = startPose.mirror();
         follower.setPose(startPose);
         drivetrain = Drivetrains.SWERVE_HEADING_LOCK.build(null, follower, telemetry);
@@ -119,10 +119,10 @@ public class ShootingTest extends LinearOpMode {
                 hoodTarget = Math.max(0, hoodTarget);
             }
 
-//            turretTarget = Math.atan2(Constants.BLUE_GOAL_POSE.mirror().getY() - follower.getPose().getY(),
-//                    Constants.BLUE_GOAL_POSE.mirror().getX() - follower.getPose().getX());
-//
-//            turretTarget -= follower.getHeading();
+            turretTarget = Math.atan2(Constants.BLUE_GOAL_POSE.mirror().getY() - follower.getPose().getY(),
+                    Constants.BLUE_GOAL_POSE.mirror().getX() - follower.getPose().getX());
+
+            turretTarget -= follower.getHeading();
 
             flywheel.setTargetAngularVelocity(flywheelTarget);
             flywheel.update();
