@@ -36,23 +36,31 @@ public class VelocityCompensationCalculator {
 
     // Anti-diagonal data points: positions where x + y ≈ 141.5
     public static Pose[] tablePositions = {
-            new Pose(93.36, 91.62),
-            new Pose(84.01, 79.585),
-            new Pose(78.59, 74.21),
-            new Pose(72.23, 65.34),
-            new Pose(60.01, 77.11),
-            new Pose(46.6, 92.75),
-            new Pose(37.03, 101.04)
+            new Pose(104.78, 104.9),
+            new Pose(95.20, 92.52),
+            new Pose(81.56, 79.82),
+            new Pose(71.1, 70.2),
+            new Pose(49.36, 93.26),
+            new Pose(26.83, 119.07),
+            new Pose(61.25, 18.03),
+            new Pose(83.14, 4.26),
+            new Pose(48.07, 6.16),
     };
     public static double[] distances = IntStream.range(0, tablePositions.length)
-            .mapToDouble(i -> distance(tablePositions[i], Constants.BLUE_GOAL_POSE.mirror()))
+            .mapToDouble(i -> distance(new Pose(tablePositions[i].getX() + SHOOTER_OFFSET_X, tablePositions[i].getY()),
+                    Constants.BLUE_GOAL_POSE.mirror()))
             .toArray();
 
-    public static double[] flywheelSpeedValues = {1000, 1000, 1000, 1000, 1000, 1000, 1000};
-    public static double[] hoodServoValues      = {0, 0, 0.07, 0.13, 0.14, 0.13, 0.12};
+    public static double[] flywheelSpeedValues = {918, 925, 1068, 1125, 1161, 1209, 1320, 1317, 1426};
+
+    public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
+            .mapToDouble(i -> flywheelSpeedValues[i] + 15)
+            .toArray();
+
+    public static double[] hoodServoValues      = {0.04, 0.05, 0.06, 0.06, 0.07, 0.08, 0.08, 0.08, 0.09};
 
     // Interpolators
-    public static LinearInterpolation speedInterpolation = new LinearInterpolation(distances, flywheelSpeedValues);
+    public static LinearInterpolation speedInterpolation = new LinearInterpolation(distances, adjustedFlywheelSpeedValues);
     public static LinearInterpolation hoodServoInterpolation = new LinearInterpolation(distances, hoodServoValues);
 
     private static double distance(Pose a, Pose b) {
