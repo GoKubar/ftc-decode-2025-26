@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.shooter.Shooter.distance;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.util.MathHelpers;
@@ -54,7 +55,7 @@ public class VelocityCompensationCalculator {
     public static double[] flywheelSpeedValues = {918, 925, 1068, 1125, 1161, 1209, 1320, 1317, 1426};
 
     public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
-            .mapToDouble(i -> flywheelSpeedValues[i] + 15)
+            .mapToDouble(i -> flywheelSpeedValues[i] + 0)
             .toArray();
 
     public static double[] hoodServoValues      = {0.04, 0.05, 0.06, 0.06, 0.07, 0.08, 0.08, 0.08, 0.09};
@@ -153,7 +154,8 @@ public class VelocityCompensationCalculator {
             dist = Math.sqrt(dx * dx + dy * dy);
 
             flywheelTicks = speedInterpolation.interpolate(dist);
-            flywheelTicks = Math.min(flywheelTicks, Arrays.stream(flywheelSpeedValues).max().getAsDouble());
+            flywheelTicks = Range.clip(flywheelTicks, Arrays.stream(flywheelSpeedValues).min().getAsDouble(),
+                    Arrays.stream(flywheelSpeedValues).max().getAsDouble());
             hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
             launchAngle = hoodAngleToLaunchAngle(hoodAngle);
             tof = dist / (flywheelTicks * Math.cos(launchAngle));
