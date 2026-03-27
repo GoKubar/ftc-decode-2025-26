@@ -90,13 +90,13 @@ public abstract class Auto extends LinearOpMode {
         updateShooter = robot.updateShootingSubsystems();
 //        updateTurret = robot.updateTurret();
 
-        double shootTime = 500;
+        double shootTime = 450;
 
         schedule(
                 updateShooter,
                 sequential(
-                        shootPreloads(600),
-//                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
+                        shootPreloads(),
+                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
                         gateCycle(shootTime),
                         runCycle(pickupClose, shootClose, shootTime, 900, 500),
                         gateCycle(shootTime),
@@ -108,26 +108,26 @@ public abstract class Auto extends LinearOpMode {
     }
 
 
-    protected Command shootPreloads(int shootingDelayMS) {
-//        return follow(robot.getFollower(), shootPreloads);
-        return sequential(
-                parallel(
-                        follow(robot.getFollower(), shootPreloads),
-                        sequential(
-                                waitUntil(() -> robot.getFollower().getCurrentTValue() > 0.17),
-                                shootAndSetIntaking(),
-                                robot.setIntakePower(1)
-                        )
-                ),
-                parallel(
-                        follow(robot.getFollower(), shootMiddle),
-                        sequential(
-                                waitMs(shootingDelayMS),
-                                robot.setIntakePower(0)
-                        )
-                )
-
-        );
+    protected Command shootPreloads() {
+        return follow(robot.getFollower(), shootPreloads);
+//        return sequential(
+//                parallel(
+//                        follow(robot.getFollower(), shootPreloads),
+//                        sequential(
+//                                waitUntil(() -> robot.getFollower().getCurrentTValue() > 0.17),
+//                                shootAndSetIntaking(),
+//                                robot.setIntakePower(1)
+//                        )
+//                ),
+//                parallel(
+//                        follow(robot.getFollower(), shootMiddle),
+//                        sequential(
+//                                waitMs(shootingDelayMS),
+//                                robot.setIntakePower(0)
+//                        )
+//                )
+//
+//        );
 //        return parallel(
 //                setShooting()
 //                sequential(
@@ -273,18 +273,18 @@ public abstract class Auto extends LinearOpMode {
 
     private void generatePaths() {
         shootPreloads = robot.getFollower().pathBuilder()
-                .addPath(new BezierCurve(startPose, middlePickupControlPoint1, middlePickupPose))
+                .addPath(new BezierLine(startPose, shootingPose))
                 .setLinearHeadingInterpolation(startPose.getHeading(), shootingPose.getHeading())
-//                .setConstraints(
-//                        new PathConstraints(0.8,
-//                                3,
-//                                3,
-//                                0.03,
-//                                50,
-//                                1,
-//                                10,
-//                                1)
-//                )
+                .setConstraints(
+                        new PathConstraints(0.8,
+                                3,
+                                3,
+                                0.03,
+                                50,
+                                1,
+                                10,
+                                1)
+                )
                 .build();
 
         pickupMiddle = robot.getFollower().pathBuilder()
