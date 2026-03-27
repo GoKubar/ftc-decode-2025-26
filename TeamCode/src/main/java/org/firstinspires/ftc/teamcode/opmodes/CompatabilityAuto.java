@@ -15,8 +15,8 @@ public abstract class CompatabilityAuto extends Auto{
 
         schedule(
                 sequential(
-                        shootPreloads(),
-                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
+                        shootPreloads(600),
+//                        runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
                         gateCycle(shootTime),
                         gateCycle(shootTime),
                         gateCycle(shootTime),

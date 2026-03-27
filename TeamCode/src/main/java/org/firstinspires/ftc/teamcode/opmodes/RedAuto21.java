@@ -11,7 +11,8 @@ public class RedAuto21 extends Auto{
         startPose = startPose.mirror();
         shootingPose = shootingPose.mirror();
         middlePickupPose = middlePickupPose.mirror();
-        middlePickupControlPoint = middlePickupControlPoint.mirror();
+        middlePickupControlPoint1 = middlePickupControlPoint1.mirror();
+        middlePickupControlPoint2 = middlePickupControlPoint2.mirror();
         gateClearPose = gateClearPose.mirror();
         gateClearControlPoint = gateClearControlPoint.mirror();
         gatePickupControlPoint = gatePickupControlPoint.mirror();
@@ -20,6 +21,7 @@ public class RedAuto21 extends Auto{
         farPickupPose = farPickupPose.mirror();
         farPickupControlPoint = farPickupControlPoint.mirror();
         cornerPose = cornerPose.mirror();
+        farShootingPose = farShootingPose.mirror();
 //        cornerControlPoint = cornerControlPoint.mirror();
         cornerBackupPose = cornerBackupPose.mirror();
         parkPose = parkPose.mirror();

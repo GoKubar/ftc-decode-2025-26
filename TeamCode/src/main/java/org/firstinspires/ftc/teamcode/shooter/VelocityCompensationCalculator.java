@@ -17,7 +17,10 @@ import java.util.stream.IntStream;
 
 @Config
 public class VelocityCompensationCalculator {
-    public static double kAuto = 5;
+    public static double kAutoRad = 12;
+    public static double kAutoTan = 5;
+
+    public static boolean useAutoLimit = true;
 
 //    public static double kRadIn = 7;
 //    public static double kRadOut = 15;
@@ -125,8 +128,8 @@ public class VelocityCompensationCalculator {
         double radialGain = vRad >= 0 ? kRadIn : kRadOut;
         double tangentialGain = kTan;
         if (Constants.lastOpModeWasAuto) {
-            radialGain = kAuto;
-            tangentialGain = kAuto;
+            radialGain = kAutoRad;
+            tangentialGain = kAutoTan;
         }
 
         //initial TOF estimate from base parameters
@@ -155,7 +158,7 @@ public class VelocityCompensationCalculator {
 
             flywheelTicks = speedInterpolation.interpolate(dist);
             flywheelTicks = Range.clip(flywheelTicks, Arrays.stream(flywheelSpeedValues).min().getAsDouble(),
-                    Arrays.stream(flywheelSpeedValues).max().getAsDouble());
+                    (Constants.lastOpModeWasAuto && useAutoLimit) ? 1100 : Arrays.stream(flywheelSpeedValues).max().getAsDouble());
             hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
             launchAngle = hoodAngleToLaunchAngle(hoodAngle);
             tof = dist / (flywheelTicks * Math.cos(launchAngle));
