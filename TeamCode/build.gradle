@@ -30,6 +30,13 @@ apply from: '../build.dependencies.gradle'
 apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
+    defaultConfig {
+        externalNativeBuild {
+            cmake {
+                cppFlags ''
+            }
+        }
+    }
     namespace = 'org.firstinspires.ftc.teamcode'
 
     packagingOptions {
@@ -42,6 +49,12 @@ android {
                 events "passed", "failed", "skipped"
                 showStandardStreams = true
             }
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path file('src/main/cpp/CMakeLists.txt')
+            version '3.22.1'
         }
     }
 }
