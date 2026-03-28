@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 @Config
 public class VelocityCompensationCalculator {
-    public static double kAutoRad = 12;
+    public static double kAutoRad = 7;
     public static double kAutoTan = 5;
 
     public static boolean useAutoLimit = true;
