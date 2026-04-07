@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 @Config
 public class VelocityCompensationCalculator {
-    public static double kAutoRad = 7;
+    public static double kAutoRad = 5;
     public static double kAutoTan = 5;
 
     public static boolean useAutoLimit = true;
@@ -55,10 +55,10 @@ public class VelocityCompensationCalculator {
                     Constants.BLUE_GOAL_POSE.mirror()))
             .toArray();
 
-    public static double[] flywheelSpeedValues = {918, 925, 1068, 1125, 1161, 1209, 1320, 1317, 1426};
+    public static double[] flywheelSpeedValues = {918, 925, 1068, 1125, 1161, 1220, 1330, 1337, 1446};
 
     public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
-            .mapToDouble(i -> flywheelSpeedValues[i] + 0) //BILL WILLIAMS
+            .mapToDouble(i -> flywheelSpeedValues[i] + 5) //BILL WILLIAMS
             .toArray();
 
     public static double[] hoodServoValues      = {0.04, 0.05, 0.06, 0.06, 0.07, 0.08, 0.08, 0.08, 0.09};
