@@ -25,6 +25,7 @@ public class RedAuto21 extends Auto{
 //        cornerControlPoint = cornerControlPoint.mirror();
         cornerBackupPose = cornerBackupPose.mirror();
         parkPose = parkPose.mirror();
+        closeParkPose = closeParkPose.mirror();
         goalPose = goalPose.mirror();
     }
 

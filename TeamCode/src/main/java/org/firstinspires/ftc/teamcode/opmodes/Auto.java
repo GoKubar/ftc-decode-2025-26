@@ -69,6 +69,7 @@ public abstract class Auto extends LinearOpMode {
 //    protected Pose parkPose = new Pose(56.243, 104.761, Math.toRadians(180));
     protected Pose farShootingPose = new Pose(50.5, 12);
     protected Pose parkPose = new Pose(45, 17);
+    protected Pose closeParkPose = new Pose(56.243, 104.761, Math.toRadians(180));
     protected Pose goalPose = Constants.BLUE_GOAL_POSE;
 
     protected PathChain shootPreloads;
@@ -89,6 +90,7 @@ public abstract class Auto extends LinearOpMode {
     protected PathChain backupCorner;
     protected PathChain shootCorner;
     protected PathChain park;
+    protected PathChain shootCornerClose;
 
     abstract void setPoses();
     abstract void setColor();
@@ -242,6 +244,40 @@ public abstract class Auto extends LinearOpMode {
         );
     }
 
+    protected Command cornerCycleClosePark(
+            double shootDelayMs,
+            double intakeDelayMs,
+            double shootingDelayMs
+    ) {
+        return sequential(
+                parallel(
+                        shootAndSetIntaking(),
+                        //shoot and pickup corner
+                        sequential(
+                                waitMs(shootDelayMs),
+                                parallel(
+                                        follow(robot.getFollower(), pickupCorner),
+                                        sequential(
+                                                waitMs(intakeDelayMs),
+                                                robot.deactivateFlywheel(),
+                                                robot.setIntakePower(1)
+                                        )
+                                )
+                        )
+                ),
+                follow(robot.getFollower(), backupCorner),
+//                waitMs(50),
+                parallel(
+                        sequential(
+                                waitMs(shootingDelayMs),
+                                robot.setIntakePower(0),
+                                robot.activateShooter()
+                        ),
+                        follow(robot.getFollower(), shootCornerClose)
+                )
+        );
+    }
+
     public static Command turnTo(Follower follower, double radians) {
         return new CommandBuilder()
                 .setStart(() -> {
@@ -383,7 +419,7 @@ public abstract class Auto extends LinearOpMode {
                 .build();
 
         shootCloseAndPark = robot.getFollower().pathBuilder()
-                .addPath(new BezierLine(closePickupPose, parkPose))
+                .addPath(new BezierLine(closePickupPose, closeParkPose))
                 .setConstantHeadingInterpolation(shootingPose.getHeading())
                 .build();
 
@@ -428,6 +464,11 @@ public abstract class Auto extends LinearOpMode {
 
         park = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(farShootingPose, parkPose))
+                .setConstantHeadingInterpolation(cornerBackupPose.getHeading())
+                .build();
+
+        shootCornerClose = robot.getFollower().pathBuilder()
+                .addPath(new BezierLine(cornerBackupPose, closeParkPose))
                 .setConstantHeadingInterpolation(cornerBackupPose.getHeading())
                 .build();
     }
