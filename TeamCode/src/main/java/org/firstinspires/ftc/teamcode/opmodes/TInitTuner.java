@@ -11,6 +11,7 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.Timer;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -68,5 +69,7 @@ public class TInitTuner extends LinearOpMode {
         while (opModeIsActive()) {
             execute();
         }
+
+        Limelight3A device;
     }
 }
