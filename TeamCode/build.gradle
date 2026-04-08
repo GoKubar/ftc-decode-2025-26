@@ -30,13 +30,6 @@ apply from: '../build.dependencies.gradle'
 apply plugin: 'dev.frozenmilk.sinister.sloth.load'
 
 android {
-    defaultConfig {
-        externalNativeBuild {
-            cmake {
-                cppFlags ''
-            }
-        }
-    }
     namespace = 'org.firstinspires.ftc.teamcode'
 
     packagingOptions {
