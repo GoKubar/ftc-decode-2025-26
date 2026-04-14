@@ -74,14 +74,14 @@ public class PedroConstants {
     private static double kFFront = 0.0130;
     private static double kFBack = 0.0190;
 
-    private static double dtLength = 271.148;
-    private static double dtWidth = 270.7;
+    private static double dtLength = 276.948;
+    private static double dtWidth = 346.000;
 
     private static CoaxialPod leftFront(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm2", "ss2", "se2",
                 new PIDFCoefficients(kP, 0, kD, kFFront), DcMotorSimple.Direction.REVERSE,
-                DcMotorSimple.Direction.REVERSE, Math.toRadians(353.1), new Pose(dtLength, dtWidth),
-                0.025, 3.290, false);
+                DcMotorSimple.Direction.FORWARD, Math.toRadians(142.4), new Pose(dtLength, dtWidth),
+                0.001, 3.213, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
         return pod;
@@ -90,8 +90,8 @@ public class PedroConstants {
     private static CoaxialPod rightFront(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm1", "ss1", "se1",
                 new PIDFCoefficients(kP, 0, kD, kFFront), DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE, Math.toRadians(348.2), new Pose(dtLength, -dtWidth),
-                0.018, 3.288, false);
+                DcMotorSimple.Direction.FORWARD, Math.toRadians(46.75), new Pose(dtLength, -dtWidth),
+                0.003, 3.219, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
         return pod;
@@ -100,8 +100,8 @@ public class PedroConstants {
     private static CoaxialPod leftBack(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm3", "ss3", "se3",
                 new PIDFCoefficients(kP, 0, kD, kFBack), DcMotorSimple.Direction.REVERSE,
-                DcMotorSimple.Direction.REVERSE, Math.toRadians(179.3), new Pose(-dtLength, dtWidth),
-                0.029, 3.307, false);
+                DcMotorSimple.Direction.FORWARD, Math.toRadians(243.44), new Pose(-dtLength, dtWidth),
+                0.006, 3.229, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
         return pod;
@@ -110,8 +110,8 @@ public class PedroConstants {
     private static CoaxialPod rightBack(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm0", "ss0", "se0",
                 new PIDFCoefficients(kP, 0, kD, kFBack), DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.REVERSE, Math.toRadians(289.5), new Pose(-dtLength, -dtWidth),
-                0.014, 3.301, false);
+                DcMotorSimple.Direction.FORWARD, Math.toRadians(9.3), new Pose(-dtLength, -dtWidth),
+                0.001, 3.214, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
         return pod;
