@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.VectorCalculator;
 import com.pedropathing.control.FilteredPIDFCoefficients;
 import com.pedropathing.control.PIDFCoefficients;
@@ -19,6 +20,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+@Config
 public class PedroConstants {
     public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.8, 0, 0.015, 0);
 
@@ -69,10 +71,10 @@ public class PedroConstants {
     // P=0.00645 D=0.00019
     // P=0.00549 D=0.00028
 
-    private static double kP = 0.0055 * 180 / Math.PI;
-    private static double kD = 0.00015 * 180 / Math.PI;
-    private static double kFFront = 0.0130;
-    private static double kFBack = 0.0190;
+    public static double kP = .45;
+    public static double kD = 0.015;
+    public static double kFFront = 0.0380;
+    public static double kFBack = 0.0430;
 
     private static double dtLength = 276.948;
     private static double dtWidth = 346.000;
