@@ -14,11 +14,6 @@ import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 @Config
 public class PTO {
 
-    public static double kP = 0;
-    public static double kD = 0;
-
-
-    private BasicPID liftPid = new BasicPID(new PIDCoefficients(kP, 0, kD));
 
     public enum Mode {
         INTAKING,
@@ -28,14 +23,8 @@ public class PTO {
 
     private Mode mode = Mode.INTAKING;
 
-    private double ptoIntakingPos = 0.68;
-    private double ptoLiftingPos = 0.6;
-
     private MotorEx intakeMotorR;
     private MotorEx intakeMotorL;
-    private ServoEx ptoServo;
-
-    private double ptoServoTarget = ptoIntakingPos;
 
     private int liftTarget = -500;
 
@@ -49,19 +38,14 @@ public class PTO {
         intakeMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        ptoServo = new ServoEx(hardwareMap, "pto");
         setIntaking();
     }
 
     public void setIntaking() {
-        ptoServoTarget = ptoIntakingPos;
-        ptoServo.setPosition(ptoServoTarget);
         mode = Mode.INTAKING;
     }
 
     public void setLifting() {
-        ptoServoTarget = ptoLiftingPos;
-        ptoServo.setPosition(ptoServoTarget);
         mode = Mode.LIFTING;
         intakeMotorR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotorL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -71,21 +55,11 @@ public class PTO {
         if (mode == Mode.LIFTING) {
             return;
         }
-        ptoServo.setPosition(ptoServoTarget);
         intakeMotorR.setPower(power);
         intakeMotorL.setPower(power);
     }
 
     public void runLift() {
-        if (mode == Mode.INTAKING) {
-            return;
-        }
-        ptoServo.setPosition(ptoServoTarget);
-        double power = Range.clip(liftPid.calculate(liftTarget, intakeMotorR.getCurrentPosition()),
-                0,
-                1);
-
-        intakeMotorR.setPower(power);
-        intakeMotorL.setPower(power);
+        return;
     }
 }
