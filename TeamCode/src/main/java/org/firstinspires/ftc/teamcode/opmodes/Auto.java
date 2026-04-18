@@ -50,9 +50,9 @@ public abstract class Auto extends LinearOpMode {
     protected Pose middlePickupControlPoint2 = new Pose(57.343, 48.111);
     protected Pose closePickupPose = new Pose(19.843, 83.761, Math.toRadians(180));
     protected Pose gateClearControlPoint = new Pose(55.343, 61.111);
-    protected Pose gateClearPose = new Pose(18.843, 63.161, Math.toRadians(180));
+    protected Pose gateClearPose = new Pose(19.1, 63.161, Math.toRadians(180));
     protected Pose gatePickupControlPoint = new Pose(19.843, 57.161);
-    protected Pose gatePickupPose = new Pose(11.5, 51.761, Math.toRadians(120));
+    protected Pose gatePickupPose = new Pose(12, 51.761, Math.toRadians(120));
     protected Pose farPickupPose = new Pose(10.843, 35.111, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(70.343, 20.111);
 //    protected Pose cornerPose = new Pose(10.343, 17.111, Math.toRadians(210));
