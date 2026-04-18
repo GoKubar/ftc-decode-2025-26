@@ -11,7 +11,7 @@ public abstract class CompatabilityAuto extends Auto{
         updateShooter = robot.updateShootingSubsystems();
 //        updateTurret = robot.updateTurret();
 
-        double shootTime = 450;
+        double shootTime = 550;
 
         schedule(
                 updateShooter,
