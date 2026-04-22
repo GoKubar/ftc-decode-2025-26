@@ -38,11 +38,11 @@ public class Turret {
     public double MAX_SERVO_POS = getServoPosFromAngle(MAX_TURRET_ANGLE);
 
     public Turret(HardwareMap hardwareMap) {
-        this.turretServoF = new ServoEx(hardwareMap, "turretFront");
+        this.turretServoF = new ServoEx(hardwareMap, "turretLeft");
 //        turretServoF = hardwareMap.get(Servo.class, "turretFront");
         turretServoF.setDirection(Servo.Direction.FORWARD);
         turretServoF.setCachingTolerance(0.0025);
-        this.turretServoB = new ServoEx(hardwareMap, "turretBack");
+        this.turretServoB = new ServoEx(hardwareMap, "turretRight");
 //        turretServoB = hardwareMap.get(Servo.class, "turretBack");
         turretServoB.setDirection(Servo.Direction.FORWARD);
         turretServoB.setCachingTolerance(0.0025);
