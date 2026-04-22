@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.shooter;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
@@ -10,19 +11,20 @@ import smile.interpolation.LinearInterpolation;
 public class Hood {
     private ServoEx hoodServo;
 
-    public static double MIN_HOOD_ANGLE = Math.toRadians(38.2843201864); //TODO: find
-    public static double MAX_HOOD_ANGLE = Math.toRadians(68.742078); //TODO: find
+    public static double MIN_HOOD_ANGLE = Math.toRadians(31.398); //TODO: find
+    public static double MAX_HOOD_ANGLE = Math.toRadians(50); //TODO: find
 
     private double targetHoodAngle;
 
     public Hood(HardwareMap hardwareMap) {
         hoodServo = new ServoEx(hardwareMap, "hood");
+        hoodServo.setDirection(Servo.Direction.REVERSE);
         hoodServo.setCachingTolerance(0.005);
     }
 
     // Servo position 0 -> 0.83 maps to hood angle min -> max
     //1.4440677966 hood angle change per 0.01 change in servo
-    private static double[] servoPositions = new double[] {0.04, 0.250916398006};
+    private static double[] servoPositions = new double[] {0, 0.6951177403};
     private static double[] hoodAngles = new double[] {
             MIN_HOOD_ANGLE,
             MAX_HOOD_ANGLE

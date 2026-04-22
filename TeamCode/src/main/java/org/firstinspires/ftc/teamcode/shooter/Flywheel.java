@@ -23,7 +23,7 @@ public class Flywheel {
         shooterMotorL = new MotorEx(hardwareMap, "leftFlywheel");
         shooterMotorR = new MotorEx(hardwareMap, "rightFlywheel");
 
-        shooterMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooterMotorL.setDirection(DcMotorSimple.Direction.FORWARD);
         shooterMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
 
         shooterMotorL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -54,7 +54,7 @@ public class Flywheel {
 
 
     public double getCurrentAngularVel() {
-        return shooterMotorR.getVelocity();
+        return shooterMotorL.getVelocity();
     }
 
     public void setTargetAngularVelocity(double target) {
