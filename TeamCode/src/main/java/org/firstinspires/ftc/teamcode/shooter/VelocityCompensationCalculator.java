@@ -58,7 +58,7 @@ public class VelocityCompensationCalculator {
     public static double[] flywheelSpeedValues = {918, 925, 1068, 1125, 1161, 1220, 1330, 1337, 1446};
 
     public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
-            .mapToDouble(i -> flywheelSpeedValues[i] - 5)
+            .mapToDouble(i -> flywheelSpeedValues[i] - 20)
             .toArray();
 
     public static double[] hoodServoValues      = {0.04, 0.05, 0.06, 0.06, 0.07, 0.08, 0.08, 0.08, 0.09};

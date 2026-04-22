@@ -10,7 +10,7 @@ import smile.interpolation.LinearInterpolation;
 public class Hood {
     private ServoEx hoodServo;
 
-    public static double MIN_HOOD_ANGLE = Math.toRadians(38.2843201864); //TODO: find
+    public static double MIN_HOOD_ANGLE = Math.toRadians(36); //TODO: find
     public static double MAX_HOOD_ANGLE = Math.toRadians(68.742078); //TODO: find
 
     private double targetHoodAngle;

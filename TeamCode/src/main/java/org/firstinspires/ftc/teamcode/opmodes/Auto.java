@@ -50,7 +50,7 @@ public abstract class Auto extends LinearOpMode {
     protected Pose middlePickupControlPoint2 = new Pose(57.343, 48.111);
     protected Pose closePickupPose = new Pose(19.843, 83.761, Math.toRadians(180));
     protected Pose gateClearControlPoint = new Pose(55.343, 61.111);
-    protected Pose gateClearPose = new Pose(19.1, 63.161, Math.toRadians(180));
+    protected Pose gateClearPose = new Pose(19.3, 63.161, Math.toRadians(180));
     protected Pose gatePickupControlPoint = new Pose(19.843, 57.161);
     protected Pose gatePickupPose = new Pose(12, 51.761, Math.toRadians(120));
     protected Pose farPickupPose = new Pose(10.843, 35.111, Math.toRadians(180));
@@ -61,7 +61,7 @@ public abstract class Auto extends LinearOpMode {
 //    protected Pose parkPose = new Pose(56.243, 104.761, Math.toRadians(180));
     protected Pose farShootingPose = new Pose(50.5, 12);
     protected Pose parkPose = new Pose(45, 17);
-    protected Pose closeParkPose = new Pose(56.243, 104.761, Math.toRadians(180));
+    protected Pose closeParkPose = new Pose(54.243, 104.761, Math.toRadians(180));
     protected Pose goalPose = Constants.BLUE_GOAL_POSE;
 
     protected PathChain shootPreloads;

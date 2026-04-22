@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import static com.pedropathing.ivy.Scheduler.cancel;
 import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.groups.Groups.sequential;
+import static com.pedropathing.ivy.commands.Commands.waitMs;
 
 public abstract class CompatabilityAuto extends Auto{
 
@@ -11,7 +14,7 @@ public abstract class CompatabilityAuto extends Auto{
         updateShooter = robot.updateShootingSubsystems();
 //        updateTurret = robot.updateTurret();
 
-        double shootTime = 550;
+        double shootTime = 650;
 
         schedule(
                 updateShooter,
@@ -23,7 +26,9 @@ public abstract class CompatabilityAuto extends Auto{
                         gateCycle(shootTime),
                         runCycle(pickupClose, shootCloseAndPark, shootTime, 900, 500),
                         shootAndSetIntaking(),
-                        robot.setIntakePower(0)
+                        robot.setIntakePower(0),
+                        waitMs(500),
+                        instant(() -> cancel(updateShooter))
 //                        robot.setTurretPos(0)
                 ));
     }
