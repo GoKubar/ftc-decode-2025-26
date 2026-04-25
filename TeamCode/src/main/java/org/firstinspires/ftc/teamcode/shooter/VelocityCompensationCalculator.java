@@ -35,40 +35,71 @@ public class VelocityCompensationCalculator {
     private static final double g = 386.0885; // in / s^2
 
     /** Shooter offset from robot center (inches) */
-    private static final double SHOOTER_OFFSET_X = -1.346;
+    private static final double SHOOTER_OFFSET_X = 0.566141732283465;
     private static final double SHOOTER_OFFSET_Y = 0.0;
 
     // Anti-diagonal data points: positions where x + y ≈ 141.5
     public static Pose[] tablePositions = {
-            new Pose(104.78, 104.9),
-            new Pose(95.20, 92.52),
-            new Pose(81.56, 79.82),
-            new Pose(71.1, 70.2),
-            new Pose(49.36, 93.26),
-            new Pose(26.83, 119.07),
-            new Pose(61.25, 18.03),
-            new Pose(83.14, 4.26),
-            new Pose(48.07, 6.16),
+            new Pose(97.25, 98.79),
+            new Pose(90.72, 90.94),
+            new Pose(86.56, 87.9),
+            new Pose(80.04, 79.58),
+            new Pose(68.34, 70.30),
+            new Pose(57.477, 82.145),
+            new Pose(43.86, 96.21),
+            new Pose(32.433, 110.94),
+            new Pose(22.25, 121.65),
+            new Pose(71.08, 23.26),
+            new Pose(66.33, 9.40),
+            new Pose(51.04, 8.18)
     };
+
+    public static double[] flywheelSpeedValues = {
+            1104,
+            1158,
+            1175,
+            1258,
+            1356,
+            1372,
+            1414,
+            1458,
+            1490,
+            1566,
+            1633,
+            1710,
+    };
+
+    public static double[] hoodServoValues      = {
+            0,
+            0,
+            0,
+            0.03,
+            0.08,
+            0.11,
+            0.17,
+            0.2,
+            0.2,
+            0.36,
+            0.39,
+            0.4
+    };
+
     public static double[] distances = IntStream.range(0, tablePositions.length)
             .mapToDouble(i -> distance(new Pose(tablePositions[i].getX() + SHOOTER_OFFSET_X, tablePositions[i].getY()),
                     Constants.BLUE_GOAL_POSE.mirror()))
             .toArray();
 
-    public static double[] flywheelSpeedValues = {918, 925, 1068, 1125, 1161, 1220, 1330, 1337, 1446};
-
     public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
             .mapToDouble(i -> flywheelSpeedValues[i] - 5)
             .toArray();
 
-    public static double[] hoodServoValues      = {0.04, 0.05, 0.06, 0.06, 0.07, 0.08, 0.08, 0.08, 0.09};
 
     // Interpolators
     public static LinearInterpolation speedInterpolation = new LinearInterpolation(distances, adjustedFlywheelSpeedValues);
     public static LinearInterpolation hoodServoInterpolation = new LinearInterpolation(distances, hoodServoValues);
 
     private static double distance(Pose a, Pose b) {
-        return Math.hypot(-SHOOTER_OFFSET_X + b.getX() - a.getX(), b.getY() - a.getY());
+        return Math.hypot(b.getX() - a.getX(), b.getY() - a.getY());
     }
 
     public static class ShotParameters {

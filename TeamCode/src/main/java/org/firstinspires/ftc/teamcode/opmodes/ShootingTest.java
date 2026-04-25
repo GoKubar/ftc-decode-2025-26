@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.robot.PTO;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.shooter.Flywheel;
 import org.firstinspires.ftc.teamcode.shooter.Hood;
+import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 import org.firstinspires.ftc.teamcode.util.telemetry.FastTelemetry;
@@ -32,6 +33,7 @@ public class ShootingTest extends LinearOpMode {
     Hood hood;
     PTO pto;
     Turret turret;
+    ServoEx gate;
 
 //    ServoEx gatePusher;
 
@@ -51,13 +53,13 @@ public class ShootingTest extends LinearOpMode {
 //        gatePusher.setPosition(Robot.BLUE_SIDE_OUT);
 
         telemetry = new FastTelemetry(telemetry);
-        Constants.color = Constants.Color.AUDIENCE;
+        Constants.color = Constants.Color.RED;
 
         dashboard = FtcDashboard.getInstance();
         dashboardTelem = dashboard.getTelemetry();
 
         follower =  PedroConstants.createFollower(hardwareMap);
-        Pose startPose = new Pose(16.988, 110.641, Math.toRadians(180));
+        Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180));
         startPose = startPose.mirror();
         follower.setPose(startPose);
         drivetrain = Drivetrains.SWERVE_HEADING_LOCK.build(null, follower, telemetry);
@@ -69,6 +71,8 @@ public class ShootingTest extends LinearOpMode {
         turret = new Turret(hardwareMap);
 
         hood = new Hood(hardwareMap);
+
+        gate = new ServoEx(hardwareMap, "gate");
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
         for (LynxModule hub : allHubs) {
@@ -119,6 +123,20 @@ public class ShootingTest extends LinearOpMode {
                 hoodTarget = Math.max(0, hoodTarget);
             }
 
+            if (gamepad1.xWasPressed()) {
+                Turret.turretOffsetRad += Math.toRadians(3);
+            }
+
+            if (gamepad1.startWasPressed()) {
+                Turret.turretOffsetRad -= Math.toRadians(3);
+            }
+
+            if (gamepad1.y) {
+                gate.setPosition(Shooter.openGatePosition);
+            } else {
+                gate.setPosition(Shooter.closedGatePosition);
+            }
+
             turretTarget = Math.atan2(Constants.BLUE_GOAL_POSE.mirror().getY() - follower.getPose().getY(),
                     Constants.BLUE_GOAL_POSE.mirror().getX() - follower.getPose().getX());
 
@@ -145,6 +163,7 @@ public class ShootingTest extends LinearOpMode {
 //            telemetry.addData("Target Launch angle", hood.getTargetLaunchAngle());
             telemetry.addData("\nCurrent Hood Servo Position", hoodTarget);
             telemetry.addData("\n pose", follower.getPose());
+            telemetry.addData("turret offset", Math.toRadians(Turret.turretOffsetRad));
             telemetry.update();
             dashboardTelem.update();
             for (LynxModule hub : allHubs) {

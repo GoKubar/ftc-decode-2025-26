@@ -55,11 +55,11 @@ public class PedroConstants {
             mass(13.732);
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(-2.9350393701) //-74.5mm
-            .strafePodX(-5.9133858268) //-150.2
+            .forwardPodY(4.271653543307087)
+            .strafePodX(-1.578740157480315)
             .distanceUnit(DistanceUnit.INCH).hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static SwerveConstants swerveConstants = new SwerveConstants()
@@ -71,10 +71,10 @@ public class PedroConstants {
     // P=0.00645 D=0.00019
     // P=0.00549 D=0.00028
 
-    public static double kP = .45;
+    public static double kP = 0.39;
     public static double kD = 0.015;
-    public static double kFFront = 0.0380;
-    public static double kFBack = 0.0430;
+    public static double kFFront = 0.033;
+    public static double kFBack = 0.038;
 
     private static double dtLength = 276.948;
     private static double dtWidth = 346.000;
@@ -92,7 +92,7 @@ public class PedroConstants {
     private static CoaxialPod rightFront(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm1", "ss1", "se1",
                 new PIDFCoefficients(kP, 0, kD, kFFront), DcMotorSimple.Direction.FORWARD,
-                DcMotorSimple.Direction.FORWARD, Math.toRadians(46.75), new Pose(dtLength, -dtWidth),
+                DcMotorSimple.Direction.FORWARD, Math.toRadians(62.4), new Pose(dtLength, -dtWidth),
                 0.003, 3.219, false);
         pod.setMotorCachingThreshold(0.05);
         pod.setServoCachingThreshold(0.05);
