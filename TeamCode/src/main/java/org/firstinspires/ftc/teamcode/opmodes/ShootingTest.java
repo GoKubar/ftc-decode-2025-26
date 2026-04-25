@@ -2,12 +2,21 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.ftc.InvertedFTCCoordinates;
+import com.pedropathing.ftc.PoseConverter;
+import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.robot.Constants;
@@ -27,6 +36,7 @@ public class ShootingTest extends LinearOpMode {
 
     FtcDashboard dashboard;
 
+    Limelight3A limelight;
 
     Flywheel flywheel;
     Hood hood;
@@ -47,6 +57,10 @@ public class ShootingTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.setPollRateHz(100); // This sets how often we ask Limelight for data (100 times per second)
+        limelight.start(); // This tells Limelight to start looking!
+
         gatePusher = new ServoEx(hardwareMap, "gatePush");
 //        gatePusher.setPosition(Robot.BLUE_SIDE_OUT);
 
@@ -80,6 +94,22 @@ public class ShootingTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            limelight.updateRobotOrientation(Math.toDegrees(follower.getHeading() + Math.PI));
+            LLResult result = limelight.getLatestResult();
+            if (result != null && result.isValid()) {
+                Pose3D botPoseMT2 = result.getBotpose_MT2();
+                Pose2D pose2D = new Pose2D(
+                        DistanceUnit.METER,
+                        botPoseMT2.getPosition().x,
+                        botPoseMT2.getPosition().y,
+                        AngleUnit.DEGREES,
+                        botPoseMT2.getOrientation().getYaw()
+                );
+
+                Pose pedroPose = PoseConverter.pose2DToPose(pose2D, InvertedFTCCoordinates.INSTANCE)
+                        .getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+            }
+
             flywheelTarget += gamepad1.right_trigger;
             flywheelTarget -= gamepad1.left_trigger;
 
