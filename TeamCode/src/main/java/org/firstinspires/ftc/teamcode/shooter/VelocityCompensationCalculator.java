@@ -64,8 +64,8 @@ public class VelocityCompensationCalculator {
             1414,
             1458,
             1490,
-            1566,
-            1633,
+            1586, //originally 1566
+            1653, //originally 1633
             1710,
     };
 
@@ -90,7 +90,7 @@ public class VelocityCompensationCalculator {
             .toArray();
 
     public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
-            .mapToDouble(i -> flywheelSpeedValues[i] - 5)
+            .mapToDouble(i -> flywheelSpeedValues[i])
             .toArray();
 
 

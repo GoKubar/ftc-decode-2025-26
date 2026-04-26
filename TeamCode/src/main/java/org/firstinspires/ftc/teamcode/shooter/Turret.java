@@ -20,7 +20,7 @@ public class Turret {
     public static double MAX_TURRET_ANGLE = Math.toRadians(90);
 
     double[] angleValues = new double[] {Math.toRadians(-90), Math.toRadians(90)};
-    double[] servoPositions = new double[] {0.215, 0.795}; //TODO: tune
+    double[] servoPositions = new double[] {0.795, 0.19}; //TODO: tune
 
 
     public double getAngleFromServoPos(double servoPos) {
@@ -36,8 +36,8 @@ public class Turret {
     }
 
 
-    public double MIN_SERVO_POS = getServoPosFromAngle(MIN_TURRET_ANGLE);
-    public double MAX_SERVO_POS = getServoPosFromAngle(MAX_TURRET_ANGLE);
+    public double MIN_SERVO_POS = Math.min(getServoPosFromAngle(MIN_TURRET_ANGLE), getServoPosFromAngle(MAX_TURRET_ANGLE));
+    public double MAX_SERVO_POS = Math.max(getServoPosFromAngle(MIN_TURRET_ANGLE), getServoPosFromAngle(MAX_TURRET_ANGLE));
 
     public Turret(HardwareMap hardwareMap) {
         this.turretServoF = new ServoEx(hardwareMap, "turretLeft");

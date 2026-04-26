@@ -35,6 +35,7 @@ import org.firstinspires.ftc.teamcode.vision.Pipelines;
 import org.firstinspires.ftc.teamcode.vision.VisionPipeline;
 import org.firstinspires.ftc.teamcode.vision.VisionResult;
 
+import java.util.List;
 import java.util.function.DoubleSupplier;
 
 @Config
@@ -78,6 +79,8 @@ public class Robot {
     private Drivetrain drivetrain;
     private LimelightManager limelightManager;
 
+    List<LynxModule> allHubs;
+
     Gamepad gamepad1;
     Gamepad gamepad2;
     Telemetry telemetry;
@@ -108,11 +111,16 @@ public class Robot {
             limelightManager = null; // limelight hardware not present in this config
         }
 
-        // Setup in your Robot class if you have one, or in init at start of opMode
-        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        PhotonCore.experimental.setMaximumParallelCommands(10); // Can be adjusted based on user preference - but raising this number further can cause issues
-        PhotonCore.enable();
+
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
+//        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+//        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+//        PhotonCore.experimental.setMaximumParallelCommands(10); // Can be adjusted based on user preference - but raising this number further can cause issues
+//        PhotonCore.enable();
     }
 
 
@@ -186,8 +194,11 @@ public class Robot {
     }
 
     public void clearCaches() {
-        PhotonCore.CONTROL_HUB.clearBulkCache();
-        PhotonCore.EXPANSION_HUB.clearBulkCache();
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+//        PhotonCore.CONTROL_HUB.clearBulkCache();
+//        PhotonCore.EXPANSION_HUB.clearBulkCache();
     }
 
     public Command deactivateShooter() {
@@ -277,7 +288,7 @@ public class Robot {
 
         if (Constants.debugTelemetry) {
             telemetry.addData("Drivetrain:", drivetrainName());
-            telemetry.addLine("Photon enabled!");
+//            telemetry.addLine("Photon enabled!");
             telemetry.addData("current loop time", currentLoopTime);
             telemetry.addData("Current State: ", currentState.name());
         }

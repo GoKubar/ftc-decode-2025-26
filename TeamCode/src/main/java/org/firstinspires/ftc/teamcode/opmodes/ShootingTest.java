@@ -28,6 +28,7 @@ public class ShootingTest extends LinearOpMode {
 
     FtcDashboard dashboard;
 
+    double intakeSpeed = 1;
 
     Flywheel flywheel;
     Hood hood;
@@ -90,7 +91,7 @@ public class ShootingTest extends LinearOpMode {
             if (gamepad1.left_bumper) {
                 pto.runIntake(-1);
             } else if (gamepad1.right_bumper) {
-                pto.runIntake(1);
+                pto.runIntake(intakeSpeed);
             } else {
                 pto.runIntake(0);
             }
@@ -137,6 +138,14 @@ public class ShootingTest extends LinearOpMode {
                 gate.setPosition(Shooter.closedGatePosition);
             }
 
+            if (gamepad2.dpadUpWasPressed()) {
+                intakeSpeed += 0.1;
+            }
+
+            if (gamepad2.dpadDownWasPressed()) {
+                intakeSpeed -= 0.1;
+            }
+
             turretTarget = Math.atan2(Constants.BLUE_GOAL_POSE.mirror().getY() - follower.getPose().getY(),
                     Constants.BLUE_GOAL_POSE.mirror().getX() - follower.getPose().getX());
 
@@ -158,11 +167,9 @@ public class ShootingTest extends LinearOpMode {
             telemetry.addData("Current Angular Vel", flywheel.getCurrentAngularVel());
             telemetry.addData("Target Angular Vel", flywheel.getTargetAngularVelocity());
             telemetry.addData("\n\nCurrent Hood angle", Math.toDegrees(hood.getCurrentHoodAngle()));
-//            telemetry.addData("Target Hood angle", hood.getTargetHoodAngle());
-//            telemetry.addData("\nCurrent Launch angle", hood.getCurrentLaunchAngle());
-//            telemetry.addData("Target Launch angle", hood.getTargetLaunchAngle());
             telemetry.addData("\nCurrent Hood Servo Position", hoodTarget);
             telemetry.addData("\n pose", follower.getPose());
+            telemetry.addData("intake speed", intakeSpeed);
             telemetry.addData("turret offset", Math.toRadians(Turret.turretOffsetRad));
             telemetry.update();
             dashboardTelem.update();
