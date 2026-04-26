@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.bylazar.field.Style;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.InvertedFTCCoordinates;
 import com.pedropathing.ftc.PoseConverter;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.Tuning;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Drivetrains;
 import org.firstinspires.ftc.teamcode.robot.PTO;
@@ -71,6 +73,7 @@ public class ShootingTest extends LinearOpMode {
         dashboardTelem = dashboard.getTelemetry();
 
         follower =  PedroConstants.createFollower(hardwareMap);
+        Tuning.Drawing.init();
         Pose startPose = new Pose(16.988, 110.641, Math.toRadians(180));
         startPose = startPose.mirror();
         follower.setPose(startPose);
@@ -108,7 +111,11 @@ public class ShootingTest extends LinearOpMode {
 
                 Pose pedroPose = PoseConverter.pose2DToPose(pose2D, InvertedFTCCoordinates.INSTANCE)
                         .getAsCoordinateSystem(PedroCoordinates.INSTANCE);
+
+                Tuning.Drawing.drawRobot(pedroPose,  new Style("", "#3F51B5", 0.75));
             }
+            Tuning.Drawing.drawRobot(follower.getPose(),  new Style("", "#66cc33", 0.75));
+            Tuning.Drawing.sendPacket();
 
             flywheelTarget += gamepad1.right_trigger;
             flywheelTarget -= gamepad1.left_trigger;
