@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.robot.Constants;
@@ -14,12 +15,16 @@ public class Flywheel {
     private MotorEx shooterMotorL;
     private MotorEx shooterMotorR;
 
-    public static double kS = 0.21, kV = 0.00042, kP = 0.015; //TODO: TUNE VALUES
+    public static double kS = 0.21, kV = 0.00035, kP = 0.015; //TODO: TUNE VALUES
 
     private double target = 0;
     private boolean activated = false;
 
-    public Flywheel(HardwareMap hardwareMap) {
+    VoltageSensor voltageSensor;
+
+    public Flywheel(HardwareMap hardwareMap, VoltageSensor voltageSensor) {
+        this.voltageSensor = voltageSensor;
+
         shooterMotorL = new MotorEx(hardwareMap, "leftFlywheel");
         shooterMotorR = new MotorEx(hardwareMap, "rightFlywheel");
 
@@ -94,15 +99,8 @@ public class Flywheel {
     public void update() {
         if (activated) {
             double power =  (kV * getTargetAngularVelocity()) + (kP * (getTargetAngularVelocity() - getCurrentAngularVel())) + kS;
-            power = Range.clip(power, -1, 1);
+            power *= 12 / voltageSensor.getVoltage();
             setPower(power);
         }
     }
-
-
-
-
-
-
-
 }

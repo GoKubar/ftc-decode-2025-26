@@ -66,7 +66,7 @@ public class ShootingTest extends LinearOpMode {
         drivetrain = Drivetrains.SWERVE_HEADING_LOCK.build(null, follower, telemetry);
 
 
-        flywheel = new Flywheel(hardwareMap);
+        flywheel = new Flywheel(hardwareMap, hardwareMap.voltageSensor.iterator().next());
 
         pto = new PTO(hardwareMap);
         turret = new Turret(hardwareMap);

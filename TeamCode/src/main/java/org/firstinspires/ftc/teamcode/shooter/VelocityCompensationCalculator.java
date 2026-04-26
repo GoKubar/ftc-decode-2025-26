@@ -54,6 +54,8 @@ public class VelocityCompensationCalculator {
             new Pose(51.04, 8.18)
     };
 
+    public static double minFarZoneSpeed = 1586;
+
     public static double[] flywheelSpeedValues = {
             1104,
             1158,
@@ -90,7 +92,7 @@ public class VelocityCompensationCalculator {
             .toArray();
 
     public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
-            .mapToDouble(i -> flywheelSpeedValues[i])
+            .mapToDouble(i -> flywheelSpeedValues[i] + 10)
             .toArray();
 
 
@@ -193,6 +195,10 @@ public class VelocityCompensationCalculator {
             hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
             launchAngle = hoodAngleToLaunchAngle(hoodAngle);
             tof = dist / (flywheelTicks * Math.cos(launchAngle));
+        }
+
+        if (robotPose.getY() > Shooter.transitionYValue) {
+            flywheelTicks = Math.max(flywheelTicks, minFarZoneSpeed);
         }
 
         // dx/dy are still signed here for correct angle

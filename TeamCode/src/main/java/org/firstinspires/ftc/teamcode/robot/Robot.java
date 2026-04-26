@@ -17,6 +17,7 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -79,23 +80,26 @@ public class Robot {
     private Drivetrain drivetrain;
     private LimelightManager limelightManager;
 
-    List<LynxModule> allHubs;
-
     Gamepad gamepad1;
     Gamepad gamepad2;
     Telemetry telemetry;
+
+    VoltageSensor voltageSensor;
+
     public Robot(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose goalPose) {
         this.telemetry = telemetry;
 
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
 
+        voltageSensor = hardwareMap.voltageSensor.iterator().next();
+
         pto = new PTO(hardwareMap);
 //        proximityIndicator = new ProximityIndicator(hardwareMap);
 
         follower = PedroConstants.createFollower(hardwareMap);
         pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-        shooter = new Shooter(hardwareMap, goalPose);
+        shooter = new Shooter(hardwareMap, goalPose, voltageSensor);
         currentPose = follower.getPose();
         currentVelocity.setOrthogonalComponents(0, 0);
 
@@ -111,16 +115,10 @@ public class Robot {
             limelightManager = null; // limelight hardware not present in this config
         }
 
-
-        allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
-
-//        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-//        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-//        PhotonCore.experimental.setMaximumParallelCommands(10); // Can be adjusted based on user preference - but raising this number further can cause issues
-//        PhotonCore.enable();
+        PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        PhotonCore.experimental.setMaximumParallelCommands(10); // Can be adjusted based on user preference - but raising this number further can cause issues
+        PhotonCore.enable();
     }
 
 
@@ -194,11 +192,8 @@ public class Robot {
     }
 
     public void clearCaches() {
-        for (LynxModule hub : allHubs) {
-            hub.clearBulkCache();
-        }
-//        PhotonCore.CONTROL_HUB.clearBulkCache();
-//        PhotonCore.EXPANSION_HUB.clearBulkCache();
+        PhotonCore.CONTROL_HUB.clearBulkCache();
+        PhotonCore.EXPANSION_HUB.clearBulkCache();
     }
 
     public Command deactivateShooter() {
@@ -285,6 +280,8 @@ public class Robot {
         telemetry.addData("avg loop time", totalMillis / numLoops);
         telemetry.addData("max loop time", maxLoopTime);
         telemetry.addData("min loop time", minLoopTime);
+
+        telemetry.addData("currentVoltage", getVoltage());
 
         if (Constants.debugTelemetry) {
             telemetry.addData("Drivetrain:", drivetrainName());
@@ -399,20 +396,18 @@ public class Robot {
     }
 
     public Command shootMotif(int shootingTime) {
-//        boolean close = getPose().getY() > Shooter.transitionYValue;
+        boolean close = getPose().getY() > Shooter.transitionYValue;
+
+        double intakePower = Math.min(1, getVoltage() / 12.5);
+
         return sequential(
                 openGate(),
                 instant(() -> currentlyShooting = true),
-                setIntakePower(1),
+                setIntakePower(close ? 1 : intakePower),
                 waitMs(shootingTime),
                 closeGate(),
                 instant(() -> currentlyShooting = false)
         );
-//        : sequential(
-//                shoot(),
-//                shoot(),
-//                shoot()
-//        );
     }
 
     public Command closeGate() {
@@ -436,32 +431,7 @@ public class Robot {
         pto.runLift();
     }
 
-
-    public void setPipeline(Pipelines pipeline) {
-        if (limelightManager != null) limelightManager.setPipeline(pipeline);
-    }
-
-    public void cycleNextPipeline() {
-        if (limelightManager != null) limelightManager.cycleNext();
-    }
-
-    public void cyclePreviousPipeline() {
-        if (limelightManager != null) limelightManager.cyclePrevious();
-    }
-
-    public Pipelines getCurrentPipeline() {
-        return limelightManager != null ? limelightManager.getCurrentPipelineEnum() : Pipelines.NONE;
-    }
-
-    public VisionPipeline getVisionPipeline() {
-        return limelightManager != null ? limelightManager.getCurrentPipeline() : null;
-    }
-
-    public LimelightManager getLimelightManager() {
-        return limelightManager;
-    }
-
-    public VisionResult getVisionResult() {
-        return limelightManager != null ? limelightManager.getResult() : new VisionResult();
+    public double getVoltage() {
+        return voltageSensor.getVoltage();
     }
 }

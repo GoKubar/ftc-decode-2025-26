@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.shooter;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.Vector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.MathHelpers;
@@ -62,9 +63,9 @@ public class Shooter {
 
     public double lastTurretAngle;
 
-    public Shooter(HardwareMap hardwareMap, Pose goalPose) {
+    public Shooter(HardwareMap hardwareMap, Pose goalPose, VoltageSensor voltageSensor) {
         hood = new Hood(hardwareMap);
-        flywheel = new Flywheel(hardwareMap);
+        flywheel = new Flywheel(hardwareMap, voltageSensor);
         turret = new Turret(hardwareMap);
         gateServo = new ServoEx(hardwareMap, "gate");
         this.goalPose = goalPose;
