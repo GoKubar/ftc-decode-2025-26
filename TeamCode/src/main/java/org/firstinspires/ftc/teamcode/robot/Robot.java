@@ -7,7 +7,6 @@ import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.bylazar.configurables.annotations.Configurable;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
@@ -31,7 +30,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
-import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 import org.firstinspires.ftc.teamcode.vision.LimelightManager;
 import org.firstinspires.ftc.teamcode.vision.Pipelines;
 import org.firstinspires.ftc.teamcode.vision.VisionPipeline;
@@ -267,6 +265,7 @@ public class Robot {
 
         telemetry.addData("turret offset (deg)", Math.toDegrees(Turret.turretOffsetRad));
         telemetry.addData("Updated lastPose", Constants.lastPose);
+        telemetry.addData("flywheel enabled", getFylwheelActivated());
         telemetry.addData("flywheel velocity", getFlywheelAngularVelocity());
         telemetry.addData("target flywheel velocity", getTargetFlywheelAngularVelocity());
         telemetry.addData("turret angle (deg)", getTurretAngleDegrees());
@@ -320,6 +319,10 @@ public class Robot {
 
     public double getFlywheelAngularVelocity() {
         return shooter.getFlywheelAngularVelocity();
+    }
+
+    public boolean getFylwheelActivated() {
+        return shooter.getFlywheelActivated();
     }
 
     public double getTargetFlywheelAngularVelocity() {

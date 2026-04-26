@@ -197,4 +197,8 @@ public class Shooter {
     public double getFlywheelAngularVelocity() { return flywheel.getCurrentAngularVel(); }
     public double getFlywheeelTargetAngularVelocity() { return flywheel.getTargetAngularVelocity(); }
     public double getHoodAngle() { return hood.getCurrentHoodAngle(); }
+
+    public boolean getFlywheelActivated() {
+        return flywheel.getActivated();
+    }
 }

@@ -80,6 +80,10 @@ public class Flywheel {
         activated = true;
     }
 
+    public boolean getActivated() {
+        return activated;
+    }
+
     public void toggle() {
         activated = !activated;
         if (!activated) {
