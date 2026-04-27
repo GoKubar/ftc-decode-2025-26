@@ -180,7 +180,7 @@ class LocalizationTest extends OpMode {
             debugStringEnabled = !debugStringEnabled;
         }
 
-        follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+        follower.setTeleOpDrive(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, true);
         follower.update();
 
         telemetryM.debug("x:" + follower.getPose().getX());
@@ -359,7 +359,7 @@ class TurnTuner extends OpMode {
  */
 class ForwardVelocityTuner extends OpMode {
     private final ArrayList<Double> velocities = new ArrayList<>();
-    public static double DISTANCE = 48;
+    public static double DISTANCE = 80;
     public static double RECORD_NUMBER = 10;
 
     private boolean end;
@@ -568,7 +568,7 @@ class LateralVelocityTuner extends OpMode {
  */
 class ForwardZeroPowerAccelerationTuner extends OpMode {
     private final ArrayList<Double> accelerations = new ArrayList<>();
-    public static double VELOCITY = 30;
+    public static double VELOCITY = 80;
 
     private double previousVelocity;
     private long previousTimeNano;
@@ -1174,7 +1174,7 @@ class DriveTuner extends OpMode {
  * @version 1.0, 3/12/2024
  */
 class Line extends OpMode {
-    public static double DISTANCE = 40;
+    public static double DISTANCE = 80;
     private boolean forward = true;
 
     private Path forwards;

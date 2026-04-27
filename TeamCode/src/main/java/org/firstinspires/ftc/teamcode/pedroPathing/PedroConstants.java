@@ -22,18 +22,18 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
 public class PedroConstants {
-    public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.8, 0, 0.015, 0);
+    public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.6, 0, 0.015, 0);
 
-    public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(1.75, 0, 0.003, 0);
+    public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(1.5, 0, 0.003, 0);
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .forwardZeroPowerAcceleration(-197.1)
-            .lateralZeroPowerAcceleration(-197.1)
+            .forwardZeroPowerAcceleration(-80.927)
+            .lateralZeroPowerAcceleration(-80.927)
             .useSecondaryDrivePIDF(true).useSecondaryHeadingPIDF(true)
             .useSecondaryTranslationalPIDF(true)
 
             .translationalPIDFCoefficients(new PIDFCoefficients(0.125, 0, 0.008, 0))
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.0825, 0, 0.008, 0))
+            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.06, 0, 0.008, 0))
 
             .headingPIDFCoefficients(headingCoeffs)
             .secondaryHeadingPIDFCoefficients(secondaryHeadingCoeffs)
@@ -63,7 +63,7 @@ public class PedroConstants {
             .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
 
     public static SwerveConstants swerveConstants = new SwerveConstants()
-            .velocity(73.9)
+            .velocity(85.758)
 //            .zeroPowerBehavior(SwerveConstants.ZeroPowerBehavior.IGNORE_ANGLE_CHANGES)
             .useBrakeModeInTeleOp(true);
 
@@ -122,7 +122,23 @@ public class PedroConstants {
     // TODO: TUNE THESE, CAN MAKE A HUGE DIFF
     // public static PathConstraints pathConstraints = new PathConstraints(0.95, 100, 1, 1);
     public static PathConstraints pathConstraints =
-            new PathConstraints(0.9, 2, 2, 0.03, 50, 1, 10, 1);
+            new PathConstraints(0.95,
+                    0.5,
+                    0.5,
+                    0.03,
+                    50,
+                    1,
+                    10,
+                    1);
+//            new PathConstraints(0.9,
+//                    1,
+//                    1,
+//                    0.03,
+//                    50,
+//                    1.25,
+//                    10,
+//                    1
+//            );
 
     // default
     // public static PathConstraints defaultConstraints = new PathConstraints(0.995, 0.1, 0.1,

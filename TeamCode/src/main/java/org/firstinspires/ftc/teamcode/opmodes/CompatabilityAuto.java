@@ -18,9 +18,9 @@ public abstract class CompatabilityAuto extends Auto{
                 sequential(
                         shootPreloads(),
                         runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
-                        gateCycle(shootTime),
-                        gateCycle(shootTime),
-                        gateCycle(shootTime),
+                        gateCycle(shootTime, 750),
+                        gateCycle(shootTime, 1500),
+                        gateCycle(shootTime, 1500),
                         runCycle(pickupClose, shootCloseAndPark, shootTime, 900, 500),
                         shootAndSetIntaking(),
                         robot.setIntakePower(0)

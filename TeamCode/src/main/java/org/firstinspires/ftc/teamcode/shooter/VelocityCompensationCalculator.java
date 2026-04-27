@@ -17,6 +17,9 @@ import java.util.stream.IntStream;
 
 @Config
 public class VelocityCompensationCalculator {
+    public static double minFarZoneSpeed = 1586;
+    public static double maxAutoSpeed = 1450;
+
     public static double kAutoRad = 5;
     public static double kAutoTan = 5;
 
@@ -56,7 +59,6 @@ public class VelocityCompensationCalculator {
             new Pose(51.04, 8.18)
     };
 
-    public static double minFarZoneSpeed = 1586;
 
     public static double[] flywheelSpeedValues = {
             1104,
@@ -194,7 +196,7 @@ public class VelocityCompensationCalculator {
 
             flywheelTicks = speedInterpolation.interpolate(dist);
             flywheelTicks = Range.clip(flywheelTicks, Arrays.stream(flywheelSpeedValues).min().getAsDouble(),
-                    (Constants.lastOpModeWasAuto && useAutoLimit) ? 1100 : Arrays.stream(flywheelSpeedValues).max().getAsDouble());
+                    (Constants.lastOpModeWasAuto && useAutoLimit) ? maxAutoSpeed : Arrays.stream(flywheelSpeedValues).max().getAsDouble());
             hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
             launchAngle = hoodAngleToLaunchAngle(hoodAngle);
             tof = dist / (flywheelTicks * Math.cos(launchAngle));

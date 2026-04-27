@@ -66,7 +66,7 @@ public class ShootingState implements State {
 
         if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof SwerveHeadingLock) {
             double heading = Constants.color == Constants.Color.RED
-                    ? Math.toRadians(30)
+                    ? Math.toRadians(32)
                     : Math.toRadians(150);
             ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
