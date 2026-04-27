@@ -11,6 +11,7 @@ import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.CoaxialPod;
 import com.pedropathing.ftc.drivetrains.SwerveConstants;
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
+import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.FusionLocalizer;
 import com.pedropathing.paths.PathConstraints;
@@ -22,6 +23,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
 public class PedroConstants {
+    private static PinpointLocalizer pinpointLocalizer;
+
+    public static PinpointLocalizer getPinpointLocalizer() {
+        return pinpointLocalizer;
+    }
+
     public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.6, 0, 0.015, 0);
 
     public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(1.5, 0, 0.003, 0);
@@ -144,9 +151,10 @@ public class PedroConstants {
     // public static PathConstraints defaultConstraints = new PathConstraints(0.995, 0.1, 0.1,
     // 0.007, 100, 1, 10, 1);
     public static Follower createFollower(HardwareMap hardwareMap) {
+        pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
         return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
                 .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
                         leftBack(hardwareMap), rightBack(hardwareMap))
-                .pinpointLocalizer(localizerConstants).build();
+                .setLocalizer(pinpointLocalizer).build();
     }
 }

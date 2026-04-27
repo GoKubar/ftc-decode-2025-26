@@ -9,21 +9,16 @@ import static com.pedropathing.ivy.groups.Groups.sequential;
 import com.acmerobotics.dashboard.config.Config;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.ivy.Command;
 import com.pedropathing.math.Vector;
 import com.pedropathing.util.Timer;
-import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
@@ -72,10 +67,8 @@ public class Robot {
     }
 
     Follower follower;
-    private final GoBildaPinpointDriver pinpoint;
     private LocalizationMode localizationMode = LocalizationMode.FOLLOWER;
     private Pose currentPose;
-    private final Vector currentVelocity = new Vector();
 
     private Drivetrain drivetrain;
     private LimelightManager limelightManager;
@@ -98,10 +91,8 @@ public class Robot {
 //        proximityIndicator = new ProximityIndicator(hardwareMap);
 
         follower = PedroConstants.createFollower(hardwareMap);
-        pinpoint = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
         shooter = new Shooter(hardwareMap, goalPose, voltageSensor);
         currentPose = follower.getPose();
-        currentVelocity.setOrthogonalComponents(0, 0);
 
         setDrivetrain(Drivetrains.SWERVE_HEADING_LOCK);
         setState(States.NONE);
@@ -165,14 +156,9 @@ public class Robot {
     }
 
     private void updatePinpoint() {
-        pinpoint.update();
-        double x = pinpoint.getPosX(DistanceUnit.INCH);
-        double y = pinpoint.getPosY(DistanceUnit.INCH);
-        double heading = pinpoint.getHeading(AngleUnit.RADIANS);
-        currentPose = new Pose(x, y, heading);
-        currentVelocity.setOrthogonalComponents(
-                pinpoint.getVelX(DistanceUnit.INCH),
-                pinpoint.getVelY(DistanceUnit.INCH));
+        PinpointLocalizer localizer = PedroConstants.getPinpointLocalizer();
+        localizer.update();
+        currentPose = localizer.getPose();
     }
 
     public Pose getPose() {
@@ -181,13 +167,13 @@ public class Robot {
 
     public Vector getVelocity() {
         return localizationMode == LocalizationMode.PINPOINT
-                ? currentVelocity
+                ? PedroConstants.getPinpointLocalizer().getVelocityVector()
                 : follower.getVelocity();
     }
 
     public double getAngularVelocity() {
         return localizationMode == LocalizationMode.PINPOINT
-                ? pinpoint.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS)
+                ? PedroConstants.getPinpointLocalizer().getAngularVelocity()
                 : follower.getAngularVelocity();
     }
 
@@ -352,7 +338,6 @@ public class Robot {
     public void setLocalizationMode(LocalizationMode mode) {
         localizationMode = mode;
         if (localizationMode == LocalizationMode.PINPOINT) {
-            currentVelocity.setOrthogonalComponents(0, 0);
             setPose(currentPose);
         }
     }
@@ -360,14 +345,6 @@ public class Robot {
     public void setPose(Pose pose) {
         currentPose = pose;
         follower.setPose(pose);
-        if (pinpoint != null) {
-            pinpoint.setPosition(new Pose2D(
-                    DistanceUnit.INCH,
-                    pose.getX(),
-                    pose.getY(),
-                    AngleUnit.RADIANS,
-                    pose.getHeading()));
-        }
         Constants.lastPose = pose;
     }
 
