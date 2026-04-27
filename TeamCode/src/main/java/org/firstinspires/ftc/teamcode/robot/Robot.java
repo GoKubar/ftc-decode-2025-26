@@ -333,6 +333,10 @@ public class Robot {
         return shooter.getFlywheelActivated();
     }
 
+    public boolean isShooterReady() {
+        return shooter.isFlywheelReady();
+    }
+
     public double getTargetFlywheelAngularVelocity() {
         return shooter.getFlywheeelTargetAngularVelocity();
     }

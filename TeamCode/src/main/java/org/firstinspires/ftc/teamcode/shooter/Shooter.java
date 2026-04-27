@@ -207,4 +207,7 @@ public class Shooter {
     public boolean getFlywheelActivated() {
         return flywheel.getActivated();
     }
+    public boolean isFlywheelReady() {
+        return flywheel.isReady();
+    }
 }

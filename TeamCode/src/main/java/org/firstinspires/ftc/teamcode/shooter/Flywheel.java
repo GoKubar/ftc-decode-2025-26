@@ -85,6 +85,10 @@ public class Flywheel {
         activated = true;
     }
 
+    public boolean isReady() {
+        return Math.abs(getTargetAngularVelocity() - getCurrentAngularVel()) <= 40;
+    }
+
     public boolean getActivated() {
         return activated;
     }
