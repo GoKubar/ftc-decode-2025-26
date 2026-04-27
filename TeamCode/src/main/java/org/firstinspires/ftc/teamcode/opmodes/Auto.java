@@ -44,24 +44,24 @@ public abstract class Auto extends LinearOpMode {
     //moved over 0.747 on x, -1.901 on y
     Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180));
 
-    protected Pose shootingPose = new Pose(53.243, 80.761, Math.toRadians(180));
-    protected Pose middlePickupPose = new Pose(13.243, 55.111, Math.toRadians(180));
-    protected Pose middlePickupControlPoint1 = new Pose(110, 45.5);
-    protected Pose middlePickupControlPoint2 = new Pose(57.343, 48.111);
-    protected Pose closePickupPose = new Pose(19.843, 83.761, Math.toRadians(180));
-    protected Pose gateClearControlPoint = new Pose(55.343, 61.111);
-    protected Pose gateClearPose = new Pose(19.1, 63.161, Math.toRadians(180));
-    protected Pose gatePickupControlPoint = new Pose(19.843, 57.161);
-    protected Pose gatePickupPose = new Pose(12, 51.761, Math.toRadians(120));
-    protected Pose farPickupPose = new Pose(10.843, 35.111, Math.toRadians(180));
-    protected Pose farPickupControlPoint = new Pose(70.343, 20.111);
+    protected Pose shootingPose = new Pose(53.990, 78.860, Math.toRadians(180));
+    protected Pose middlePickupPose = new Pose(13.990, 53.210, Math.toRadians(180));
+    protected Pose middlePickupControlPoint1 = new Pose(110.747, 43.599);
+    protected Pose middlePickupControlPoint2 = new Pose(58.090, 46.210);
+    protected Pose closePickupPose = new Pose(20.590, 81.860, Math.toRadians(180));
+    protected Pose gateClearControlPoint = new Pose(56.090, 59.210);
+    protected Pose gateClearPose = new Pose(19.847, 61.260, Math.toRadians(180));
+    protected Pose gatePickupControlPoint = new Pose(20.590, 55.260);
+    protected Pose gatePickupPose = new Pose(12.747, 49.860, Math.toRadians(120));
+    protected Pose farPickupPose = new Pose(11.590, 33.210, Math.toRadians(180));
+    protected Pose farPickupControlPoint = new Pose(71.090, 18.210);
 //    protected Pose cornerPose = new Pose(10.343, 17.111, Math.toRadians(210));
-    protected Pose cornerPose = new Pose(13.243, 19.761, Math.toRadians(210));
-    protected Pose cornerBackupPose = new Pose(10.943, 10.261, Math.toRadians(180));
+    protected Pose cornerPose = new Pose(13.990, 17.860, Math.toRadians(210));
+    protected Pose cornerBackupPose = new Pose(11.690, 8.360, Math.toRadians(180));
 //    protected Pose parkPose = new Pose(56.243, 104.761, Math.toRadians(180));
-    protected Pose farShootingPose = new Pose(50.5, 12);
-    protected Pose parkPose = new Pose(45, 17);
-    protected Pose closeParkPose = new Pose(56.243, 104.761, Math.toRadians(180));
+    protected Pose farShootingPose = new Pose(51.247, 10.099);
+    protected Pose parkPose = new Pose(45.747, 15.099);
+    protected Pose closeParkPose = new Pose(56.990, 102.860, Math.toRadians(180));
     protected Pose goalPose = Constants.BLUE_GOAL_POSE;
 
     protected PathChain shootPreloads;
@@ -103,7 +103,7 @@ public abstract class Auto extends LinearOpMode {
                         runCycle(pickupClose, shootClose, shootTime, 900, 500),
                         gateCycle(shootTime),
                         runCycle(pickupFar, shootFar, shootTime + 125, 700, 1250),
-                        cornerCycle(shootTime + 150, 1250, 1250),
+                        cornerCycleClosePark(shootTime+150, 1250, 1250),
                         robot.setIntakePower(0)
 //                        robot.setTurretPos(0)
                 ));
