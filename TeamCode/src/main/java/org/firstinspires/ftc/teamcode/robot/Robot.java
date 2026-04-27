@@ -26,12 +26,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
-import org.firstinspires.ftc.teamcode.vision.LimelightManager;
-import org.firstinspires.ftc.teamcode.vision.Pipelines;
-import org.firstinspires.ftc.teamcode.vision.VisionPipeline;
-import org.firstinspires.ftc.teamcode.vision.VisionResult;
-
-import java.util.List;
 import java.util.function.DoubleSupplier;
 
 @Config
@@ -71,7 +65,6 @@ public class Robot {
     private Pose currentPose;
 
     private Drivetrain drivetrain;
-    private LimelightManager limelightManager;
 
     Gamepad gamepad1;
     Gamepad gamepad2;
@@ -100,12 +93,6 @@ public class Robot {
 //        gatePusher = new ServoEx(hardwareMap, "gatePush");
 //        gatePusher.setPosition(BLUE_SIDE_OUT);
 
-        try {
-            limelightManager = new LimelightManager(hardwareMap, telemetry);
-        } catch (Exception e) {
-            limelightManager = null; // limelight hardware not present in this config
-        }
-
         PhotonCore.CONTROL_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         PhotonCore.EXPANSION_HUB.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         PhotonCore.experimental.setMaximumParallelCommands(10); // Can be adjusted based on user preference - but raising this number further can cause issues
@@ -128,7 +115,6 @@ public class Robot {
 
     public void loop() {
         updateLocalization();
-        if (limelightManager != null) limelightProcess();
         executeCurrentState();
         updateShooter();
 //        if (getCurrentState() == States.INTAKING) {
@@ -277,11 +263,6 @@ public class Robot {
         }
 
         telemetry.update();
-    }
-
-    public void limelightProcess() {
-        telemetry.addData("Pipeline:", limelightManager.getCurrentPipelineName());
-        limelightManager.process(this);
     }
 
     public void executeCurrentState() {
