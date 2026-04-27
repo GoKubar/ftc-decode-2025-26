@@ -20,6 +20,8 @@ public class VelocityCompensationCalculator {
     public static double kAutoRad = 5;
     public static double kAutoTan = 5;
 
+    public static double angularVelScaling = 0.07;
+
     public static boolean useAutoLimit = true;
 
 //    public static double kRadIn = 7;
@@ -130,14 +132,15 @@ public class VelocityCompensationCalculator {
      * Calculate shot parameters with velocity compensation.
      *
      * @param robotPose Robot position (x, y, heading)
-     * @param robotVel Robot velocity (vx, vy in in/s, omega in rad/s)
+     * @param robotVel Robot velocity (vx, vy in in/s)
+     * @param angularVel Angular velocity (omega in rad/s)
      * @param goalPose Goal Position (x,y)
      */
-    public static ShotParameters calculate(Pose robotPose, Vector robotVel, Pose goalPose) {
-        return calculate(robotPose, robotVel, goalPose, new ShotParameters());
+    public static ShotParameters calculate(Pose robotPose, Vector robotVel, double angularVel, Pose goalPose) {
+        return calculate(robotPose, robotVel, angularVel, goalPose, new ShotParameters());
     }
 
-    public static ShotParameters calculate(Pose robotPose, Vector robotVel, Pose goalPose, ShotParameters output) {
+    public static ShotParameters calculate(Pose robotPose, Vector robotVel, double angularVel, Pose goalPose, ShotParameters output) {
 
         //shooter offset
         double cosH = Math.cos(robotPose.getHeading());
@@ -197,12 +200,14 @@ public class VelocityCompensationCalculator {
             tof = dist / (flywheelTicks * Math.cos(launchAngle));
         }
 
-        if (robotPose.getY() > Shooter.transitionYValue) {
+        if (robotPose.getY() <= Shooter.transitionYValue) {
             flywheelTicks = Math.max(flywheelTicks, minFarZoneSpeed);
         }
 
         // dx/dy are still signed here for correct angle
-        double turretAngle = MathHelpers.wrapAngleRadians(Math.atan2(dy, dx) - robotPose.getHeading());
+        double turretAngle = MathHelpers.wrapAngleRadians(
+                Math.atan2(dy, dx) - robotPose.getHeading() - angularVelScaling * angularVel
+        );
 
         output.set(hoodAngle, turretAngle, flywheelTicks);
         return output;

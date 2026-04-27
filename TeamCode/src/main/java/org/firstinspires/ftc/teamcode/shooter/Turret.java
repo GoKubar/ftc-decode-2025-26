@@ -16,8 +16,8 @@ public class Turret {
 
 //    public static double MIN_TURRET_ANGLE = Math.toRadians(-156.72);
 //    public static double MAX_TURRET_ANGLE = Math.toRadians(153.62);
-    public static double MIN_TURRET_ANGLE = Math.toRadians(-90);
-    public static double MAX_TURRET_ANGLE = Math.toRadians(90);
+    public static double MIN_TURRET_ANGLE = Math.toRadians(-151);
+    public static double MAX_TURRET_ANGLE = Math.toRadians(146.5);
 
     double[] angleValues = new double[] {Math.toRadians(-90), Math.toRadians(90)};
     double[] servoPositions = new double[] {0.795, 0.19}; //TODO: tune

@@ -40,9 +40,9 @@ public abstract class Auto extends LinearOpMode {
     protected Command updateShooter;
 //    private Command updateTurret;
 
-//    originally startPose = new Pose(18.865, 114.22, Math.toRadians(180));
-    //moved over -1.877 on x, -3.579 on y
-    Pose startPose = new Pose(16.988, 110.641, Math.toRadians(180));
+//    Pose startPose = new Pose(16.988, 110.641, Math.toRadians(180));
+    //moved over 0.747 on x, -1.901 on y
+    Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180));
 
     protected Pose shootingPose = new Pose(53.243, 80.761, Math.toRadians(180));
     protected Pose middlePickupPose = new Pose(13.243, 55.111, Math.toRadians(180));

@@ -13,6 +13,7 @@ import com.pedropathing.ivy.Scheduler;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.drivetrains.SwerveHeadingLock;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.States;
@@ -63,28 +64,18 @@ public class ShootingState implements State {
             Constants.debugTelemetry = !Constants.debugTelemetry;
         }
 
-        if (gamepad1.rightBumperWasPressed() && !transitioningState && !Constants.lastOpModeWasAuto) {
-            transitioningState = true;
-            schedule(
-                    sequential(
-//                            waitUntil(robot::readyToShoot).raceWith(infinite(() -> {
-//                                telemetry.addData("Waiting to shoot...", "");
-//                            })).raceWith(waitMs(300)),
-                            robot.shootMotif(),
-                            instant(() -> cancel(updateShooter)),
-                            instant(() -> robot.setState(States.INTAKING))
-                    )
-            );
+        if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof SwerveHeadingLock) {
+            double heading = Constants.color == Constants.Color.RED
+                    ? Math.toRadians(30)
+                    : Math.toRadians(150);
+            ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
-        if (gamepad1.bWasPressed() && !transitioningState && !Constants.lastOpModeWasAuto) {
-            transitioningState = true;
-            schedule(
-                    sequential(
-                            instant(() -> cancel(updateShooter)),
-                            instant(() -> robot.setState(States.INTAKING))
-                    )
-            );
+        if (gamepad1.bWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof SwerveHeadingLock) {
+            double heading = Constants.color == Constants.Color.RED
+                    ? Math.toRadians(180)
+                    : Math.toRadians(0);
+            ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
         if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto) {

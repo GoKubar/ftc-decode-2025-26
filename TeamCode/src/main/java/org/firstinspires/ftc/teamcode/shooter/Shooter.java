@@ -74,14 +74,16 @@ public class Shooter {
     /**
      * Update shooting subsystems WITH velocity compensation
      */
-    public void updateShootingSubsystems(Pose pose, Vector velocity, Telemetry telemetry, boolean useVelocityComp) {
+    public void updateShootingSubsystems(Pose pose, Vector velocity, double angularVel, Telemetry telemetry, boolean useVelocityComp) {
         if (!useVelocityComp) {
             updateShootingSubsystems(pose, telemetry);
             return;
         }
 
         VelocityCompensationCalculator.ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
-                pose, velocity,
+                pose,
+                velocity,
+                angularVel,
                 goalPose
         );
 
@@ -98,6 +100,7 @@ public class Shooter {
     public void updateTurretOnly(
             Pose pose,
             Vector velocity,
+            double angularVel,
             Telemetry telemetry,
             boolean useVelocityComp
     ) {
@@ -107,7 +110,9 @@ public class Shooter {
         }
 
         VelocityCompensationCalculator.ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
-                pose, velocity,
+                pose,
+                velocity,
+                angularVel,
                 goalPose
         );
 

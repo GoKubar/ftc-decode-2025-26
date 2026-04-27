@@ -245,11 +245,11 @@ public class Robot {
     }
 
     public Command updateShootingSubsystems() {
-        return infinite(() -> shooter.updateShootingSubsystems(getPose(), getVelocity(), telemetry, useVelocityComp));
+        return infinite(() -> shooter.updateShootingSubsystems(getPose(), getVelocity(), getAngularVelocity(), telemetry, useVelocityComp));
     }
 
     public Command updateTurret() {
-        return infinite(() -> shooter.updateTurretOnly(getPose(), getVelocity(), telemetry, useVelocityComp));
+        return infinite(() -> shooter.updateTurretOnly(getPose(), getVelocity(), getAngularVelocity(), telemetry, useVelocityComp));
     }
 
     public boolean readyToShoot() {
@@ -396,14 +396,14 @@ public class Robot {
     }
 
     public Command shootMotif(int shootingTime) {
-        boolean close = getPose().getY() > Shooter.transitionYValue;
+//        boolean close = getPose().getY() > Shooter.transitionYValue;
 
         double intakePower = Math.min(1, getVoltage() / 12.5);
 
         return sequential(
                 openGate(),
                 instant(() -> currentlyShooting = true),
-                setIntakePower(close ? 1 : intakePower),
+                setIntakePower(intakePower),
                 waitMs(shootingTime),
                 closeGate(),
                 instant(() -> currentlyShooting = false)
