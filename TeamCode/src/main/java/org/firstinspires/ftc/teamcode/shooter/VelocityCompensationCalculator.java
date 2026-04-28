@@ -40,8 +40,8 @@ public class VelocityCompensationCalculator {
     private static final double g = 386.0885; // in / s^2
 
     /** Shooter offset from robot center (inches) */
-    private static final double SHOOTER_OFFSET_X = 0.566141732283465;
-    private static final double SHOOTER_OFFSET_Y = 0.0;
+    public static final double SHOOTER_OFFSET_X = 0.566141732283465;
+    public static final double SHOOTER_OFFSET_Y = 0.0;
 
     // Anti-diagonal data points: positions where x + y ≈ 141.5
     public static Pose[] tablePositions = {

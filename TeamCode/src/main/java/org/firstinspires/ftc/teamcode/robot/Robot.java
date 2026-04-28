@@ -159,7 +159,7 @@ public class Robot {
 
     public double getAngularVelocity() {
         return localizationMode == LocalizationMode.PINPOINT
-                ? PedroConstants.getPinpointLocalizer().getAngularVelocity()
+                ? PedroConstants.getPinpointLocalizer().getVelocity().getHeading()
                 : follower.getAngularVelocity();
     }
 
