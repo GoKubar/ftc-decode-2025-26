@@ -299,8 +299,7 @@ public class FusionLocalizer implements Localizer {
         return Double.isNaN(currentPosition.getX()) || Double.isNaN(currentPosition.getY()) || Double.isNaN(currentPosition.getHeading());
     }
 
-    @Override
     public double getAngularVelocity() {
-        return deadReckoning.getAngularVelocity();
+        return currentVelocity != null ? currentVelocity.getHeading() : deadReckoning.getVelocity().getHeading();
     }
 }
