@@ -25,19 +25,20 @@ public abstract class FarAuto extends LinearOpMode {
     Robot robot;
     //default for all poses is blue side
 
+    public static double offsetX = -0.66;
+    public static double offsetY = -2.325;
+
     protected Command updateShooter;
     //originally 46.05, 6.81
-    //moved -0.66 on x, -2.325 on y
-    //start pose moved, moved others
-    protected Pose startPose = new Pose(45.39, 4.485, Math.toRadians(180));
-    protected Pose farPickupPose = new Pose(11.59, 33.210, Math.toRadians(180));
-    protected Pose farPickupControlPoint = new Pose(49.56, 37.3);
-    protected Pose shootingPose = new Pose(52.22, 12.93, Math.toRadians(180));
-    protected Pose cornerPickup = new Pose(10.42, 6, Math.toRadians(180));
-    protected Pose hpEdgePose = new Pose(10.42, 22, Math.toRadians(180));
-    protected Pose sweepPose = new Pose(9, 40, Math.toRadians(90));
-    protected Pose sweepControlPoint = new Pose(6.9, 0);
-    protected Pose parkPose = new Pose(42, 15, Math.toRadians(180));
+    protected Pose startPose = new Pose(46.05 + offsetX, 6.81 + offsetY, Math.toRadians(180));
+    protected Pose farPickupPose = new Pose(11.59 + offsetX, 33.210 + offsetY, Math.toRadians(180));
+    protected Pose farPickupControlPoint = new Pose(49.56 + offsetX + offsetY, 37.3);
+    protected Pose shootingPose = new Pose(52.22 + offsetX, 12.93 + offsetY, Math.toRadians(180));
+    protected Pose cornerPickup = new Pose(10.42 + offsetX, 6.5 + offsetY, Math.toRadians(180));
+    protected Pose hpEdgePose = new Pose(10.42 + offsetX, 22 + offsetY, Math.toRadians(180));
+    protected Pose sweepPose = new Pose(9 + offsetX, 40 + offsetY, Math.toRadians(90));
+    protected Pose sweepControlPoint = new Pose(6.9 + offsetX + offsetY, 0);
+    protected Pose parkPose = new Pose(42 + offsetX, 15 + offsetY, Math.toRadians(180));
     protected Pose goalPose = Constants.BLUE_GOAL_POSE;
 
     protected PathChain shootPreloads;

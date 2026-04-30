@@ -20,7 +20,7 @@ public class Turret {
     public static double MAX_TURRET_ANGLE = Math.toRadians(135);
 
     double[] angleValues = new double[] {Math.toRadians(-90), Math.toRadians(90)};
-    double[] servoPositions = new double[] {0.795, 0.19}; //TODO: tune
+    double[] servoPositions = new double[] {0.8, 0.1967}; //TODO: tune
 
 
     public double getAngleFromServoPos(double servoPos) {

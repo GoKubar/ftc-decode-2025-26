@@ -130,7 +130,7 @@ public class IntakingState implements State {
         if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof SwerveHeadingLock) {
             double heading = Constants.color == Constants.Color.RED
                     ? Math.toRadians(32)
-                    : Math.toRadians(150);
+                    : Math.toRadians(148);
             ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
