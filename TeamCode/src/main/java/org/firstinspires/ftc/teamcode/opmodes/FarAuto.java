@@ -26,8 +26,10 @@ public abstract class FarAuto extends LinearOpMode {
     //default for all poses is blue side
 
     protected Command updateShooter;
-
-    protected Pose startPose = new Pose(46.05, 6.81, Math.toRadians(180));
+    //originally 46.05, 6.81
+    //moved -0.66 on x, -2.325 on y
+    //start pose moved, moved others
+    protected Pose startPose = new Pose(45.39, 4.485, Math.toRadians(180));
     protected Pose farPickupPose = new Pose(11.59, 33.210, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(49.56, 37.3);
     protected Pose shootingPose = new Pose(52.22, 12.93, Math.toRadians(180));

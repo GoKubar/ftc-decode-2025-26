@@ -146,8 +146,8 @@ public class ShootingTest extends LinearOpMode {
                 intakeSpeed -= 0.1;
             }
 
-            turretTarget = Math.atan2(Constants.BLUE_GOAL_POSE.mirror().getY() - follower.getPose().getY(),
-                    Constants.BLUE_GOAL_POSE.mirror().getX() - follower.getPose().getX());
+            turretTarget = Math.atan2(Constants.RED_GOAL_POSE.getY() - follower.getPose().getY(),
+                    Constants.RED_GOAL_POSE.getX() - follower.getPose().getX());
 
             turretTarget -= follower.getHeading();
 

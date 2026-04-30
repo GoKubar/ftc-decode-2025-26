@@ -10,7 +10,7 @@ public class RedTele extends Tele{
     protected void setPoses() {
         // Red side - mirror the starting pose
         startPose = startPose.mirror();
-        goalPose = goalPose.mirror();
+        goalPose = Constants.RED_GOAL_POSE;
         //etc
     }
 

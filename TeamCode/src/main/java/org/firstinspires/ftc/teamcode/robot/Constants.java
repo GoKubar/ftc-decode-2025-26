@@ -7,8 +7,9 @@ import org.firstinspires.ftc.teamcode.shooter.Turret;
 
 @Config
 public class Constants {
-    public static Pose BLUE_GOAL_POSE = new Pose(8, 136.5, Math.toRadians(0));
-    //public static Pose RED_GOAL_POSE = new Pose(134, 134, Math.toRadians(0));
+    public static Pose BLUE_GOAL_POSE = new Pose(3, 133.5, Math.toRadians(0));
+    public static Pose RED_GOAL_POSE = new Pose(133.5, 136.5, Math.toRadians(0));
+
     public enum Color {
         BLUE,
         RED,

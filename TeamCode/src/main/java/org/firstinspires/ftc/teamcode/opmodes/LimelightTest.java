@@ -11,6 +11,7 @@ import com.pedropathing.math.MathFunctions;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -31,6 +32,7 @@ import org.firstinspires.ftc.teamcode.util.telemetry.FastTelemetry;
 
 import java.util.List;
 
+@Disabled
 @TeleOp
 public class LimelightTest extends LinearOpMode {
 

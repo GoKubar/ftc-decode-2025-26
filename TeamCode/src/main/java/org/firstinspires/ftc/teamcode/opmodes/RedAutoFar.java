@@ -17,7 +17,7 @@ public class RedAutoFar extends FarAuto{
         sweepPose = sweepPose.mirror();
         sweepControlPoint = sweepControlPoint.mirror();
         parkPose = parkPose.mirror();
-        goalPose = goalPose.mirror();
+        goalPose = Constants.RED_GOAL_POSE;
     }
 
     protected void setColor() {
