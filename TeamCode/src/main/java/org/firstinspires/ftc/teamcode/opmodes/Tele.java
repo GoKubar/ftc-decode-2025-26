@@ -18,7 +18,7 @@ public abstract class Tele extends LinearOpMode {
     //default startPose
     //length: 15.28
     //width: 15.12
-    Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180));
+    Pose startPose = new Pose(17.735, 110.63, Math.toRadians(180));
     double lastTurretTicksAtEndOfAuto = -999999;
     boolean wasLastOpModeAuto = false;
 

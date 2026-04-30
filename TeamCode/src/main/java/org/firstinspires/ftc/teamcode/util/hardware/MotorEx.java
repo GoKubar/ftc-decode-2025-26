@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
 public class MotorEx {
@@ -63,5 +64,9 @@ public class MotorEx {
 
     public DcMotorEx getMotor() {
         return motor;
+    }
+
+    public double getCurrent() {
+        return motor.getCurrent(CurrentUnit.AMPS);
     }
 }

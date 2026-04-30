@@ -93,6 +93,10 @@ public class Flywheel {
         return activated;
     }
 
+    public double getCurrent() {
+        return shooterMotorL.getCurrent() + shooterMotorR.getCurrent();
+    }
+
     public void toggle() {
         activated = !activated;
         if (!activated) {

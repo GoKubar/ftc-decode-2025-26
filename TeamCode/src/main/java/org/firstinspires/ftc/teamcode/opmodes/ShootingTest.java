@@ -163,9 +163,11 @@ public class ShootingTest extends LinearOpMode {
 
             dashboardTelem.addData("Current Flyhweel Vel", flywheel.getCurrentAngularVel());
             dashboardTelem.addData("Target Flyhweel Vel", flywheel.getTargetAngularVelocity());
+            dashboardTelem.addData("Flywheel Current", flywheel.getCurrent());
 
             telemetry.addData("Current Angular Vel", flywheel.getCurrentAngularVel());
             telemetry.addData("Target Angular Vel", flywheel.getTargetAngularVelocity());
+            telemetry.addData("Flywheel Current", flywheel.getCurrent());
             telemetry.addData("\n\nCurrent Hood angle", Math.toDegrees(hood.getCurrentHoodAngle()));
             telemetry.addData("\nCurrent Hood Servo Position", hoodTarget);
             telemetry.addData("\n pose", follower.getPose());

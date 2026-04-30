@@ -23,7 +23,9 @@ import org.firstinspires.ftc.teamcode.shooter.Turret;
 
 public class IntakingState implements State {
 
-    Pose redResetPose = new Pose( 8.7863775591,6.0059158661+ 0.5511811024, 0);
+//    private static double dtLength = 276.948;
+//    private static double dtWidth = 346.000;
+    Pose redResetPose = new Pose(11.5179795276, 8.2037401575, Math.toRadians(180));
 
     Telemetry telemetry;
     private Gamepad gamepad1;
