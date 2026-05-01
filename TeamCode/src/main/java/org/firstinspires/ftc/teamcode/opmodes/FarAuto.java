@@ -34,7 +34,7 @@ public abstract class FarAuto extends LinearOpMode {
     protected Pose farPickupPose = new Pose(11.59 + offsetX, 33.210 + offsetY, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(49.56 + offsetX + offsetY, 37.3);
     protected Pose shootingPose = new Pose(52.22 + offsetX, 12.93 + offsetY, Math.toRadians(180));
-    protected Pose cornerPickup = new Pose(10.42 + offsetX, 6.5 + offsetY, Math.toRadians(180));
+    protected Pose cornerPickup = new Pose(10.42 + offsetX, 6.81 + offsetY, Math.toRadians(180));
     protected Pose hpEdgePose = new Pose(10.42 + offsetX, 22 + offsetY, Math.toRadians(180));
     protected Pose sweepPose = new Pose(9 + offsetX, 40 + offsetY, Math.toRadians(90));
     protected Pose sweepControlPoint = new Pose(6.9 + offsetX + offsetY, 0);
