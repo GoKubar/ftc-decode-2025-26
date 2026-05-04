@@ -40,8 +40,6 @@ public class Robot {
 
     private State currentState;
 
-    private boolean useVelocityComp = true;
-
     Timer timer = new Timer();
     ElapsedTime telemetryTimer = new ElapsedTime();
     int totalMillis = 0;
@@ -72,6 +70,8 @@ public class Robot {
 
     VoltageSensor voltageSensor;
 
+    Pose goalPose;
+
     public Robot(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose goalPose) {
         this.telemetry = telemetry;
 
@@ -84,12 +84,13 @@ public class Robot {
 //        proximityIndicator = new ProximityIndicator(hardwareMap);
 
         follower = PedroConstants.createFollower(hardwareMap);
-        shooter = new Shooter(hardwareMap, goalPose, voltageSensor);
+        shooter = new Shooter(hardwareMap, voltageSensor);
         currentPose = follower.getPose();
 
         setDrivetrain(Drivetrains.SWERVE_HEADING_LOCK);
         setState(States.NONE);
 
+        this.goalPose = goalPose;
 //        gatePusher = new ServoEx(hardwareMap, "gatePush");
 //        gatePusher.setPosition(BLUE_SIDE_OUT);
 
@@ -216,12 +217,12 @@ public class Robot {
         return instant(() -> shooter.setTurretAngle(angle));
     }
 
-    public Command updateShootingSubsystems() {
-        return infinite(() -> shooter.updateShootingSubsystems(getPose(), getVelocity(), getAngularVelocity(), telemetry, useVelocityComp));
+    public void moveGoalPose(double dx, double dy) {
+        goalPose = new Pose(goalPose.getX() + dx, goalPose.getY() + dy);
     }
 
-    public Command updateTurret() {
-        return infinite(() -> shooter.updateTurretOnly(getPose(), getVelocity(), getAngularVelocity(), telemetry, useVelocityComp));
+    public Command updateShootingSubsystems() {
+        return infinite(() -> shooter.updateShootingSubsystems(getPose(), goalPose, getVelocity(), getAngularVelocity(), telemetry));
     }
 
     public boolean readyToShoot() {
@@ -243,6 +244,8 @@ public class Robot {
 
         telemetry.addData("turret offset (deg)", Math.toDegrees(Turret.turretOffsetRad));
         telemetry.addData("Updated lastPose", Constants.lastPose);
+        telemetry.addData("Current goal pose", goalPose);
+        telemetry.addLine();
         telemetry.addData("flywheel enabled", getFylwheelActivated());
         telemetry.addData("flywheel velocity", getFlywheelAngularVelocity());
         telemetry.addData("target flywheel velocity", getTargetFlywheelAngularVelocity());

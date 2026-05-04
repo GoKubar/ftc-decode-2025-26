@@ -8,6 +8,8 @@ import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.commands.Commands.waitUntil;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
+import static org.firstinspires.ftc.teamcode.states.IntakingState.tickingIncrementInches;
+
 import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.Scheduler;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -60,14 +62,14 @@ public class ShootingState implements State {
     }
 
     public void execute(Robot robot) {
-        if (gamepad2.dpadDownWasPressed()) {
+        if (gamepad2.leftBumperWasPressed()) {
             Constants.debugTelemetry = !Constants.debugTelemetry;
         }
 
         if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof SwerveHeadingLock) {
             double heading = Constants.color == Constants.Color.RED
                     ? Math.toRadians(32)
-                    : Math.toRadians(150);
+                    : Math.toRadians(148);
             ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
@@ -78,12 +80,32 @@ public class ShootingState implements State {
             ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
-        if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto) {
-            Turret.turretOffsetRad += Math.toRadians(3);
+//        if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto) {
+//            Turret.turretOffsetRad += Math.toRadians(3);
+//        }
+//
+//        if (gamepad2.dpadRightWasPressed() && !Constants.lastOpModeWasAuto) {
+//            Turret.turretOffsetRad -= Math.toRadians(3);
+//        }
+
+        if ((gamepad1.dpadLeftWasPressed() || gamepad2.dpadLeftWasPressed()) && !Constants.lastOpModeWasAuto) {
+            robot.moveGoalPose(0,
+                    (Constants.color == Constants.Color.RED) ? tickingIncrementInches : -tickingIncrementInches);
         }
 
-        if (gamepad2.dpadRightWasPressed() && !Constants.lastOpModeWasAuto) {
-            Turret.turretOffsetRad -= Math.toRadians(3);
+        if ((gamepad1.dpadRightWasPressed() || gamepad2.dpadRightWasPressed()) && !Constants.lastOpModeWasAuto) {
+            robot.moveGoalPose(0,
+                    (Constants.color == Constants.Color.RED) ? -tickingIncrementInches : tickingIncrementInches);
+        }
+
+        if ((gamepad1.dpadUpWasPressed() || gamepad2.dpadUpWasPressed()) && !Constants.lastOpModeWasAuto) {
+            robot.moveGoalPose((Constants.color == Constants.Color.RED) ? tickingIncrementInches : -tickingIncrementInches
+                    ,0);
+        }
+
+        if ((gamepad1.dpadDownWasPressed() || gamepad2.dpadDownWasPressed()) && !Constants.lastOpModeWasAuto) {
+            robot.moveGoalPose((Constants.color == Constants.Color.RED) ? -tickingIncrementInches : tickingIncrementInches
+                    ,0);
         }
     }
 

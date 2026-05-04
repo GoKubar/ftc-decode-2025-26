@@ -63,23 +63,17 @@ public class Shooter {
 
     public double lastTurretAngle;
 
-    public Shooter(HardwareMap hardwareMap, Pose goalPose, VoltageSensor voltageSensor) {
+    public Shooter(HardwareMap hardwareMap, VoltageSensor voltageSensor) {
         hood = new Hood(hardwareMap);
         flywheel = new Flywheel(hardwareMap, voltageSensor);
         turret = new Turret(hardwareMap);
         gateServo = new ServoEx(hardwareMap, "gate");
-        this.goalPose = goalPose;
     }
 
     /**
      * Update shooting subsystems WITH velocity compensation
      */
-    public void updateShootingSubsystems(Pose pose, Vector velocity, double angularVel, Telemetry telemetry, boolean useVelocityComp) {
-        if (!useVelocityComp) {
-            updateShootingSubsystems(pose, telemetry);
-            return;
-        }
-
+    public void updateShootingSubsystems(Pose pose, Pose goalPose, Vector velocity, double angularVel, Telemetry telemetry) {
         VelocityCompensationCalculator.ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
                 pose,
                 velocity,
@@ -94,75 +88,8 @@ public class Shooter {
         turret.setTurretAngle(shotParameters.turretAngle);
     }
 
-    /**
-     * Update turret only during intaking state
-     */
-    public void updateTurretOnly(
-            Pose pose,
-            Vector velocity,
-            double angularVel,
-            Telemetry telemetry,
-            boolean useVelocityComp
-    ) {
-        if (!useVelocityComp) {
-            updateTurretOnly(pose, telemetry);
-            return;
-        }
-
-        VelocityCompensationCalculator.ShotParameters shotParameters = VelocityCompensationCalculator.calculate(
-                pose,
-                velocity,
-                angularVel,
-                goalPose
-        );
-
-        lastTurretAngle = shotParameters.turretAngle;
-
-        turret.setTurretAngle(shotParameters.turretAngle);
-        flywheel.setPower(0);
-    }
-
-    public void updateTurretOnly(Pose pose, Telemetry telemetry) {
-        double turretAngle = getTargetTurretAngle(pose);
-
-        lastTurretAngle = turretAngle;
-
-        turret.setTurretAngle(turretAngle);
-    }
-
-    /**
-     * Update shooting subsystems WITHOUT velocity compensation (fallback/simple mode)
-     */
-    public void updateShootingSubsystems(Pose pose, Telemetry telemetry) {
-        double dist = distance(pose, goalPose);
-
-//        double flywheelSpeed = flywheelSpeeds.interpolate(dist);
-//        double hoodAngle = Hood.servoToHoodAngle.interpolate(hoodServoInterpolation.interpolate(dist));
-//        double turretAngle = getTargetTurretAngle(pose);
-
-        double flywheelSpeed = 0;
-        double hoodAngle = 0;
-        double turretAngle = 0;
-
-        lastTurretAngle = turretAngle;
-
-        flywheel.setTargetAngularVelocity(flywheelSpeed);
-        hood.setHoodAngle(hoodAngle);
-        turret.setTurretAngle(turretAngle);
-    }
-
     public void setTurretAngle(double angle) {
         turret.setTurretAngle(angle);
-    }
-
-    public double getTargetTurretAngle(Pose pose) {
-        double targetAngle = Math.atan2(
-                goalPose.getY() - pose.getY(),
-                goalPose.getX() - pose.getX()
-        );
-        targetAngle -= pose.getHeading();
-        targetAngle = MathHelpers.wrapAngleRadians(targetAngle);
-        return targetAngle;
     }
 
     public boolean readyToShoot() {

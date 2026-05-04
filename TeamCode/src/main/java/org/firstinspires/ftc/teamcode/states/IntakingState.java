@@ -27,12 +27,13 @@ public class IntakingState implements State {
 //    private static double dtWidth = 346.000;
     Pose redResetPose = new Pose(11.5179795276, 8.2037401575, Math.toRadians(180));
 
+    public static double tickingIncrementInches = 2;
+
     Telemetry telemetry;
     private Gamepad gamepad1;
     private Gamepad gamepad2;
 
     private Command joystickToIntake;
-//    private Command updateTurret;
 
 //    private Command transition;
 
@@ -94,7 +95,7 @@ public class IntakingState implements State {
 //            );
 //        }
 
-        if (gamepad2.dpadDownWasPressed()) {
+        if (gamepad2.leftBumperWasPressed()) {
             Constants.debugTelemetry = !Constants.debugTelemetry;
         }
 
@@ -141,12 +142,34 @@ public class IntakingState implements State {
             ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
+//        if ((gamepad1.dpadLeftWasPressed() || gamepad2.dpadLeftWasPressed()) && !Constants.lastOpModeWasAuto) {
+//            Turret.turretOffsetRad += Math.toRadians(3);
+//        }
+//
+//        if ((gamepad1.dpadRightWasPressed() || gamepad2.dpadRightWasPressed()) && !Constants.lastOpModeWasAuto) {
+//            Turret.turretOffsetRad -= Math.toRadians(3);
+//        }
+
+
+
         if ((gamepad1.dpadLeftWasPressed() || gamepad2.dpadLeftWasPressed()) && !Constants.lastOpModeWasAuto) {
-            Turret.turretOffsetRad += Math.toRadians(3);
+            robot.moveGoalPose(0,
+                    (Constants.color == Constants.Color.RED) ? tickingIncrementInches : -tickingIncrementInches);
         }
 
         if ((gamepad1.dpadRightWasPressed() || gamepad2.dpadRightWasPressed()) && !Constants.lastOpModeWasAuto) {
-            Turret.turretOffsetRad -= Math.toRadians(3);
+            robot.moveGoalPose(0,
+                    (Constants.color == Constants.Color.RED) ? -tickingIncrementInches : tickingIncrementInches);
+        }
+
+        if ((gamepad1.dpadUpWasPressed() || gamepad2.dpadUpWasPressed()) && !Constants.lastOpModeWasAuto) {
+            robot.moveGoalPose((Constants.color == Constants.Color.RED) ? tickingIncrementInches : -tickingIncrementInches
+                    ,0);
+        }
+
+        if ((gamepad1.dpadDownWasPressed() || gamepad2.dpadDownWasPressed()) && !Constants.lastOpModeWasAuto) {
+            robot.moveGoalPose((Constants.color == Constants.Color.RED) ? -tickingIncrementInches : tickingIncrementInches
+                    ,0);
         }
     }
 
