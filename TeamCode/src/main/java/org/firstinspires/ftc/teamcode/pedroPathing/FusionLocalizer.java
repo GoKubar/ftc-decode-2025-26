@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.localization.Localizer;
 import com.pedropathing.math.MathFunctions;
 import com.pedropathing.math.Matrix;
 import com.pedropathing.math.Vector;
-import com.pedropathing.localization.Localizer;
 
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -90,8 +90,8 @@ public class FusionLocalizer implements Localizer {
      * @param dt the time step Δt in seconds
      */
     private void updateCovariance(double dt) {
-        P = P.plus(Q.multiply(dt*dt));
-        clampCovariance(P);
+        Matrix G = Matrix.createRotation(getPose().getHeading()).multiply(dt);
+        P = P.plus(G.multiply(Q.multiply(G.transposed())));
     }
 
     /**
@@ -167,7 +167,6 @@ public class FusionLocalizer implements Localizer {
         Matrix updatedCovariance =
                 IK.multiply(Pm).multiply(IK.transposed())
                         .plus(K.multiply(measurementR).multiply(K.transposed()));
-        clampCovariance(updatedCovariance);
 
         covarianceHistory.put(timestamp, updatedCovariance);
 
@@ -190,8 +189,8 @@ public class FusionLocalizer implements Localizer {
             poseHistory.put(t, nextPose);
 
             // Covariance propagation: P ← P + Q dt²
-            prevCov = prevCov.plus(Q.multiply(dt * dt));
-            clampCovariance(prevCov);
+            Matrix G = Matrix.createRotation(prevPose.getHeading()).multiply(dt);
+            prevCov = prevCov.plus(G.multiply(Q.multiply(G.transposed())));
             covarianceHistory.put(t, prevCov);
 
             prevPose = nextPose;
@@ -236,18 +235,8 @@ public class FusionLocalizer implements Localizer {
         );
     }
 
-    private void clampCovariance(Matrix P) {
-        double eps = 1e-6; // minimum allowed variance
-        for (int i = 0; i < 3; i++) {
-            double v = P.get(i, i);
-            if (v < eps) {
-                P.set(i, i, eps);
-            }
-        }
-    }
-
     @Override
-    public Pose getPose() { return currentPosition; }
+    public Pose getPose() { return currentPosition.withHeading(deadReckoning.getPose().getHeading()); }
 
     @Override
     public Pose getVelocity() {
@@ -297,9 +286,5 @@ public class FusionLocalizer implements Localizer {
     @Override
     public boolean isNAN() {
         return Double.isNaN(currentPosition.getX()) || Double.isNaN(currentPosition.getY()) || Double.isNaN(currentPosition.getHeading());
-    }
-
-    public double getAngularVelocity() {
-        return currentVelocity != null ? currentVelocity.getHeading() : deadReckoning.getVelocity().getHeading();
     }
 }

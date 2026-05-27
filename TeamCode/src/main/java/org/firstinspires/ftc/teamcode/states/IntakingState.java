@@ -5,12 +5,8 @@ import static com.pedropathing.ivy.Scheduler.schedule;
 
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.ivy.Command;
-import com.pedropathing.ivy.Scheduler;
-import com.pedropathing.ivy.bindings.Binding;
-import com.pedropathing.ivy.bindings.Bindings;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import static com.pedropathing.ivy.bindings.Bindings.bind;
 import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 

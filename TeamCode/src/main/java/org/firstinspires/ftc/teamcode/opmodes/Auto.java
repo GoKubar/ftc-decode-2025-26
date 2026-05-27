@@ -6,7 +6,6 @@ import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.groups.Groups.parallel;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
-import static com.pedropathing.ivy.pedro.PedroCommands.turn;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;

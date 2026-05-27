@@ -17,6 +17,7 @@ import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.pedroPathing.FusionLocalizer;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -59,6 +60,8 @@ public class PedroConstants {
             // )
             .centripetalScaling(0.0005).
             mass(13.732);
+
+    
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
             .forwardPodY(4.271653543307087)
