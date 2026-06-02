@@ -73,7 +73,7 @@ public class PedroConstants {
 
     public static SwerveConstants swerveConstants = new SwerveConstants()
             .velocity(85.758)
-//            .zeroPowerBehavior(SwerveConstants.ZeroPowerBehavior.IGNORE_ANGLE_CHANGES)
+            //.zeroPowerBehavior(SwerveConstants.ZeroPowerBehavior.IGNORE_ANGLE_CHANGES)
             .useBrakeModeInTeleOp(true);
 
     // F - front: .130, back: .190
@@ -105,7 +105,7 @@ public class PedroConstants {
 
     private static CoaxialPod rightFront(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm1", "ss1", "se1",
-                new PIDFCoefficients(kP, 0, kD, kFFront), DcMotorSimple.Direction.FORWARD,
+                new PIDFCoefficients(kP/*.3*/, 0, kD/*0.02*/, kFFront), DcMotorSimple.Direction.FORWARD,
                 DcMotorSimple.Direction.FORWARD, Math.toRadians(rightFrontOffsetDegrees), new Pose(dtLength, -dtWidth),
                 0.003, 3.219, false);
         pod.setMotorCachingThreshold(0.05);
@@ -125,7 +125,7 @@ public class PedroConstants {
 
     private static CoaxialPod rightBack(HardwareMap hardwareMap) {
         CoaxialPod pod = new CoaxialPod(hardwareMap, "sm0", "ss0", "se0",
-                new PIDFCoefficients(kP, 0, kD, kFBack), DcMotorSimple.Direction.FORWARD,
+                new PIDFCoefficients(kP/*+.05*/, 0, kD, kFBack), DcMotorSimple.Direction.FORWARD,
                 DcMotorSimple.Direction.FORWARD, Math.toRadians(rightBackOffsetDegrees), new Pose(-dtLength, -dtWidth),
                 0.001, 3.214, false);
         pod.setMotorCachingThreshold(0.05);

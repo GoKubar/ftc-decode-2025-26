@@ -1529,7 +1529,7 @@ class SwerveOffsetsTest extends OpMode {
             debugStringEnabled = !debugStringEnabled;
         }
 
-        follower.setTeleOpDrive(0.25, 0, 0, true);
+        follower.setTeleOpDrive(0.5, 0, 0, true);
         follower.update();
 
         if (debugStringEnabled) {
