@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.control;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
@@ -31,7 +31,7 @@ public final class AprilTagLocalizer implements AutoCloseable {
     private static final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(
             AngleUnit.DEGREES,
             0,
-            -80,
+            -60,
             0,
             0
     );
@@ -57,7 +57,7 @@ public final class AprilTagLocalizer implements AutoCloseable {
                 .build();
 
         visionPortal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
+                .setCamera(hardwareMap.get(WebcamName.class, "webcam"))
                 .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(processor)

@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
+import org.firstinspires.ftc.teamcode.opmodes.AprilTagLocalizer;
 import java.util.function.DoubleSupplier;
 
 @Config
@@ -59,6 +60,7 @@ public class Robot {
     }
 
     Follower follower;
+    AprilTagLocalizer aprilTagLocalizer;
     private LocalizationMode localizationMode = LocalizationMode.FOLLOWER;
     private Pose currentPose;
 
@@ -84,6 +86,7 @@ public class Robot {
 //        proximityIndicator = new ProximityIndicator(hardwareMap);
 
         follower = PedroConstants.createFollower(hardwareMap);
+        this.aprilTagLocalizer = PedroConstants.getAprilTagLocalizer();
         shooter = new Shooter(hardwareMap, voltageSensor);
         currentPose = follower.getPose();
 
@@ -125,6 +128,10 @@ public class Robot {
 //        updateLastTurretTicks();
     }
 
+    public void stop(){
+        aprilTagLocalizer.close();
+    }
+
 //    public void updateLastTurretTicks() {
 //        if (shooter.getTurretPos() != 0 || Constants.getLastTurretTicks() == 0)  {
 //            Constants.setLastTurretTicks(shooter.getTurretPos());
@@ -136,6 +143,7 @@ public class Robot {
             updatePinpoint();
         } else {
             follower.update();
+            aprilTagLocalizer.update();
             currentPose = follower.getPose();
         }
 

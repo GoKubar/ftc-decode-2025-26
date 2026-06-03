@@ -345,5 +345,8 @@ public abstract class Auto extends LinearOpMode {
             robot.clearCaches();
             Scheduler.execute();
         }
+        robot.stop();
     }
+
+
 }

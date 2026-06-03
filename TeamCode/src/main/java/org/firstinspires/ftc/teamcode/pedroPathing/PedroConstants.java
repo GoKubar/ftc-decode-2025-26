@@ -18,16 +18,19 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.pedroPathing.FusionLocalizer;
+import org.firstinspires.ftc.teamcode.opmodes.AprilTagLocalizer;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Config
 public class PedroConstants {
+    private static AprilTagLocalizer aprilTagLocalizer;
     private static PinpointLocalizer pinpointLocalizer;
 
     public static PinpointLocalizer getPinpointLocalizer() {
         return pinpointLocalizer;
     }
+    public static AprilTagLocalizer getAprilTagLocalizer() { return aprilTagLocalizer; }
 
     public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.6, 0, 0.015, 0);
 
@@ -158,10 +161,10 @@ public class PedroConstants {
     // public static PathConstraints defaultConstraints = new PathConstraints(0.995, 0.1, 0.1,
     // 0.007, 100, 1, 10, 1);
     public static Follower createFollower(HardwareMap hardwareMap) {
-        pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
+        aprilTagLocalizer = new AprilTagLocalizer(new PinpointLocalizer(hardwareMap, localizerConstants));
         return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
                 .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
                         leftBack(hardwareMap), rightBack(hardwareMap))
-                .setLocalizer(pinpointLocalizer).build();
+                .setLocalizer(aprilTagLocalizer.getLocalizer()).build();
     }
 }
