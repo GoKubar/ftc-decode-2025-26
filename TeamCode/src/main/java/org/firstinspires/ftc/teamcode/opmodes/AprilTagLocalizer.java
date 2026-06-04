@@ -7,6 +7,9 @@ import android.util.Size;
 import com.acmerobotics.dashboard.config.Config;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.localization.Localizer;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -41,7 +44,7 @@ public final class AprilTagLocalizer implements AutoCloseable {
     private final VisionPortal visionPortal;
     public static double decisionMarginThreshold = 50;
 
-    public AprilTagLocalizer(Localizer localizer) {
+    public AprilTagLocalizer(Localizer localizer, HardwareMap hardwareMap) {
 
         fusion = new FusionLocalizer(
                 localizer,
@@ -68,7 +71,7 @@ public final class AprilTagLocalizer implements AutoCloseable {
         return fusion;
     }
 
-    public void update() {
+    public void update(Telemetry telemetry) {
         List<AprilTagDetection> detections = processor.getDetections();
 
         telemetry.addData("AprilTags/detections", detections.size());

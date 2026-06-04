@@ -64,20 +64,19 @@ public class ArdCamTesting extends LinearOpMode {
     private static final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(
             AngleUnit.DEGREES,
             0,
-            30,
-            -90,
+            -60,
+            0,
             0
     );
     public static int latencyMs = 10;
     private AprilTagProcessor processor;
     private FusionLocalizer fusion;
-    private VisionPortal visionPortal;
     public static double decisionMarginThreshold = 50;
 
     Follower follower;
     Turret turret;
     Drivetrain drivetrain;
-
+    VisionPortal visionPortal;
 
     PinpointLocalizer pinpoint;
 
@@ -90,7 +89,7 @@ public class ArdCamTesting extends LinearOpMode {
 
         follower = PedroConstants.createFollower(hardwareMap);
         Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180)).mirror();
-        PedroConstants.getPinpointLocalizer().setPose(startPose);
+        //PedroConstants.getPinpointLocalizer().setPose(startPose);
         follower.setPose(startPose);
 
         drivetrain = Drivetrains.SWERVE_HEADING_LOCK.build(null, follower, telemetry);
@@ -118,7 +117,7 @@ public class ArdCamTesting extends LinearOpMode {
                 .setLensIntrinsics(544.2876017217492, 543.8059217350639, 332.20336755183894, 248.65289514406953)
                 .build();
 
-        visionPortal = new VisionPortal.Builder()
+        visionPortal  = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "webcam"))
                 .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)

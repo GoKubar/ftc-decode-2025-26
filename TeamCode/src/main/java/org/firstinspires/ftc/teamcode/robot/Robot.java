@@ -143,7 +143,7 @@ public class Robot {
             updatePinpoint();
         } else {
             follower.update();
-            aprilTagLocalizer.update();
+            aprilTagLocalizer.update(telemetry);
             currentPose = follower.getPose();
         }
 
