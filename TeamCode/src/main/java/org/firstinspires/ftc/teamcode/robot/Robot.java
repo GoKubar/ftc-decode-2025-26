@@ -56,12 +56,13 @@ public class Robot {
 
     public enum LocalizationMode {
         FOLLOWER,
-        PINPOINT
+        PINPOINT,
+        FUSION
     }
 
     Follower follower;
     AprilTagLocalizer aprilTagLocalizer;
-    private LocalizationMode localizationMode = LocalizationMode.FOLLOWER;
+    private LocalizationMode localizationMode = LocalizationMode.FUSION;
     private Pose currentPose;
 
     private Drivetrain drivetrain;
@@ -141,9 +142,12 @@ public class Robot {
     public void updateLocalization() {
         if (localizationMode == LocalizationMode.PINPOINT) {
             updatePinpoint();
-        } else {
+        } else if (localizationMode == LocalizationMode.FUSION){
             follower.update();
             aprilTagLocalizer.update(telemetry);
+            currentPose = follower.getPose();
+        } else {
+            follower.update();
             currentPose = follower.getPose();
         }
 

@@ -48,9 +48,9 @@ public final class AprilTagLocalizer implements AutoCloseable {
 
         fusion = new FusionLocalizer(
                 localizer,
-                new Pose(0.25, 0.25, Math.toRadians(2)),
-                new Pose(1, 1, Math.toRadians(0.5) / 60),
-                new Pose(2.1561, 2.6065, 0.0248),
+                new Pose(.5, .5, Math.toRadians(2)),
+                new Pose(.25, .25, Math.toRadians(0.05) / 60),
+                new Pose(0, 0, 0),
                 100
         );
 
