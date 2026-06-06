@@ -10,9 +10,6 @@ import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.telemetryM;
 import com.bylazar.configurables.PanelsConfigurables;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.configurables.annotations.IgnoreConfigurable;
-import com.bylazar.field.FieldManager;
-import com.bylazar.field.PanelsField;
-import com.bylazar.field.Style;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
@@ -92,10 +89,10 @@ public class Tuning extends SelectableOpMode {
     @Override
     public void onSelect() {
         if (follower == null) {
-            follower = PedroConstants.createFollower(hardwareMap);
+            follower = PedroConstants.createPinpointFollower(hardwareMap);
             PanelsConfigurables.INSTANCE.refreshClass(this);
         } else {
-            follower = PedroConstants.createFollower(hardwareMap);
+            follower = PedroConstants.createPinpointFollower(hardwareMap);
         }
 
         follower.setStartingPose(new Pose());

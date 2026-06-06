@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Drivetrains;
 import org.firstinspires.ftc.teamcode.robot.PTO;
-import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.shooter.Flywheel;
 import org.firstinspires.ftc.teamcode.shooter.Hood;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
@@ -59,7 +58,7 @@ public class ShootingTest extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
         dashboardTelem = dashboard.getTelemetry();
 
-        follower =  PedroConstants.createFollower(hardwareMap);
+        follower =  PedroConstants.createPinpointFollower(hardwareMap);
         Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180));
         startPose = startPose.mirror();
         follower.setPose(startPose);

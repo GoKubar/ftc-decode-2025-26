@@ -20,8 +20,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
+import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
@@ -62,7 +64,7 @@ public class Robot {
 
     Follower follower;
     AprilTagLocalizer aprilTagLocalizer;
-    private LocalizationMode localizationMode = LocalizationMode.FUSION;
+    private LocalizationMode localizationMode = LocalizationMode.FOLLOWER;
     private Pose currentPose;
 
     private Drivetrain drivetrain;
@@ -75,21 +77,31 @@ public class Robot {
 
     Pose goalPose;
 
-    public Robot(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose goalPose) {
+    public Robot(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose goalPose, LocalizationMode localizationMode) {
         this.telemetry = telemetry;
 
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
+
+        Drawing.init();
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         pto = new PTO(hardwareMap);
 //        proximityIndicator = new ProximityIndicator(hardwareMap);
 
-        follower = PedroConstants.createFollower(hardwareMap);
-        this.aprilTagLocalizer = PedroConstants.getAprilTagLocalizer();
-        shooter = new Shooter(hardwareMap, voltageSensor);
+        this.localizationMode = localizationMode;
+        if (localizationMode == LocalizationMode.FUSION){
+            follower = PedroConstants.createAprilTagFollower(hardwareMap);
+            this.aprilTagLocalizer = PedroConstants.getAprilTagLocalizer();
+        } else {
+            follower = PedroConstants.createPinpointFollower(hardwareMap);
+        }
+
         currentPose = follower.getPose();
+
+
+        shooter = new Shooter(hardwareMap, voltageSensor);
 
         setDrivetrain(Drivetrains.SWERVE_HEADING_LOCK);
         setState(States.NONE);
@@ -146,6 +158,9 @@ public class Robot {
             follower.update();
             aprilTagLocalizer.update(telemetry);
             currentPose = follower.getPose();
+            Drawing.drawRobot(follower.getPose(), Drawing.robotLook);
+            Drawing.drawRobot(PedroConstants.getPinpointLocalizer().getPose(), Drawing.historyLook);
+            Drawing.sendPacket();
         } else {
             follower.update();
             currentPose = follower.getPose();
@@ -253,6 +268,8 @@ public class Robot {
             return;
         }
         telemetryTimer.reset();
+
+
 
         telemetry.addData("turret offset (deg)", Math.toDegrees(Turret.turretOffsetRad));
         telemetry.addData("Updated lastPose", Constants.lastPose);

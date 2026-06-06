@@ -21,6 +21,7 @@ import com.pedropathing.paths.PathChain;
 import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.States;
@@ -324,12 +325,14 @@ public abstract class Auto extends LinearOpMode {
         setColor();
         setPoses();
         Constants.lastOpModeWasAuto = true;
+        Constants.currentOpModeIsAuto = true;
         Scheduler.reset();
 
-        robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose);
+
+        robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.FOLLOWER);
         // Constants.robot = robot;
         robot.setPose(startPose);
-        robot.setLocalizationMode(Robot.LocalizationMode.FUSION);
+        //robot.setLocalizationMode(Robot.LocalizationMode.FOLLOWER);
         robot.init();
 
         generatePaths();

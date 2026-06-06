@@ -14,10 +14,10 @@ public class Drawing {
     public static final double ROBOT_RADIUS = 9;
     private static final FieldManager panelsField = PanelsField.INSTANCE.getField();
 
-    private static final Style robotLook = new Style(
+    public static final Style robotLook = new Style(
             "", "#3F51B5", 0.75
     );
-    private static final Style historyLook = new Style(
+    public static final Style historyLook = new Style(
             "", "#4CAF50", 0.75
     );
 

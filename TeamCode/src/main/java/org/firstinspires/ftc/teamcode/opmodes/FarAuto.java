@@ -180,7 +180,7 @@ public abstract class FarAuto extends LinearOpMode {
         Constants.lastOpModeWasAuto = true;
         Scheduler.reset();
 
-        robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose);
+        robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.PINPOINT);
         robot.setPose(startPose);
         robot.setLocalizationMode(Robot.LocalizationMode.FOLLOWER);
         robot.init();

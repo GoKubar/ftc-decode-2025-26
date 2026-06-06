@@ -1,25 +1,18 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
-import android.content.Context;
 import android.util.Size;
 
 import com.bylazar.field.Style;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.InvertedFTCCoordinates;
 import com.pedropathing.ftc.PoseConverter;
-import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.localization.Localizer;
-import com.pedropathing.math.MathFunctions;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -35,7 +28,6 @@ import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Drivetrains;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.shooter.VelocityCompensationCalculator;
-import org.firstinspires.ftc.teamcode.util.MathHelpers;
 import org.firstinspires.ftc.teamcode.util.telemetry.FastTelemetry;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -78,7 +70,7 @@ public class ArdCamTesting extends LinearOpMode {
     Drivetrain drivetrain;
     VisionPortal visionPortal;
 
-    PinpointLocalizer pinpoint;
+    Localizer pinpoint;
 
     double turretTarget = 0;
 
@@ -87,7 +79,7 @@ public class ArdCamTesting extends LinearOpMode {
         telemetry = new FastTelemetry(telemetry);
         Constants.color = Constants.Color.RED;
 
-        follower = PedroConstants.createFollower(hardwareMap);
+        follower = PedroConstants.createPinpointFollower(hardwareMap);
         Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180)).mirror();
         //PedroConstants.getPinpointLocalizer().setPose(startPose);
         follower.setPose(startPose);
@@ -106,7 +98,7 @@ public class ArdCamTesting extends LinearOpMode {
 
         fusion = new FusionLocalizer(
                 pinpoint,
-                new Pose(0.25, 0.25, Math.toRadians(2)),
+                new Pose(0.5, 0.5, Math.toRadians(2)),
                 new Pose(1, 1, Math.toRadians(0.5) / 60),
                 new Pose(2.1561, 2.6065, 0.0248),
                 100

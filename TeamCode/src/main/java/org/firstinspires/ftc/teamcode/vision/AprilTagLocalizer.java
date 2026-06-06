@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.FusionLocalizer;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -22,10 +23,10 @@ import java.util.List;
 @Config("AprilTags")
 public final class AprilTagLocalizer implements AutoCloseable {
     private static final Position cameraPosition = new Position(
-            DistanceUnit.INCH,
-            2.204,
-            5.96,
-            8.82,
+            DistanceUnit.MM,
+            86.72638,
+            75.17500,
+            194.45158+2+105.85503,
             0
     );
     private static final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(
@@ -85,6 +86,7 @@ public final class AprilTagLocalizer implements AutoCloseable {
             );
 
             //context.addPose("AprilTags/" + detection.metadata.name, pose);
+
 
             fusion.addMeasurement(pose, System.nanoTime() - latencyMs * 1_000_000L);
         }

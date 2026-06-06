@@ -7,7 +7,6 @@ import com.pedropathing.ftc.PoseConverter;
 import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.geometry.PedroCoordinates;
-import com.pedropathing.math.MathFunctions;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -56,7 +55,7 @@ public class LimelightTest extends LinearOpMode {
         telemetry = new FastTelemetry(telemetry);
         Constants.color = Constants.Color.RED;
 
-        follower = PedroConstants.createFollower(hardwareMap);
+        follower = PedroConstants.createPinpointFollower(hardwareMap);
         Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180)).mirror();
         PedroConstants.getPinpointLocalizer().setPose(startPose);
         follower.setPose(startPose);

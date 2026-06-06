@@ -158,11 +158,21 @@ public class PedroConstants {
     // default
     // public static PathConstraints defaultConstraints = new PathConstraints(0.995, 0.1, 0.1,
     // 0.007, 100, 1, 10, 1);
-    public static Follower createFollower(HardwareMap hardwareMap) {
-        aprilTagLocalizer = new AprilTagLocalizer(new PinpointLocalizer(hardwareMap, localizerConstants), hardwareMap);
+    public static Follower createPinpointFollower(HardwareMap hardwareMap) {
+        pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
         return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
                 .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
                         leftBack(hardwareMap), rightBack(hardwareMap))
-                .setLocalizer(aprilTagLocalizer.getLocalizer()).build();
+                .setLocalizer(pinpointLocalizer).build();
+    }
+
+    public static Follower createAprilTagFollower(HardwareMap hardwareMap) {
+        pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
+        aprilTagLocalizer = new AprilTagLocalizer(pinpointLocalizer, hardwareMap);
+        return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
+                .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
+                        leftBack(hardwareMap), rightBack(hardwareMap))
+                .setLocalizer(aprilTagLocalizer.getLocalizer())
+                .build();
     }
 }
