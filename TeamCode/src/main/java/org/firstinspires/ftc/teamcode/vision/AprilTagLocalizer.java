@@ -1,7 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes;
-
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+package org.firstinspires.ftc.teamcode.vision;
 
 import android.util.Size;
 import com.acmerobotics.dashboard.config.Config;

@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
-import org.firstinspires.ftc.teamcode.opmodes.AprilTagLocalizer;
+import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 import java.util.function.DoubleSupplier;
 
 @Config
