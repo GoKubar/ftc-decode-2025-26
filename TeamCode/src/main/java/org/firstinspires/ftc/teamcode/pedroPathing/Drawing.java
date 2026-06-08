@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.pedroPathing;
 import com.bylazar.field.FieldManager;
 import com.bylazar.field.PanelsField;
 import com.bylazar.field.Style;
+import com.bylazar.panels.Panels;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.util.PoseHistory;
@@ -13,6 +16,7 @@ import com.pedropathing.paths.PathChain;
 public class Drawing {
     public static final double ROBOT_RADIUS = 9;
     private static final FieldManager panelsField = PanelsField.INSTANCE.getField();
+    private static final TelemetryManager panelsTelem = PanelsTelemetry.INSTANCE.getTelemetry();
 
     public static final Style robotLook = new Style(
             "", "#3F51B5", 0.75
@@ -23,6 +27,7 @@ public class Drawing {
 
     public static void init() {
         panelsField.setOffsets(PanelsField.INSTANCE.getPresets().getPEDRO_PATHING());
+
     }
 
     public static void drawDebug(Follower follower) {
@@ -35,7 +40,13 @@ public class Drawing {
         drawRobot(follower.getPose(), historyLook);
         sendPacket();
     }
-
+    public static void addTelemetry(String string, Object value){
+        panelsTelem.addData(string, value);
+    }
+    public static void addTelemetry(String string){
+        panelsTelem.addLine(string);
+    }
+    public static void updateTelem() {panelsTelem.update();}
     public static void drawRobot(Pose pose, Style style) {
         if (pose == null || Double.isNaN(pose.getX()) || Double.isNaN(pose.getY()) || Double.isNaN(pose.getHeading())) {
             return;
@@ -97,5 +108,6 @@ public class Drawing {
 
     public static void sendPacket() {
         panelsField.update();
+        panelsTelem.update();
     }
 }

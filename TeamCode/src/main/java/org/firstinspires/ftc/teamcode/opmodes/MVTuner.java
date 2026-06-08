@@ -2,17 +2,20 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import android.util.Size;
 import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.field.Style;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.shooter.VelocityCompensationCalculator;
 import org.firstinspires.ftc.teamcode.util.WelfordVariance;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
@@ -20,15 +23,19 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 
-@TeleOp(name = "Measurement STDEV Tuner")
-@Config("Measurement STDEV Tuner")
+@TeleOp
 public class MVTuner extends LinearOpMode {
     public static Follower follower;
 
+    private static final Style STYLE_PINPOINT = new Style("", "#3F51B5", 0.75); // blue
+    private static final Style STYLE_LL_TURRET = new Style("", "#FF9800", 0.75); // orange
+    private static final Style STYLE_LL_ROBOT = new Style("", "#FF0000", 0.75); // green
+    private static final Style STYLE_FUSION = new Style("", "#10e044", 0.75);
+
     private static final Position cameraPosition = new Position(
             DistanceUnit.MM,
-            75.17500,
-            86.72638,
+            130.17,
+            85.73-14.38,
             194.45158+2+105.85503,
             0
     );
@@ -46,6 +53,7 @@ public class MVTuner extends LinearOpMode {
     private final WelfordVariance varianceY = new WelfordVariance();
     private final WelfordVariance varianceHeading = new WelfordVariance();
     private AprilTagProcessor processor;
+    private VisionPortal visionPortal;
     Pose startPose = new Pose(17.735, 110.63, Math.toRadians(180));
 
 
@@ -56,13 +64,14 @@ public class MVTuner extends LinearOpMode {
                 .setLensIntrinsics(544.2876017217492, 543.8059217350639, 332.20336755183894, 248.65289514406953)
                 .build();
 
-        VisionPortal visionPortal = new VisionPortal.Builder()
+        visionPortal = new VisionPortal.Builder()
                 .setCamera(hardwareMap.get(WebcamName.class, "webcam"))
                 .setCameraResolution(new Size(640, 480))
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(processor)
                 .build();
 
+        Drawing.init();
         follower = PedroConstants.createPinpointFollower(hardwareMap);
         follower.setPose(startPose);
         follower.startTeleopDrive();
@@ -91,7 +100,7 @@ public class MVTuner extends LinearOpMode {
 
                 Pose pose = new Pose(
                         detection.robotPose.getPosition().y + 72,
-                        -detection.robotPose.getPosition().x + 72,
+                        -detection.robotPose.getPosition().x + 72 ,
                         detection.robotPose.getOrientation().getYaw(AngleUnit.RADIANS)
                 );
                 actualX = follower.getPose().getX();
@@ -104,6 +113,11 @@ public class MVTuner extends LinearOpMode {
                 varianceX.update(actualX - pose.getX());
                 varianceY.update(actualY - pose.getY());
                 varianceHeading.update(actualHeading - pose.getHeading());
+                Drawing.drawRobot(pose, STYLE_LL_ROBOT);
+
+                Drawing.addTelemetry("April", pose);
+
+                telemetry.addData("April", pose);
             }
 
 
@@ -118,6 +132,9 @@ public class MVTuner extends LinearOpMode {
             telemetry.addData("mean x", varianceX.mean());
             telemetry.addData("mean y", varianceY.mean());
             telemetry.addData("mean heading", varianceHeading.mean());
+            Drawing.addTelemetry("Follower", follower.getPose());
+            Drawing.drawRobot(follower.getPose(), STYLE_PINPOINT);
+            Drawing.sendPacket();
             telemetry.update();
 
         }

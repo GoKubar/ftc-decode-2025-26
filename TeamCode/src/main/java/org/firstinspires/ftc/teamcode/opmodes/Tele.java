@@ -6,7 +6,6 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.ivy.Scheduler;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.States;
@@ -33,12 +32,12 @@ public abstract class Tele extends LinearOpMode {
             wasLastOpModeAuto = false;
             Constants.reset();
             //robot needs to be created after Constants.reset() probably
-            robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.FUSION);
+            robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.LLFUSION);
             robot.setPose(startPose);
         } else {
             Turret.turretOffsetRad = 0;
             wasLastOpModeAuto = true;
-            robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.FUSION);
+            robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.LLFUSION);
             robot.setPose(Constants.lastPose);
         }
 

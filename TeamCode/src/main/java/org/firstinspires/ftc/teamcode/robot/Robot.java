@@ -20,15 +20,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
+import org.firstinspires.ftc.teamcode.opmodes.ArdCamTesting;
 import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
+import org.firstinspires.ftc.teamcode.vision.MT1Localizer;
+
 import java.util.function.DoubleSupplier;
 
 @Config
@@ -59,11 +61,13 @@ public class Robot {
     public enum LocalizationMode {
         FOLLOWER,
         PINPOINT,
-        FUSION
+        ARDFUSION,
+        LLFUSION
     }
 
     Follower follower;
     AprilTagLocalizer aprilTagLocalizer;
+    MT1Localizer mt1Localizer;
     private LocalizationMode localizationMode = LocalizationMode.FOLLOWER;
     private Pose currentPose;
 
@@ -91,9 +95,12 @@ public class Robot {
 //        proximityIndicator = new ProximityIndicator(hardwareMap);
 
         this.localizationMode = localizationMode;
-        if (localizationMode == LocalizationMode.FUSION){
+        if (localizationMode == LocalizationMode.ARDFUSION){
             follower = PedroConstants.createAprilTagFollower(hardwareMap);
             this.aprilTagLocalizer = PedroConstants.getAprilTagLocalizer();
+        } else if (localizationMode == LocalizationMode.LLFUSION) {
+            follower = PedroConstants.createMT1Follower(hardwareMap);
+            this.mt1Localizer = PedroConstants.getLLLocalizer();
         } else {
             follower = PedroConstants.createPinpointFollower(hardwareMap);
         }
@@ -154,14 +161,22 @@ public class Robot {
     public void updateLocalization() {
         if (localizationMode == LocalizationMode.PINPOINT) {
             updatePinpoint();
-        } else if (localizationMode == LocalizationMode.FUSION){
+        } else if (localizationMode == LocalizationMode.ARDFUSION){
             follower.update();
             aprilTagLocalizer.update(telemetry);
             currentPose = follower.getPose();
-            Drawing.drawRobot(follower.getPose(), Drawing.robotLook);
-            Drawing.drawRobot(PedroConstants.getPinpointLocalizer().getPose(), Drawing.historyLook);
+            Drawing.drawRobot(follower.getPose(), ArdCamTesting.STYLE_FUSION);
+            Drawing.drawRobot(PedroConstants.getPinpointLocalizer().getPose(), ArdCamTesting.STYLE_PINPOINT);
             Drawing.sendPacket();
-        } else {
+        } else if (localizationMode == LocalizationMode.LLFUSION) {
+            follower.update();
+            mt1Localizer.updateLLPose(follower);
+            currentPose = follower.getPose();
+            Drawing.drawRobot(follower.getPose(), ArdCamTesting.STYLE_FUSION);
+            Drawing.drawRobot(PedroConstants.getPinpointLocalizer().getPose(), ArdCamTesting.STYLE_PINPOINT);
+            Drawing.sendPacket();
+        }
+        else {
             follower.update();
             currentPose = follower.getPose();
         }

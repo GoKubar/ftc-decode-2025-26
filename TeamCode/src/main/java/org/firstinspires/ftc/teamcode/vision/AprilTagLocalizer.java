@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.opmodes.ArdCamTesting;
 import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.FusionLocalizer;
 import org.firstinspires.ftc.vision.VisionPortal;
@@ -24,8 +25,8 @@ import java.util.List;
 public final class AprilTagLocalizer implements AutoCloseable {
     private static final Position cameraPosition = new Position(
             DistanceUnit.MM,
-            86.72638,
-            75.17500,
+            130.17,
+            85.73,
             194.45158+2+105.85503,
             0
     );
@@ -41,6 +42,9 @@ public final class AprilTagLocalizer implements AutoCloseable {
     private final FusionLocalizer fusion;
     private final VisionPortal visionPortal;
     public static double decisionMarginThreshold = 50;
+
+
+
 
     public AprilTagLocalizer(Localizer localizer, HardwareMap hardwareMap) {
 
@@ -63,6 +67,7 @@ public final class AprilTagLocalizer implements AutoCloseable {
                 .setStreamFormat(VisionPortal.StreamFormat.MJPEG)
                 .addProcessor(processor)
                 .build();
+
     }
 
     public Localizer getLocalizer() {
@@ -70,6 +75,7 @@ public final class AprilTagLocalizer implements AutoCloseable {
     }
 
     public void update(Telemetry telemetry) {
+
         List<AprilTagDetection> detections = processor.getDetections();
 
         telemetry.addData("AprilTags/detections", detections.size());
@@ -89,6 +95,7 @@ public final class AprilTagLocalizer implements AutoCloseable {
 
 
             fusion.addMeasurement(pose, System.nanoTime() - latencyMs * 1_000_000L);
+            Drawing.drawRobot(pose, ArdCamTesting.STYLE_LL_TURRET);
         }
     }
 

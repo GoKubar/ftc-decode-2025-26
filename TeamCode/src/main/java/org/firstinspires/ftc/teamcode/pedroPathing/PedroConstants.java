@@ -19,16 +19,19 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.vision.AprilTagLocalizer;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.vision.MT1Localizer;
 
 @Config
 public class PedroConstants {
     private static AprilTagLocalizer aprilTagLocalizer;
     private static PinpointLocalizer pinpointLocalizer;
+    private static MT1Localizer mt1Localizer;
 
     public static PinpointLocalizer getPinpointLocalizer() {
         return pinpointLocalizer;
     }
     public static AprilTagLocalizer getAprilTagLocalizer() { return aprilTagLocalizer; }
+    public static MT1Localizer getLLLocalizer() { return mt1Localizer; }
 
     public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.6, 0, 0.015, 0);
 
@@ -173,6 +176,16 @@ public class PedroConstants {
                 .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
                         leftBack(hardwareMap), rightBack(hardwareMap))
                 .setLocalizer(aprilTagLocalizer.getLocalizer())
+                .build();
+    }
+
+    public static Follower createMT1Follower(HardwareMap hardwareMap) {
+        pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
+        mt1Localizer = new MT1Localizer(hardwareMap, pinpointLocalizer);
+        return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
+                .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
+                        leftBack(hardwareMap), rightBack(hardwareMap))
+                .setLocalizer(mt1Localizer.getLocalizer())
                 .build();
     }
 }

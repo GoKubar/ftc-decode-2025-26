@@ -13,6 +13,7 @@ import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -41,16 +42,17 @@ public class ArdCamTesting extends LinearOpMode {
 
     private static final double SHOOTER_OFFSET_X = VelocityCompensationCalculator.SHOOTER_OFFSET_X; // inches, forward in robot frame
 
-    private static final Style STYLE_PINPOINT = new Style("", "#3F51B5", 0.75); // blue
-    private static final Style STYLE_LL_TURRET = new Style("", "#FF9800", 0.75); // orange
-    private static final Style STYLE_LL_ROBOT = new Style("", "#4CAF50", 0.75); // green
+    public static final Style STYLE_PINPOINT = new Style("", "#3F51B5", 0.75); // blue
+    public static final Style STYLE_LL_TURRET = new Style("", "#FF9800", 0.75); // orange
+    public static final Style STYLE_LL_ROBOT = new Style("", "#FF0000", 0.75); // green
+    public static final Style STYLE_FUSION = new Style("", "#10e044", 0.75);
 
 
     private static final Position cameraPosition = new Position(
-            DistanceUnit.INCH,
-            2.204,
-            5.96,
-            8.82,
+            DistanceUnit.MM,
+            130.17,
+            85.73,
+            194.45158+2+105.85503,
             0
     );
     private static final YawPitchRollAngles cameraOrientation = new YawPitchRollAngles(
@@ -80,7 +82,7 @@ public class ArdCamTesting extends LinearOpMode {
         Constants.color = Constants.Color.RED;
 
         follower = PedroConstants.createPinpointFollower(hardwareMap);
-        Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180)).mirror();
+        Pose startPose = new Pose(17.735, 110.63, Math.toRadians(180)).mirror();
         //PedroConstants.getPinpointLocalizer().setPose(startPose);
         follower.setPose(startPose);
 
@@ -99,8 +101,8 @@ public class ArdCamTesting extends LinearOpMode {
         fusion = new FusionLocalizer(
                 pinpoint,
                 new Pose(0.5, 0.5, Math.toRadians(2)),
-                new Pose(1, 1, Math.toRadians(0.5) / 60),
-                new Pose(2.1561, 2.6065, 0.0248),
+                new Pose(.5, .5, Math.toRadians(0.2) / 60),
+                new Pose(1, 1, .02),
                 100
         );
 
@@ -116,6 +118,8 @@ public class ArdCamTesting extends LinearOpMode {
                 .addProcessor(processor)
                 .build();
 
+        Pose arduTurretPose = null;
+        Pose arduRobotPose = null;
         waitForStart();
 
         while (opModeIsActive()) {
@@ -123,9 +127,6 @@ public class ArdCamTesting extends LinearOpMode {
             pinpoint.update();
             Pose pinpointPose = pinpoint.getPose();
             double pinpointHeading = pinpointPose.getHeading();
-
-            Pose arduTurretPose = null;
-            Pose arduRobotPose = null;
 
 
             List<AprilTagDetection> detections = processor.getDetections();
@@ -137,19 +138,21 @@ public class ArdCamTesting extends LinearOpMode {
                 telemetry.addData("AprilTags/" + detection.metadata.name + " margin", detection.decisionMargin);
                 if (detection.decisionMargin <= decisionMarginThreshold) continue;
 
-                Pose pose = new Pose(
+                Pose pose = new Pose( // pedro coordinates
                         detection.robotPose.getPosition().y + 72,
                         -detection.robotPose.getPosition().x + 72,
                         detection.robotPose.getOrientation().getYaw(AngleUnit.RADIANS)
                 );
 
-                Pose2D botpose2D = new Pose2D(
-                        DistanceUnit.METER,
+
+                Pose2D botpose2D = new Pose2D( // standard ftc coordinates
+                        DistanceUnit.INCH,
                         detection.robotPose.getPosition().x,
                         detection.robotPose.getPosition().y,
                         AngleUnit.DEGREES,
-                        detection.robotPose.getOrientation().getYaw()
+                        detection.robotPose.getOrientation().getYaw(AngleUnit.DEGREES)
                 );
+
 
                 Pose ftcPose = PoseConverter.pose2DToPose(botpose2D, InvertedFTCCoordinates.INSTANCE);
                 Pose turretPedro = ftcPose.getAsCoordinateSystem(PedroCoordinates.INSTANCE);
@@ -157,15 +160,17 @@ public class ArdCamTesting extends LinearOpMode {
                 arduTurretPose = turretPedro;
 
 
-                double robotX = turretPedro.getX() - SHOOTER_OFFSET_X * Math.cos(pinpointHeading);
-                double robotY = turretPedro.getY() - SHOOTER_OFFSET_X * Math.sin(pinpointHeading);
+                double robotX = turretPedro.getX() - SHOOTER_OFFSET_X * Math.cos(pinpointHeading) + 72;
+                double robotY = turretPedro.getY() - SHOOTER_OFFSET_X * Math.sin(pinpointHeading) + 72;
                 arduRobotPose = new Pose(robotX, robotY, pinpointHeading);
 
                 telemetry.addData("AprilTags/Robot x", pose.getX());
                 telemetry.addData("AprilTags/Robot y", pose.getY());
                 telemetry.addData("AprilTags/Robot heading (deg)", Math.toDegrees(pose.getHeading()));
 
-                fusion.addMeasurement(pose, System.nanoTime() - latencyMs * 1_000_000L);
+                fusion.addMeasurement(arduRobotPose, System.nanoTime() - latencyMs * 1_000_000L);
+                Drawing.drawRobot(pose, STYLE_LL_TURRET);
+
             }
 
 
@@ -184,8 +189,13 @@ public class ArdCamTesting extends LinearOpMode {
 
             // --- Drawing ---
             Drawing.drawRobot(pinpointPose, STYLE_PINPOINT);
-            if (arduTurretPose != null)Drawing.drawRobot(arduTurretPose, STYLE_LL_TURRET);
+            if (arduTurretPose != null) Drawing.drawRobot(arduTurretPose, STYLE_LL_TURRET);
             if (arduRobotPose != null) Drawing.drawRobot(arduRobotPose, STYLE_LL_ROBOT);
+            Drawing.drawRobot(fusion.getPose(), STYLE_FUSION);
+            Drawing.addTelemetry("Bright green > fusion");
+            Drawing.addTelemetry("Orange > arduTurretPose");
+            Drawing.addTelemetry("Blue > pinpoint");
+            if (arduRobotPose!= null) Drawing.addTelemetry("ardRobotPose", arduRobotPose.getPose());
             Drawing.sendPacket();
 
             for (LynxModule hub : allHubs) {
