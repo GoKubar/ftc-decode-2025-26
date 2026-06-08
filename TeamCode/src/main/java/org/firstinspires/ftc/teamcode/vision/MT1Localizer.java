@@ -15,14 +15,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.opmodes.ArdCamTesting;
 import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.FusionLocalizer;
+import org.firstinspires.ftc.teamcode.shooter.VelocityCompensationCalculator;
 
 @Configurable
 public class MT1Localizer {
 
-    public static final double llOffset = 6.496063; // INCHES
-    public static final double turretOffset = -1.094488;
+    public static final double llOffset = Math.sqrt(Math.pow(5.12, 2) + Math.pow(3.38, 2)); // INCHES
+    public static final double turretOffset = VelocityCompensationCalculator.SHOOTER_OFFSET_X;
     public static double varianceMult = 16;
     private final FusionLocalizer fusion;
     Limelight3A limelight;
@@ -82,7 +84,7 @@ public class MT1Localizer {
 
             long timestampNanos = System.nanoTime() - result.getStaleness() * 1_000_000L;
 
-            double[] measurementStdDevs = result.getStddevMt2();
+            double[] measurementStdDevs = result.getStddevMt1();
 
             double stdX_in = measurementStdDevs[0] * 39.3701;
             double stdY_in = measurementStdDevs[1] * 39.3701;
@@ -100,6 +102,7 @@ public class MT1Localizer {
                     timestampNanos,
                     measurementVariance
             );
+            Drawing.drawRobot(pedroPose, ArdCamTesting.STYLE_LL_ROBOT);
             return pedroPose;
         }
         return new Pose(0,0,0);
