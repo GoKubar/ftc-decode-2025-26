@@ -32,12 +32,12 @@ public abstract class Tele extends LinearOpMode {
             wasLastOpModeAuto = false;
             Constants.reset();
             //robot needs to be created after Constants.reset() probably
-            robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.LLFUSION);
+            robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.FOLLOWER);
             robot.setPose(startPose);
         } else {
             Turret.turretOffsetRad = 0;
             wasLastOpModeAuto = true;
-            robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.LLFUSION);
+            robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.FOLLOWER);
             robot.setPose(Constants.lastPose);
         }
 

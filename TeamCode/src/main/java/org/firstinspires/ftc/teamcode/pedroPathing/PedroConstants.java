@@ -7,6 +7,8 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
 import com.pedropathing.ftc.drivetrains.CoaxialPod;
+import com.pedropathing.ftc.drivetrains.Mecanum;
+import com.pedropathing.ftc.drivetrains.MecanumConstants;
 import com.pedropathing.ftc.drivetrains.SwerveConstants;
 import com.pedropathing.ftc.localization.constants.PinpointConstants;
 import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
@@ -72,8 +74,8 @@ public class PedroConstants {
             .strafePodX(-1.578740157480315)
             .distanceUnit(DistanceUnit.INCH).hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.REVERSED);
+            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
+            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 
     public static SwerveConstants swerveConstants = new SwerveConstants()
             .velocity(85.758)
@@ -163,10 +165,23 @@ public class PedroConstants {
     // 0.007, 100, 1, 10, 1);
     public static Follower createPinpointFollower(HardwareMap hardwareMap) {
         pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
+        MecanumConstants mecanumConstants = new  MecanumConstants();
+        mecanumConstants.leftFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
+        mecanumConstants.leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
+        mecanumConstants.rightFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
+        mecanumConstants.rightRearMotorDirection = DcMotorSimple.Direction.REVERSE;
+
         return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
-                .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
-                        leftBack(hardwareMap), rightBack(hardwareMap))
+                .mecanumDrivetrain( mecanumConstants)
+//                .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
+//                        leftBack(hardwareMap), rightBack(hardwareMap))
                 .setLocalizer(pinpointLocalizer).build();
+
+
+
+//        public FollowerBuilder mecanumDrivetrain(MecanumConstants mecanumConstants) {
+//            return setDrivetrain(new Mecanum(hardwareMap, mecanumConstants));
+//        }
     }
 
     public static Follower createAprilTagFollower(HardwareMap hardwareMap) {
