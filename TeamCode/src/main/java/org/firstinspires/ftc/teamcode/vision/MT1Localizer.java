@@ -26,7 +26,7 @@ public class MT1Localizer {
     public static final double llXOffset = 4.4144; // INCHES
     public static final double llYOffset = 4.7717;
     public static final double turretOffset = VelocityCompensationCalculator.SHOOTER_OFFSET_X;
-    public static double varianceMult = 16;
+    public static double varianceMult = 3;
     private final FusionLocalizer fusion;
     Limelight3A limelight;
     LLResult result;
@@ -99,13 +99,14 @@ public class MT1Localizer {
                     stdYaw_rad * stdYaw_rad * varianceMult
             );
 
-
-            fusion.addMeasurement(
-                    pedroPose,
-                    timestampNanos,
-                    measurementVariance
-            );
-            Drawing.drawRobot(pedroPose, ArdCamTesting.STYLE_LL_ROBOT);
+            if(pedroPose != null) {
+                fusion.addMeasurement(
+                        pedroPose,
+                        timestampNanos,
+                        measurementVariance
+                );
+                Drawing.drawRobot(pedroPose, ArdCamTesting.STYLE_LL_ROBOT);
+            }
             return pedroPose;
         }
         return new Pose(0,0,0);

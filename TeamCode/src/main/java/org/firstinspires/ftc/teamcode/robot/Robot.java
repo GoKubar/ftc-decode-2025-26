@@ -183,6 +183,8 @@ public class Robot {
         else {
             follower.update();
             currentPose = follower.getPose();
+            Drawing.drawRobot(follower.getPose(), ArdCamTesting.STYLE_LL_TURRET);
+            Drawing.sendPacket();
         }
 
         Constants.lastPose = currentPose;
@@ -376,6 +378,7 @@ public class Robot {
 
     public void setPose(Pose pose) {
         currentPose = pose;
+
         follower.setPose(pose);
         Constants.lastPose = pose;
     }
