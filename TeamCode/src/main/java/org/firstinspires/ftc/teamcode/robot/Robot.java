@@ -6,7 +6,10 @@ import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
+import android.media.MediaTimestamp;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.bylazar.field.Style;
 import com.outoftheboxrobotics.photoncore.PhotonCore;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.ftc.localization.localizers.PinpointLocalizer;
@@ -75,6 +78,7 @@ public class Robot {
 
     Gamepad gamepad1;
     Gamepad gamepad2;
+
     Telemetry telemetry;
 
     VoltageSensor voltageSensor;
@@ -100,13 +104,12 @@ public class Robot {
             this.aprilTagLocalizer = PedroConstants.getAprilTagLocalizer();
         } else if (localizationMode == LocalizationMode.LLFUSION) {
             follower = PedroConstants.createMT1Follower(hardwareMap);
-            this.mt1Localizer = PedroConstants.getLLLocalizer();
+            this.mt1Localizer = PedroConstants.getMT1Localizer();
         } else {
             follower = PedroConstants.createPinpointFollower(hardwareMap);
         }
 
         currentPose = follower.getPose();
-
 
         shooter = new Shooter(hardwareMap, voltageSensor);
 
@@ -149,7 +152,7 @@ public class Robot {
     }
 
     public void stop(){
-        aprilTagLocalizer.close();
+        //aprilTagLocalizer.close();
     }
 
 //    public void updateLastTurretTicks() {
@@ -170,10 +173,11 @@ public class Robot {
             Drawing.sendPacket();
         } else if (localizationMode == LocalizationMode.LLFUSION) {
             follower.update();
-            mt1Localizer.updateLLPose(follower);
+            mt1Localizer.updateLLPose(follower, shooter.getCurrentTurretAngle());
             currentPose = follower.getPose();
             Drawing.drawRobot(follower.getPose(), ArdCamTesting.STYLE_FUSION);
             Drawing.drawRobot(PedroConstants.getPinpointLocalizer().getPose(), ArdCamTesting.STYLE_PINPOINT);
+            Drawing.drawRobot(MT1Localizer.pedroPose, ArdCamTesting.STYLE_LL_ROBOT);
             Drawing.sendPacket();
         }
         else {

@@ -23,21 +23,25 @@ import org.firstinspires.ftc.teamcode.shooter.VelocityCompensationCalculator;
 @Configurable
 public class MT1Localizer {
 
-    public static final double llOffset = Math.sqrt(Math.pow(5.12, 2) + Math.pow(3.38, 2)); // INCHES
+    public static final double llXOffset = 4.4144; // INCHES
+    public static final double llYOffset = 4.7717;
     public static final double turretOffset = VelocityCompensationCalculator.SHOOTER_OFFSET_X;
     public static double varianceMult = 16;
     private final FusionLocalizer fusion;
     Limelight3A limelight;
     LLResult result;
+    public static Pose pedroPose;
 
     public MT1Localizer(HardwareMap hardwareMap, Localizer localizer) {
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        limelight.pipelineSwitch(0);
+        limelight.start();
 
         fusion = new FusionLocalizer(
                 localizer,
                 new Pose(.5, .5, Math.toRadians(2)),
-                new Pose(.25, .25, Math.toRadians(0.05) / 60),
-                new Pose(0, 0, 0),
+                new Pose(1, 1, .1),
+                new Pose(-3, -1, -.03),
                 100
         );
     }
@@ -51,36 +55,35 @@ public class MT1Localizer {
         return fusion;
     }
 
-    public Pose updateLLPose(Follower follower){
-        if (limelight.getStatus().getPipelineIndex() != 0){
-            limelight.pipelineSwitch(0);
-        }
-        LLResult result = limelight.getLatestResult();
-
+    public Pose updateLLPose(Follower follower, double currentTurretAngle){
+        result = limelight.getLatestResult();
         Pose2D botPose = null;
         if (result != null && result.isValid()){
             Pose3D pose = result.getBotpose();
             botPose = new Pose2D(DistanceUnit.METER, pose.getPosition().x, pose.getPosition().y, AngleUnit.DEGREES, pose.getOrientation().getYaw());
         }
-        Pose pedroPose = null;
+        pedroPose = null;
         if (botPose != null) {
             pedroPose = PoseConverter.pose2DToPose(botPose, FTCCoordinates.INSTANCE)
                     .getAsCoordinateSystem(PedroCoordinates.INSTANCE);
 
-            double turretOffsetX = llOffset * Math.cos(pedroPose.getHeading());
-            double turretOffsetY = llOffset * Math.sin(pedroPose.getHeading());
+            // 1. Rotate camera offset by turret angle (camera is on turret)
+            double turretAngle = currentTurretAngle;
+            double camOffsetX_turret = llXOffset * Math.cos(turretAngle) - llYOffset * Math.sin(turretAngle);
+            double camOffsetY_turret = llXOffset * Math.sin(turretAngle) - llYOffset * Math.cos(turretAngle);
 
-            pedroPose = new Pose(pedroPose.getX() - turretOffsetX,
-                    pedroPose.getY()- turretOffsetY,
-                    follower.getHeading());
+// 2. Add turret offset to get camera position relative to robot center
+            double camOffsetX_robot = camOffsetX_turret - turretOffset;
+            double camOffsetY_robot = camOffsetY_turret;
 
-            double robotCenterOffsetX = turretOffset * Math.cos(pedroPose.getHeading());
-            double robotCenterOffsetY = turretOffset * Math.sin(pedroPose.getHeading());
+// 3. Rotate by robot heading to get offset in world frame
+            double worldCamOffsetX = camOffsetX_robot * Math.cos(pedroPose.getHeading()) - camOffsetY_robot * Math.sin(pedroPose.getHeading());
+            double worldCamOffsetY = camOffsetX_robot * Math.sin(pedroPose.getHeading()) + camOffsetY_robot * Math.cos(pedroPose.getHeading());
 
-            pedroPose = new Pose(pedroPose.getX() - robotCenterOffsetX,
-                    pedroPose.getY()- robotCenterOffsetY,
+// 4. Subtract from LL pose to get robot center
+            pedroPose = new Pose(pedroPose.getX() - worldCamOffsetX,
+                    pedroPose.getY() - worldCamOffsetY,
                     pedroPose.getHeading());
-            Drawing.drawRobot(pedroPose);
 
             long timestampNanos = System.nanoTime() - result.getStaleness() * 1_000_000L;
 

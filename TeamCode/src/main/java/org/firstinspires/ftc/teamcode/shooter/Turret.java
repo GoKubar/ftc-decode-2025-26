@@ -62,6 +62,10 @@ public class Turret {
         return getAngleFromServoPos(currentPos);
     }
 
+    public double getCurrentAngle() {
+        return getAngleFromServoPos(turretServoF.getPosition());
+    }
+
     public void setTargetServoPosition(double pos) {
         turretServoF.setPosition(pos);
         turretServoB.setPosition(pos);

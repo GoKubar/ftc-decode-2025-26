@@ -79,6 +79,7 @@ public class Shooter {
                 velocity,
                 angularVel,
                 goalPose
+
         );
 
         lastTurretAngle = shotParameters.turretAngle;
@@ -127,6 +128,7 @@ public class Shooter {
 
     public double getTurretPos() { return turret.getTargetPosition(); }
     public double getTurretAngle() { return turret.getTargetAngle(); }
+    public double getCurrentTurretAngle() { return turret.getCurrentAngle(); }
     public double getFlywheelAngularVelocity() { return flywheel.getCurrentAngularVel(); }
     public double getFlywheeelTargetAngularVelocity() { return flywheel.getTargetAngularVelocity(); }
     public double getHoodAngle() { return hood.getCurrentHoodAngle(); }

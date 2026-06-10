@@ -29,11 +29,9 @@ public class PedroConstants {
     private static PinpointLocalizer pinpointLocalizer;
     private static MT1Localizer mt1Localizer;
 
-    public static PinpointLocalizer getPinpointLocalizer() {
-        return pinpointLocalizer;
-    }
+    public static PinpointLocalizer getPinpointLocalizer() {return pinpointLocalizer;}
     public static AprilTagLocalizer getAprilTagLocalizer() { return aprilTagLocalizer; }
-    public static MT1Localizer getLLLocalizer() { return mt1Localizer; }
+    public static MT1Localizer getMT1Localizer() { return mt1Localizer; }
 
     public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.6, 0, 0.015, 0);
 
@@ -81,6 +79,16 @@ public class PedroConstants {
             .velocity(85.758)
             //.zeroPowerBehavior(SwerveConstants.ZeroPowerBehavior.IGNORE_ANGLE_CHANGES)
             .useBrakeModeInTeleOp(true);
+
+    public static MecanumConstants mecanumConstants = new  MecanumConstants()
+            .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .leftRearMotorDirection(DcMotorSimple.Direction.FORWARD)
+            .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
+            .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
+
+            .useBrakeModeInTeleOp(true);
+
+    
 
     // F - front: .130, back: .190
     // P=0.00645 D=0.00019
@@ -165,14 +173,9 @@ public class PedroConstants {
     // 0.007, 100, 1, 10, 1);
     public static Follower createPinpointFollower(HardwareMap hardwareMap) {
         pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
-        MecanumConstants mecanumConstants = new  MecanumConstants();
-        mecanumConstants.leftFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
-        mecanumConstants.leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
-        mecanumConstants.rightFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
-        mecanumConstants.rightRearMotorDirection = DcMotorSimple.Direction.REVERSE;
 
         return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
-                .mecanumDrivetrain( mecanumConstants)
+                .mecanumDrivetrain(mecanumConstants)
 //                .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
 //                        leftBack(hardwareMap), rightBack(hardwareMap))
                 .setLocalizer(pinpointLocalizer).build();
@@ -188,8 +191,7 @@ public class PedroConstants {
         pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
         aprilTagLocalizer = new AprilTagLocalizer(pinpointLocalizer, hardwareMap);
         return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
-                .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
-                        leftBack(hardwareMap), rightBack(hardwareMap))
+                .mecanumDrivetrain(mecanumConstants)
                 .setLocalizer(aprilTagLocalizer.getLocalizer())
                 .build();
     }
@@ -198,8 +200,7 @@ public class PedroConstants {
         pinpointLocalizer = new PinpointLocalizer(hardwareMap, localizerConstants);
         mt1Localizer = new MT1Localizer(hardwareMap, pinpointLocalizer);
         return new FollowerBuilder(followerConstants, hardwareMap).pathConstraints(pathConstraints)
-                .swerveDrivetrain(swerveConstants, leftFront(hardwareMap), rightFront(hardwareMap),
-                        leftBack(hardwareMap), rightBack(hardwareMap))
+                .mecanumDrivetrain(mecanumConstants)
                 .setLocalizer(mt1Localizer.getLocalizer())
                 .build();
     }
