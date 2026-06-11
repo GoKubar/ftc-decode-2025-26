@@ -21,7 +21,7 @@ public abstract class Tele extends LinearOpMode {
     Pose startPose = new Pose(17.735, 110.63, Math.toRadians(180));
     double lastTurretTicksAtEndOfAuto = -999999;
     boolean wasLastOpModeAuto = false;
-    Robot.LocalizationMode localizationMode = Robot.LocalizationMode.LLFUSION;
+    Robot.LocalizationMode localizationMode = Robot.LocalizationMode.FOLLOWER;
 
 
     public void initialize() {

@@ -59,20 +59,20 @@ public class VelocityCompensationCalculator {
             new Pose(51.04, 8.18)
     };
 
-
+    public static double bump = 75;
     public static double[] flywheelSpeedValues = {
-            1104,
-            1158,
-            1175,
-            1258,
-            1356,
-            1372,
-            1414,
-            1458,
-            1490,
-            1586, //originally 1566
-            1653, //originally 1633
-            1710,
+            1104+bump,
+            1158+bump,
+            1175+bump,
+            1258+bump,
+            1356+bump,
+            1372+bump,
+            1414+bump,
+            1458+bump,
+            1490+bump,
+            1586+bump, //originally 1566
+            1653+bump, //originally 1633
+            1710+bump,
     };
 
     public static double[] hoodServoValues      = {
