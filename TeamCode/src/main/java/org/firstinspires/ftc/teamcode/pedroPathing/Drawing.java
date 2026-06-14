@@ -106,6 +106,10 @@ public class Drawing {
         drawPoseHistory(poseTracker, historyLook);
     }
 
+    public static FieldManager getFieldManager() {
+        return panelsField;
+    }
+
     public static void sendPacket() {
         panelsField.update();
         panelsTelem.update();

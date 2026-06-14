@@ -113,7 +113,7 @@ public class Robot {
 
         shooter = new Shooter(hardwareMap, voltageSensor);
 
-        setDrivetrain(Drivetrains.MECANUM);
+        setDrivetrain(Drivetrains.MECANUM_HEADING_LOCK);
         setState(States.NONE);
 
         this.goalPose = goalPose;

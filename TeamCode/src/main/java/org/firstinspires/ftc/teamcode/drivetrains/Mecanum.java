@@ -1,23 +1,37 @@
 package org.firstinspires.ftc.teamcode.drivetrains;
 
 import com.pedropathing.follower.Follower;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
 public class Mecanum implements Drivetrain {
-    private Telemetry telemetry;
+
+    Telemetry telemetry;
+    protected Follower follower;
+    protected Robot robot;
     private com.pedropathing.ftc.drivetrains.Mecanum dt;
 
     public Mecanum(Robot robot, Follower follower, Telemetry telemetry) {
-       dt = (com.pedropathing.ftc.drivetrains.Mecanum) follower.getDrivetrain();
-       this.telemetry = telemetry;
+
+        this.robot = robot;
+        this.follower = follower;
+        this.telemetry = telemetry;
+
+        dt = (com.pedropathing.ftc.drivetrains.Mecanum) follower.getDrivetrain();
+        dt.startTeleopDrive();
+
+    }
+
+    protected  com.pedropathing.ftc.drivetrains.Mecanum getDrivetrain() {
+        return dt;
     }
 
     @Override
     public void update(Gamepad gamepad, double speed, double rotSpeed) {
-        arcade(-gamepad.left_stick_y, gamepad.left_stick_x*1.1, gamepad.right_stick_x, -gamepad.right_stick_y, speed, rotSpeed);
+        arcade(-gamepad.left_stick_y, gamepad.left_stick_x*1.1, gamepad.right_stick_x, -gamepad.right_stick_y, speed, rotSpeed / 1.2);
     }
 
     @Override

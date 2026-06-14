@@ -15,7 +15,7 @@ import com.pedropathing.ivy.Scheduler;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.drivetrains.SwerveHeadingLock;
+import org.firstinspires.ftc.teamcode.drivetrains.MecanumHeadingLock;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.States;
@@ -66,18 +66,18 @@ public class ShootingState implements State {
             Constants.debugTelemetry = !Constants.debugTelemetry;
         }
 
-        if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof SwerveHeadingLock) {
+        if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof MecanumHeadingLock) {
             double heading = Constants.color == Constants.Color.RED
                     ? Math.toRadians(32)
                     : Math.toRadians(148);
-            ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
+            ((MecanumHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
-        if (gamepad1.bWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof SwerveHeadingLock) {
+        if (gamepad1.bWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof MecanumHeadingLock) {
             double heading = Constants.color == Constants.Color.RED
                     ? Math.toRadians(180)
                     : Math.toRadians(0);
-            ((SwerveHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
+            ((MecanumHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
 //        if (gamepad2.dpadLeftWasPressed() && !Constants.lastOpModeWasAuto) {

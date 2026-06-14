@@ -21,7 +21,7 @@ public class VelocityCompensationCalculator {
     public static double maxAutoSpeed = 1450;
 
     public static double kAutoRad = 5;
-    public static double kAutoTan = 5;
+    public static double kAutoTan = 8;
 
     public static double angularVelScaling = 0.07;
 
@@ -31,9 +31,9 @@ public class VelocityCompensationCalculator {
 //    public static double kRadOut = 15;
 //    public static double kTan = 10.5;
 
-    public static double kRadIn = 0;
-    public static double kRadOut = 0;
-    public static double kTan = 0;
+    public static double kRadIn = 4;
+    public static double kRadOut = 4.8;
+    public static double kTan = 4.5;
 
     public static int NUM_ITERATIONS = 2;
 
@@ -59,20 +59,20 @@ public class VelocityCompensationCalculator {
             new Pose(51.04, 8.18)
     };
 
-
+    public static int speedBump = 0;//150;
     public static double[] flywheelSpeedValues = {
-            1104,
-            1158,
-            1175,
-            1258,
-            1356,
-            1372,
-            1414,
-            1458,
-            1490,
-            1586, //originally 1566
-            1653, //originally 1633
-            1710,
+            1104 + speedBump,
+            1158 + speedBump,
+            1175 + speedBump,
+            1258 + speedBump,
+            1356 + speedBump,
+            1372 + speedBump,
+            1414 + speedBump,
+            1458 + speedBump,
+            1490 + speedBump,
+            1586 + speedBump, //originally 1566
+            1653 + speedBump, //originally 1633
+            1710 + speedBump,
     };
 
     public static double[] hoodServoValues      = {
