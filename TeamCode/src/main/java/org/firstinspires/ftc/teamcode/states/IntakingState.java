@@ -139,6 +139,15 @@ public class IntakingState implements State {
             ((MecanumHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
+
+        if (gamepad1.xWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof MecanumHeadingLock) {
+            double heading = Constants.color == Constants.Color.RED
+                    ? Math.toRadians(-35)
+                    : Math.toRadians(210);
+            ((MecanumHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
+        }
+
+
 //        if ((gamepad1.dpadLeftWasPressed() || gamepad2.dpadLeftWasPressed()) && !Constants.lastOpModeWasAuto) {
 //            Turret.turretOffsetRad += Math.toRadians(3);
 //        }

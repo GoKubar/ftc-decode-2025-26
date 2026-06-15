@@ -68,8 +68,8 @@ public class PedroConstants {
     
 
     public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(4.271653543307087)
-            .strafePodX(-1.578740157480315)
+            .forwardPodY(6.16830709)
+            .strafePodX(-1.5674507874)
             .distanceUnit(DistanceUnit.INCH).hardwareMapName("pinpoint")
             .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
             .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)

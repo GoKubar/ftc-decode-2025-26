@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
 import org.firstinspires.ftc.teamcode.opmodes.ArdCamTesting;
 import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
-import org.firstinspires.ftc.teamcode.shooter.Limelight;
+//import org.firstinspires.ftc.teamcode.shooter.Limelight;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
 import org.firstinspires.ftc.teamcode.states.State;
@@ -60,7 +60,7 @@ public class Robot {
 
     PTO pto;
     Shooter shooter;
-    Limelight limelight;
+//    Limelight limelight;
 //    ProximityIndicator proximityIndicator;
 
     public enum LocalizationMode {
@@ -112,7 +112,7 @@ public class Robot {
             follower = PedroConstants.createPinpointFollower(hardwareMap);
         }
 
-        limelight = new Limelight(hardwareMap);
+        //limelight = new Limelight(hardwareMap);
 
         currentPose = follower.getPose();
 
@@ -167,11 +167,11 @@ public class Robot {
 //    }
 
     public void updateLocalization() {
-        double turretAngle = getTurretAngleDegrees();
-        Pose mt1Pose = limelight.getMT1Pose(turretAngle, gamepad1);
-        if (mt1Pose != null) {
-            follower.setPose(mt1Pose);
-        }
+//        double turretAngle = getTurretAngleDegrees();
+//        Pose mt1Pose = limelight.getMT1Pose(turretAngle, gamepad1);
+//        if (mt1Pose != null) {
+//            follower.setPose(mt1Pose);
+//        }
         if (localizationMode == LocalizationMode.PINPOINT) {
             updatePinpoint();
         } else if (localizationMode == LocalizationMode.ARDFUSION){
@@ -203,6 +203,7 @@ public class Robot {
     private void updatePinpoint() {
         PinpointLocalizer localizer = PedroConstants.getPinpointLocalizer();
         localizer.update();
+        currentPose = localizer.getPose();
     }
 
     public Pose getPose() {
@@ -347,7 +348,7 @@ public class Robot {
     }
 
     public double getTurretAngleDegrees() {
-        return Math.toDegrees(shooter.getCurrentTurretAngle());
+        return Math.toDegrees(shooter.getTurretAngle());
     }
 
     public double getHoodAngleDegrees() {
