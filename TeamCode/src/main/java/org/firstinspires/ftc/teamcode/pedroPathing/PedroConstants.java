@@ -33,14 +33,15 @@ public class PedroConstants {
     public static AprilTagLocalizer getAprilTagLocalizer() { return aprilTagLocalizer; }
     public static MT1Localizer getMT1Localizer() { return mt1Localizer; }
 
-    public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.6, 0, 0.015, 0);
+    public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(1.7, 0, 0.05, 0.01);
 
-    public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(1.5, 0, 0.003, 0);
+    public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(0.8, 0, 0.025, 0.03);
 
     public static FollowerConstants followerConstants = new FollowerConstants()
-            .forwardZeroPowerAcceleration(-80.927)
-            .lateralZeroPowerAcceleration(-80.927)
-            .useSecondaryDrivePIDF(true).useSecondaryHeadingPIDF(true)
+            .forwardZeroPowerAcceleration(-29.286)
+            .lateralZeroPowerAcceleration(-68.86)
+            .useSecondaryDrivePIDF(true)
+            .useSecondaryHeadingPIDF(true)
             .useSecondaryTranslationalPIDF(true)
 
             .translationalPIDFCoefficients(new PIDFCoefficients(0.125, 0, 0.008, 0))
@@ -62,8 +63,8 @@ public class PedroConstants {
             // 0,//0.38735914623969386,
             // 0.002)
             // )
-            .centripetalScaling(0.0005).
-            mass(13.732);
+            .centripetalScaling(0.0005)
+            .mass(11.34);
 
     
 
@@ -86,7 +87,11 @@ public class PedroConstants {
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightRearMotorDirection(DcMotorSimple.Direction.REVERSE)
 
-            .useBrakeModeInTeleOp(true);
+            .useBrakeModeInTeleOp(true)
+            .xVelocity(111.048)
+            .yVelocity(79.5)
+            ;
+
 
     
 
