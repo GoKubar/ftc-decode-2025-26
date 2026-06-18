@@ -34,6 +34,7 @@ public abstract class Auto extends LinearOpMode {
 
 
     protected Command updateShooter;
+    private int gateCycleNum = -1;
 
     Pose startPose = new Pose(17.735, 110.63, Math.toRadians(180));
 
@@ -45,7 +46,12 @@ public abstract class Auto extends LinearOpMode {
     protected Pose gateClearControlPoint = new Pose(56.090, 59.210);
     protected Pose gateClearPose = new Pose(19.847, 60.5, Math.toRadians(180));
     protected Pose gatePickupControlPoint = new Pose(20.590, 55.260);
-    protected Pose gatePickupPose = new Pose(13.6, 56, Math.toRadians(146.4));
+    protected Pose[] gatePickupPoses = {
+            new Pose(13.6, 56, Math.toRadians(150)),
+            new Pose(13.6, 55.75, Math.toRadians(150)),
+            new Pose(13.6, 55.5, Math.toRadians(150)),
+            new Pose(13.6, 55.25, Math.toRadians(150)),
+    };
     protected Pose farPickupPose = new Pose(11.590, 33.210, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(45, 34);
     // protected Pose cornerPose = new Pose(10.343, 17.111, Math.toRadians(210));
@@ -62,8 +68,8 @@ public abstract class Auto extends LinearOpMode {
     protected PathChain shootMiddle;
     protected PathChain clearGate;
     // protected PathChain pickupGate1;
-    protected PathChain pickupGate;
-    protected PathChain shootGate;
+    protected PathChain[] pickupGates;
+    protected PathChain[] shootGates;
     protected PathChain shootGateAndPark;
     // PathChain clearGate2;
     // PathChain shootGate2;
@@ -122,19 +128,21 @@ public abstract class Auto extends LinearOpMode {
     }
 
     protected Command gateCycle(double shootDelayMs, double gateWaitMs) {
+        gateCycleNum++;
         return sequential(
                 parallel(shootAndSetIntaking(),
                         sequential(waitMs(shootDelayMs), robot.setIntakePower(1),
-                                follow(robot.getFollower(), pickupGate))),
-                waitMs(gateWaitMs), parallel(follow(robot.getFollower(), shootGate),
+                                follow(robot.getFollower(), pickupGates[gateCycleNum]))),
+                waitMs(gateWaitMs), parallel(follow(robot.getFollower(), shootGates[gateCycleNum]),
                         sequential(waitMs(1500), robot.setIntakePower(0))));
     }
 
     protected Command gateCycleAndPark(double shootDelayMs, double gateWaitMs) {
+        gateCycleNum++;
         return sequential(
                 parallel(shootAndSetIntaking(),
                         sequential(waitMs(shootDelayMs), robot.setIntakePower(1),
-                                follow(robot.getFollower(), pickupGate))),
+                                follow(robot.getFollower(), pickupGates[gateCycleNum]))),
                 waitMs(gateWaitMs), parallel(follow(robot.getFollower(), shootGateAndPark),
                         sequential(waitMs(1000), robot.setIntakePower(0))));
     }
@@ -243,28 +251,36 @@ public abstract class Auto extends LinearOpMode {
         // .setLinearHeadingInterpolation(gatePickupPose.getHeading())
         // .build();
 
-        pickupGate = robot.getFollower().pathBuilder()
+        for (int i = 0; i < gatePickupPoses.length; i++) {
+            if (i == 0) {
+                pickupGates = new PathChain[gatePickupPoses.length];
+                shootGates = new PathChain[gatePickupPoses.length];
+            }
+            pickupGates[i] = robot.getFollower().pathBuilder()
 //                .addPath(new BezierCurve(shootingPose, gateClearControlPoint, gatePickupPose))
-                .addPath(new BezierLine(shootingPose, gatePickupPose))
-                // .addPath(new BezierCurve(gateClearPose, gatePickupControlPoint, gatePickupPose))
+                    .addPath(new BezierLine(shootingPose, gatePickupPoses[i]))
+                    // .addPath(new BezierCurve(gateClearPose, gatePickupControlPoint, gatePickupPose))
 //                .setConstantHeadingInterpolation(gatePickupPose.getHeading())
-                .setHeadingInterpolation(HeadingInterpolator.piecewise(
-                        new HeadingInterpolator.PiecewiseNode(0, 0.5, HeadingInterpolator.tangent),
-                        new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.constant(gatePickupPose.getHeading()))
-                ))
-                .build();
+                    .setHeadingInterpolation(HeadingInterpolator.piecewise(
+                            new HeadingInterpolator.PiecewiseNode(0, 0.5, HeadingInterpolator.tangent),
+                            new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.constant(gatePickupPoses[i].getHeading()))
+                    ))
+                    .build();
 //                .setConstraints(new PathConstraints(0.95, 0.5, 0.5, 0.03, 50, 1, 10, 1)).build();
 
-        shootGate = robot.getFollower().pathBuilder()
-                .addPath(new BezierLine(gatePickupPose, shootingPose))
+            shootGates[i] = robot.getFollower().pathBuilder()
+                    .addPath(new BezierLine(gatePickupPoses[i], shootingPose))
 //                .setConstantHeadingInterpolation(gatePickupPose.getHeading()).build();
-                .setTangentHeadingInterpolation()
-                .setReversed()
-                .build();
+                    .setTangentHeadingInterpolation()
+                    .setReversed()
+                    .build();
+        }
+
+
 
         shootGateAndPark = robot.getFollower().pathBuilder()
-                .addPath(new BezierLine(gatePickupPose, closeParkPose))
-                .setConstantHeadingInterpolation(gatePickupPose.getHeading()).build();
+                .addPath(new BezierLine(gatePickupPoses[gatePickupPoses.length-1], closeParkPose))
+                .setConstantHeadingInterpolation(gatePickupPoses[gatePickupPoses.length-1].getHeading()).build();
 
         // clearGate2 = robot.getFollower().pathBuilder()
         // .addPath(new BezierCurve(shootingPose,
