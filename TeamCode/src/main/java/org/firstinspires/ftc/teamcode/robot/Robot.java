@@ -327,6 +327,9 @@ public class Robot {
         maxCurrent = Math.max(maxCurrent, getCurrent());
         telemetry.addData("maxCurrent", maxCurrent);
 
+        telemetry.addLine();
+        telemetry.addData("Holding 3 balls", beamBroken());
+
         if (Constants.debugTelemetry) {
             telemetry.addData("Drivetrain:", drivetrainName());
 //            telemetry.addLine("Photon enabled!");

@@ -48,12 +48,13 @@ public abstract class Auto extends LinearOpMode {
     protected Pose gateClearControlPoint = new Pose(56.090, 59.210);
     protected Pose gateClearPose = new Pose(19.847, 60.5, Math.toRadians(180));
     protected Pose gatePickupControlPoint = new Pose(20.590, 55.260);
+    private double yOffset = -0.5;
     protected Pose[] gatePickupPoses = {
-            new Pose(13.6, 56, Math.toRadians(150)),
-            new Pose(13.6, 55.75, Math.toRadians(150)),
-            new Pose(13.6, 55.5, Math.toRadians(150)),
-            new Pose(14, 55.25, Math.toRadians(150)),
-            new Pose(14, 55, Math.toRadians(150)),
+            new Pose(13.6, 56 + yOffset, Math.toRadians(150)),
+            new Pose(13.6, 55.6 + yOffset, Math.toRadians(150)),
+            new Pose(13.6, 55.25 + yOffset, Math.toRadians(150)),
+            new Pose(14, 55 + yOffset, Math.toRadians(150)),
+            new Pose(14, 54.75 + yOffset, Math.toRadians(150)),
     };
     protected Pose farPickupPose = new Pose(11.590, 33.210, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(45, 34);
@@ -95,7 +96,7 @@ public abstract class Auto extends LinearOpMode {
     protected void createAutoCommands() {
         updateShooter = robot.updateShootingSubsystems();
 
-        double shootTime = 300;
+        double shootTime = 150;
 
         schedule(updateShooter,
                 sequential(
@@ -148,7 +149,7 @@ public abstract class Auto extends LinearOpMode {
                 parallel(
                         follow(robot.getFollower(), shootGates[gateCycleNum]),
                         sequential(
-                                waitMs(1500),
+                                waitMs(200),
                                 robot.setIntakePower(0)
                         )
                 )
