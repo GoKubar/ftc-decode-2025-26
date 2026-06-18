@@ -188,6 +188,10 @@ public class ShootingTest extends LinearOpMode {
             telemetry.addData("Total Current", current);
             maxCurrent = Math.max(maxCurrent, current);
             telemetry.addData("max current", maxCurrent);
+
+            telemetry.addLine();
+            telemetry.addData("beam broken", pto.isBeamBroken());
+
             telemetry.update();
             dashboardTelem.update();
             for (LynxModule hub : allHubs) {
