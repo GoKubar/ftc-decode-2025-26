@@ -9,10 +9,10 @@ public class RedAutoCompatibility extends CompatabilityAuto {
     @Override
     protected void setPoses() {
         startPose = startPose.mirror();
-        preloadShootingPose = preloadShootingPose.mirror();
+//        preloadShootingPose = preloadShootingPose.mirror();
         shootingPose = shootingPose.mirror();
         middlePickupPose = middlePickupPose.mirror();
-        middlePickupControlPoint1 = middlePickupControlPoint1.mirror();
+//        middlePickupControlPoint1 = middlePickupControlPoint1.mirror();
         middlePickupControlPoint2 = middlePickupControlPoint2.mirror();
         gateClearPose = gateClearPose.mirror();
         gateClearControlPoint = gateClearControlPoint.mirror();

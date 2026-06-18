@@ -33,7 +33,7 @@ public class VelocityCompensationCalculator {
 
     public static double kRadIn = 4;
     public static double kRadOut = 4.8;
-    public static double kTan = 4.5;
+    public static double kTan = 5;
 
     public static int NUM_ITERATIONS = 2;
 
@@ -59,7 +59,7 @@ public class VelocityCompensationCalculator {
             new Pose(51.04, 8.18)
     };
 
-    public static int speedBump = 0;//150;
+    public static int speedBump = 60;//150;
     public static double[] flywheelSpeedValues = {
             1104 + speedBump,
             1158 + speedBump,

@@ -1238,7 +1238,7 @@ class Line extends OpMode {
  * @version 1.0, 3/13/2024
  */
 class CentripetalTuner extends OpMode {
-    public static double DISTANCE = 20;
+    public static double DISTANCE = 40;
     private boolean forward = true;
 
     private Path forwards;
@@ -1269,6 +1269,10 @@ class CentripetalTuner extends OpMode {
         forwards = new Path(new BezierCurve(new Pose(72,72), new Pose(Math.abs(DISTANCE) + 72,72), new Pose(Math.abs(DISTANCE) + 72,DISTANCE + 72)));
         backwards = new Path(new BezierCurve(new Pose(Math.abs(DISTANCE) + 72,DISTANCE + 72), new Pose(Math.abs(DISTANCE) + 72,72), new Pose(72,72)));
 
+//        forwards.setConstantHeadingInterpolation(0);
+//        backwards.setConstantHeadingInterpolation(0);
+
+        forwards.setTangentHeadingInterpolation();
         backwards.setTangentHeadingInterpolation();
         backwards.reverseHeadingInterpolation();
 
