@@ -59,6 +59,10 @@ public class PTO {
         intakeMotorL.setPower(power);
     }
 
+    public double getCurrent() {
+        return intakeMotorL.getCurrent() + intakeMotorR.getCurrent();
+    }
+
     public void runLift() {
         return;
     }

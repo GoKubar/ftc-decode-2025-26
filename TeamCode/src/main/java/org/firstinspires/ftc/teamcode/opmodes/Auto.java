@@ -50,7 +50,8 @@ public abstract class Auto extends LinearOpMode {
             new Pose(13.6, 56, Math.toRadians(150)),
             new Pose(13.6, 55.75, Math.toRadians(150)),
             new Pose(13.6, 55.5, Math.toRadians(150)),
-            new Pose(13.6, 55.25, Math.toRadians(150)),
+            new Pose(14, 55.25, Math.toRadians(150)),
+            new Pose(14, 55, Math.toRadians(150)),
     };
     protected Pose farPickupPose = new Pose(11.590, 33.210, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(45, 34);
@@ -97,8 +98,9 @@ public abstract class Auto extends LinearOpMode {
         schedule(updateShooter,
                 sequential(
                         shootPreloads(),
+                        waitMs(250),
                         runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
-                        gateCycle(shootTime, 750),
+                        gateCycle(shootTime, 1000),
                         gateCycle(shootTime, 1500),
                         runCycle(pickupClose, shootClose, shootTime, 900, 500),
                         gateCycle(shootTime, 1000),
@@ -197,7 +199,9 @@ public abstract class Auto extends LinearOpMode {
     private void generatePaths() {
         shootPreloads = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(startPose, shootingPose))
-                .setLinearHeadingInterpolation(startPose.getHeading(), shootingPose.getHeading())
+//                .setLinearHeadingInterpolation(startPose.getHeading(), shootingPose.getHeading())
+                .setTangentHeadingInterpolation()
+                .setReversed()
                 // .setConstraints(
                 // new PathConstraints(0.8,
                 // 3,
@@ -280,7 +284,10 @@ public abstract class Auto extends LinearOpMode {
 
         shootGateAndPark = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(gatePickupPoses[gatePickupPoses.length-1], closeParkPose))
-                .setConstantHeadingInterpolation(gatePickupPoses[gatePickupPoses.length-1].getHeading()).build();
+//                .setConstantHeadingInterpolation(gatePickupPoses[gatePickupPoses.length-1].getHeading()).build();
+                .setTangentHeadingInterpolation()
+                .setReversed()
+                .build();
 
         // clearGate2 = robot.getFollower().pathBuilder()
         // .addPath(new BezierCurve(shootingPose,

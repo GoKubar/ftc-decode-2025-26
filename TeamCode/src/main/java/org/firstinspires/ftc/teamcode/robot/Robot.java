@@ -25,6 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
+import org.firstinspires.ftc.teamcode.drivetrains.Mecanum;
 import org.firstinspires.ftc.teamcode.opmodes.ArdCamTesting;
 import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
@@ -39,6 +40,7 @@ import java.util.function.DoubleSupplier;
 
 @Config
 public class Robot {
+    private double maxCurrent = 0;
 
     public static int singleShootTimeMillis = 250;
 //    public ServoEx gatePusher;
@@ -317,6 +319,10 @@ public class Robot {
         telemetry.addData("min loop time", minLoopTime);
 
         telemetry.addData("currentVoltage", getVoltage());
+        telemetry.addData("currentCurrent", getCurrent());
+
+        maxCurrent = Math.max(maxCurrent, getCurrent());
+        telemetry.addData("maxCurrent", maxCurrent);
 
         if (Constants.debugTelemetry) {
             telemetry.addData("Drivetrain:", drivetrainName());
@@ -459,5 +465,9 @@ public class Robot {
 
     public double getVoltage() {
         return voltageSensor.getVoltage();
+    }
+
+    public double getCurrent() {
+        return shooter.getCurrent() + pto.getCurrent() + ((Mecanum) drivetrain).getCurrent();
     }
 }

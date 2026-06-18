@@ -12,13 +12,16 @@ public abstract class CompatabilityAuto extends Auto{
         double shootTime = 300;
 
         schedule(updateShooter,
-                sequential(shootPreloads(),
+                sequential(
+                        shootPreloads(),
+                        waitMs(250),
                         runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
-                        gateCycle(shootTime, 750),
+                        gateCycle(shootTime, 1000),
                         gateCycle(shootTime, 1500),
                         gateCycle(shootTime, 1500),
                         runCycle(pickupClose, shootClose, shootTime, 900, 500),
-                        gateCycleAndPark(shootTime, 1000),
+                        gateCycle(shootTime, 1000),
+                        gateCycleAndPark(shootTime, 1500),
                         shootAndSetIntaking(),
                         waitMs(500),
                         robot.setIntakePower(0),

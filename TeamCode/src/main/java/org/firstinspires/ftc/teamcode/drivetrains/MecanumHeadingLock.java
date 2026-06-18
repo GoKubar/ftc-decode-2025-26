@@ -39,10 +39,9 @@ public class MecanumHeadingLock extends Mecanum {
     public void arcade(double forward, double strafe, double rotateX,double rotateY, double speed, double rotSpeed) {
         //Turn off heading lock while shooting for smoother slowdown.  Otherwise the robot oscillates a little and throws off shooting while  moving.
         //Can also look to fix the heading lock PID, but this is a simpler fix for now.
-        if(robot.getCurrentState() == States.SHOOTING) {
+        if(robot != null && robot.getCurrentState() == States.SHOOTING) {
             super.arcade(forward, strafe, rotateX, rotateY, speed, rotSpeed);
         } else {
-
             double heading = robot != null ? robot.getPose().getHeading() : follower.getHeading();
             double angularVelocityRadPerSec = robot != null ? robot.getAngularVelocity() : 0.0;
 

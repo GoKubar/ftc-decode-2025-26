@@ -45,58 +45,42 @@ public class VelocityCompensationCalculator {
 
     // Anti-diagonal data points: positions where x + y ≈ 141.5
     public static Pose[] tablePositions = {
-            new Pose(97.25, 98.79),
-            new Pose(90.72, 90.94),
-            new Pose(86.56, 87.9),
-            new Pose(80.04, 79.58),
-            new Pose(68.34, 70.30),
-            new Pose(57.477, 82.145),
-            new Pose(43.86, 96.21),
-            new Pose(32.433, 110.94),
-            new Pose(22.25, 121.65),
-            new Pose(71.08, 23.26),
-            new Pose(66.33, 9.40),
-            new Pose(51.04, 8.18)
+            new Pose(37.85, 101.5),
+            new Pose(47.69, 93.36),
+            new Pose(57.22, 80.95),
+            new Pose(59.3, 71.4),
+            new Pose(85.85, 83.55),
+            new Pose(97.48, 97.69),
+            new Pose(119.96, 116.388),
     };
 
-    public static int speedBump = 60;//150;
     public static double[] flywheelSpeedValues = {
-            1104 + speedBump,
-            1158 + speedBump,
-            1175 + speedBump,
-            1258 + speedBump,
-            1356 + speedBump,
-            1372 + speedBump,
-            1414 + speedBump,
-            1458 + speedBump,
-            1490 + speedBump,
-            1586 + speedBump, //originally 1566
-            1653 + speedBump, //originally 1633
-            1710 + speedBump,
+            1228,
+            1283,
+            1370,
+            1434,
+            1513,
+            1559,
+            1611,
     };
 
     public static double[] hoodServoValues      = {
             0,
             0,
-            0,
-            0.03,
-            0.08,
-            0.11,
-            0.17,
-            0.2,
-            0.2,
-            0.36,
-            0.39,
-            0.4
+            0.02,
+            0.05,
+            0.07,
+            0.13,
+            0.15,
     };
 
     public static double[] distances = IntStream.range(0, tablePositions.length)
-            .mapToDouble(i -> distance(new Pose(tablePositions[i].getX() + SHOOTER_OFFSET_X, tablePositions[i].getY()),
-                    Constants.BLUE_GOAL_POSE.mirror()))
+            .mapToDouble(i -> distance(new Pose(tablePositions[i].getX() - SHOOTER_OFFSET_X, tablePositions[i].getY()),
+                    Constants.BLUE_GOAL_POSE))
             .toArray();
 
     public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
-            .mapToDouble(i -> flywheelSpeedValues[i] + 10)
+            .mapToDouble(i -> flywheelSpeedValues[i])
             .toArray();
 
 

@@ -9,14 +9,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.Drivetrain;
+import org.firstinspires.ftc.teamcode.drivetrains.Mecanum;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Drivetrains;
 import org.firstinspires.ftc.teamcode.robot.PTO;
+import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.shooter.Flywheel;
 import org.firstinspires.ftc.teamcode.shooter.Hood;
 import org.firstinspires.ftc.teamcode.shooter.Shooter;
 import org.firstinspires.ftc.teamcode.shooter.Turret;
+import org.firstinspires.ftc.teamcode.util.MathHelpers;
 import org.firstinspires.ftc.teamcode.util.hardware.ServoEx;
 import org.firstinspires.ftc.teamcode.util.telemetry.FastTelemetry;
 
@@ -24,6 +27,8 @@ import java.util.List;
 
 @TeleOp
 public class ShootingTest extends LinearOpMode {
+    private double current = 0;
+    private double maxCurrent = 0;
 
     FtcDashboard dashboard;
 
@@ -53,16 +58,17 @@ public class ShootingTest extends LinearOpMode {
 //        gatePusher.setPosition(Robot.BLUE_SIDE_OUT);
 
         telemetry = new FastTelemetry(telemetry);
-        Constants.color = Constants.Color.RED;
+        Constants.color = Constants.Color.BLUE;
 
         dashboard = FtcDashboard.getInstance();
         dashboardTelem = dashboard.getTelemetry();
 
         follower =  PedroConstants.createPinpointFollower(hardwareMap);
-        Pose startPose = new Pose(17.735, 108.74, Math.toRadians(180));
-        startPose = startPose.mirror();
+        Pose startPose = new Pose(17.735, 110.63, Math.toRadians(180));
+//        startPose = startPose.mirror();
         follower.setPose(startPose);
-        drivetrain = Drivetrains.SWERVE_HEADING_LOCK.build(null, follower, telemetry);
+        drivetrain = Drivetrains.MECANUM_HEADING_LOCK.build(null, follower, telemetry);
+//        drivetrain = Drivetrains.MECANUM.build(null, follower, telemetry);
 
 
         flywheel = new Flywheel(hardwareMap, hardwareMap.voltageSensor.iterator().next());
@@ -84,6 +90,10 @@ public class ShootingTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            follower.update();
+            drivetrain.update(gamepad1);
+
+
             flywheelTarget += gamepad1.right_trigger;
             flywheelTarget -= gamepad1.left_trigger;
 
@@ -145,18 +155,17 @@ public class ShootingTest extends LinearOpMode {
                 intakeSpeed -= 0.1;
             }
 
-            turretTarget = Math.atan2(Constants.RED_GOAL_POSE.getY() - follower.getPose().getY(),
-                    Constants.RED_GOAL_POSE.getX() - follower.getPose().getX());
+            turretTarget = Math.atan2(Constants.BLUE_GOAL_POSE.getY() - follower.getPose().getY(),
+                    Constants.BLUE_GOAL_POSE.getX() - follower.getPose().getX());
 
             turretTarget -= follower.getHeading();
+            turretTarget = MathHelpers.wrapAngleRadians(turretTarget);
 
             flywheel.setTargetAngularVelocity(flywheelTarget);
             flywheel.update();
             hood.setTargetPosition(hoodTarget);
             turret.setTurretAngle(turretTarget);
 //            turret.update(telemetry);
-            follower.update();
-            drivetrain.update(gamepad1);
 
 
 
@@ -172,6 +181,13 @@ public class ShootingTest extends LinearOpMode {
             telemetry.addData("\n pose", follower.getPose());
             telemetry.addData("intake speed", intakeSpeed);
             telemetry.addData("turret offset", Math.toRadians(Turret.turretOffsetRad));
+            telemetry.addData("turretTarget", Math.toDegrees(turretTarget));
+            telemetry.addLine();
+
+            current = flywheel.getCurrent() + pto.getCurrent() + ((Mecanum) drivetrain).getCurrent();
+            telemetry.addData("Total Current", current);
+            maxCurrent = Math.max(maxCurrent, current);
+            telemetry.addData("max current", maxCurrent);
             telemetry.update();
             dashboardTelem.update();
             for (LynxModule hub : allHubs) {

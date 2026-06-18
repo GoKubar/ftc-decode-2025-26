@@ -2,10 +2,15 @@ package org.firstinspires.ftc.teamcode.drivetrains;
 
 import com.pedropathing.follower.Follower;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.robot.Robot;
+
+import java.util.List;
+import java.util.stream.IntStream;
 
 public class Mecanum implements Drivetrain {
 
@@ -46,6 +51,13 @@ public class Mecanum implements Drivetrain {
         //pedro impl for run drive sets in this order:
         //motors = Arrays.asList(leftFront, leftRear, rightFront, rightRear);
         dt.runDrive(new double[] {frontLeftPower * speed, backLeftPower * speed, frontRightPower * speed, backRightPower * speed});
+    }
+
+    public double getCurrent() {
+        List<DcMotorEx> motors = dt.getMotors();
+        return IntStream.range(0, motors.size())
+                .mapToDouble(i -> Math.abs(motors.get(i).getCurrent(CurrentUnit.AMPS)))
+                .sum();
     }
 
     @Override
