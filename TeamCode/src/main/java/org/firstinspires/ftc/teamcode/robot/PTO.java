@@ -64,6 +64,7 @@ public class PTO {
     }
 
     public boolean isBeamBroken(){
+        // Both beams watch the same ball slot; either one can detect a ball if the other sees a hole.
         return !beam1.getState() || !beam2.getState();
     }
 

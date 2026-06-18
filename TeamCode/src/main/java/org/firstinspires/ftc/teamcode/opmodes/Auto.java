@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
+import static com.pedropathing.ivy.commands.Commands.waitUntil;
 import static com.pedropathing.ivy.groups.Groups.parallel;
+import static com.pedropathing.ivy.groups.Groups.race;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 
@@ -132,11 +134,25 @@ public abstract class Auto extends LinearOpMode {
     protected Command gateCycle(double shootDelayMs, double gateWaitMs) {
         gateCycleNum++;
         return sequential(
-                parallel(shootAndSetIntaking(),
-                        sequential(waitMs(shootDelayMs), robot.setIntakePower(1),
-                                follow(robot.getFollower(), pickupGates[gateCycleNum]))),
-                waitMs(gateWaitMs), parallel(follow(robot.getFollower(), shootGates[gateCycleNum]),
-                        sequential(waitMs(1500), robot.setIntakePower(0))));
+                parallel(
+                        shootAndSetIntaking(),
+                        sequential(waitMs(shootDelayMs),
+                                robot.setIntakePower(1),
+                                follow(robot.getFollower(), pickupGates[gateCycleNum])
+                        )
+                ),
+                race(
+                        waitMs(gateWaitMs),
+                        waitUntil(() -> robot.beamBroken()) //leave gate early if we have all balls
+                ),
+                parallel(
+                        follow(robot.getFollower(), shootGates[gateCycleNum]),
+                        sequential(
+                                waitMs(1500),
+                                robot.setIntakePower(0)
+                        )
+                )
+        );
     }
 
     protected Command gateCycleAndPark(double shootDelayMs, double gateWaitMs) {
