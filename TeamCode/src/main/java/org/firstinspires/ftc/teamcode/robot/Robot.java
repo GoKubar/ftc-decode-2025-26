@@ -430,7 +430,7 @@ public class Robot {
     }
 
     public Command shootMotif() {
-        return shootMotif(800);
+        return shootMotif(500);
     }
 
     public Command shootMotif(int shootingTime) {

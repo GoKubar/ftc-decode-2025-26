@@ -125,11 +125,27 @@ public abstract class Auto extends LinearOpMode {
     protected Command runCycle(PathChain pickupPath, PathChain shootPath, double shootDelayMs,
             double intakeDelayMs, double shootingDelayMs) {
         return sequential(
-                parallel(shootAndSetIntaking(), sequential(waitMs(shootDelayMs),
-                        parallel(follow(robot.getFollower(), pickupPath),
-                                sequential(waitMs(intakeDelayMs), robot.setIntakePower(1))))),
-                parallel(follow(robot.getFollower(), shootPath),
-                        sequential(waitMs(shootingDelayMs), robot.setIntakePower(0))));
+                parallel(
+                        shootAndSetIntaking(),
+                        sequential(waitMs(shootDelayMs),
+                                parallel(
+                                        follow(robot.getFollower(), pickupPath),
+                                        sequential(
+                                                waitMs(intakeDelayMs),
+                                                robot.setIntakePower(1)
+                                        )
+                                ).raceWith(waitUntil(() -> robot.beamBroken()))
+                        )
+                ),
+                parallel(
+                        follow(robot.getFollower(),
+                                shootPath),
+                        sequential(
+                                waitMs(shootingDelayMs),
+                                robot.setIntakePower(0)
+                        )
+                )
+        );
     }
 
     protected Command gateCycle(double shootDelayMs, double gateWaitMs) {

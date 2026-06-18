@@ -31,15 +31,16 @@ public abstract class FarAuto extends LinearOpMode {
     protected Command updateShooter;
     //originally 46.05, 6.81
     protected Pose startPose = new Pose(46.05 + offsetX, 6.81 + offsetY, Math.toRadians(180));
-    protected Pose farPickupPose = new Pose(11.59 + offsetX, 33.210 + offsetY, Math.toRadians(180));
-    protected Pose farPickupControlPoint = new Pose(49.56 + offsetX + offsetY, 37.3);
-    protected Pose firstShotPose = new Pose(64 + offsetX, 27 + offsetY, Math.toRadians(180));
+    protected Pose farPickupPose = new Pose(13.99 + offsetX, 33.210 + offsetY, Math.toRadians(180));
+    protected Pose farPickupControlPoint = new Pose(36 + offsetX, 34 + offsetY);
+    protected Pose firstShotPose = new Pose(61 + offsetX, 27 + offsetY, Math.toRadians(180));
     protected Pose shootingPose = new Pose(52.22 + offsetX, 12.93 + offsetY, Math.toRadians(180));
-    protected Pose cornerPickup = new Pose(10.42 + offsetX, 6.81 + offsetY, Math.toRadians(180));
-    protected Pose hpEdgePose = new Pose(10.42 + offsetX, 22 + offsetY, Math.toRadians(180));
-    protected Pose sweepPose = new Pose(9 + offsetX, 40 + offsetY, Math.toRadians(90));
-    protected Pose sweepControlPoint = new Pose(6.9 + offsetX + offsetY, 0);
-    protected Pose parkPose = new Pose(42 + offsetX, 15 + offsetY, Math.toRadians(180));
+    protected Pose cornerPickup = new Pose(13.99 + offsetX, 6.81 + offsetY, Math.toRadians(180));
+    protected Pose hpEdgePose = new Pose(13.99 + offsetX, 22 + offsetY, Math.toRadians(180));
+    protected Pose sweepPose = new Pose(13 + offsetX, 40 + offsetY, Math.toRadians(90));
+    protected Pose sweepControlPoint = new Pose(10.9 + offsetX + offsetY, 0);
+//    protected Pose parkPose = new Pose(42 + offsetX, 15 + offsetY, Math.toRadians(180));
+protected Pose parkPose = new Pose(39 + offsetX, 22 + offsetY, Math.toRadians(180));
     protected Pose goalPose = Constants.BLUE_GOAL_POSE;
 
     protected PathChain shootPreloads;
@@ -59,7 +60,7 @@ public abstract class FarAuto extends LinearOpMode {
     protected void createAutoCommands() {
         updateShooter = robot.updateShootingSubsystems();
 
-        double shootTime = 400;
+        double shootTime = 200;
 
         schedule(
                 updateShooter,
@@ -72,6 +73,7 @@ public abstract class FarAuto extends LinearOpMode {
                         runCycle(sweep, shootSweep, shootTime, 700, 400),
                         runCycle(pickupCorner, shootCorner, shootTime, 700, 400),
                         runCycle(pickupHPEdge, shootHPEdge, shootTime, 700, 400),
+                        runCycle(sweep, shootSweep, shootTime, 700, 400),
                         park(shootTime)
                 ));
     }
@@ -102,7 +104,7 @@ public abstract class FarAuto extends LinearOpMode {
                                                 waitMs(intakeDelayMs),
                                                 robot.setIntakePower(1)
                                         )
-                                )
+                                ).raceWith(waitUntil(() -> robot.beamBroken()))
                         )
                 ),
                 parallel(
@@ -132,45 +134,48 @@ public abstract class FarAuto extends LinearOpMode {
 
     private void generatePaths() {
         shootPreloads = robot.getFollower().pathBuilder()
-            .addPath(new BezierLine(startPose, shootingPose))
-            .setConstantHeadingInterpolation(startPose.getHeading())
-            .build();
+                .addPath(new BezierLine(startPose, firstShotPose))
+                .setConstantHeadingInterpolation(startPose.getHeading())
+                .build();
         pickupFar = robot.getFollower().pathBuilder()
-            .addPath(new BezierCurve(shootingPose, farPickupControlPoint, farPickupPose))
-            .setConstantHeadingInterpolation(shootingPose.getHeading())
-            .build();
+                .addPath(new BezierCurve(firstShotPose, farPickupControlPoint, farPickupPose))
+                .setTangentHeadingInterpolation()
+                .build();
         shootFar = robot.getFollower().pathBuilder()
-            .addPath(new BezierLine(farPickupPose, shootingPose))
-            .setConstantHeadingInterpolation(shootingPose.getHeading())
-            .build();
+                .addPath(new BezierLine(farPickupPose, shootingPose))
+                .setTangentHeadingInterpolation()
+                .setReversed()
+                .build();
         pickupCorner = robot.getFollower().pathBuilder()
-            .addPath(new BezierLine(shootingPose, cornerPickup))
-            .setConstantHeadingInterpolation(cornerPickup.getHeading())
-            .build();
+                .addPath(new BezierLine(shootingPose, cornerPickup))
+                .setConstantHeadingInterpolation(cornerPickup.getHeading())
+                .build();
         shootCorner = robot.getFollower().pathBuilder()
-            .addPath(new BezierLine(cornerPickup, shootingPose))
-            .setConstantHeadingInterpolation(shootingPose.getHeading())
-            .build();
+                .addPath(new BezierLine(cornerPickup, shootingPose))
+                .setConstantHeadingInterpolation(shootingPose.getHeading())
+                .build();
         pickupHPEdge = robot.getFollower().pathBuilder()
-            .addPath(new BezierLine(shootingPose, hpEdgePose))
-            .setConstantHeadingInterpolation(hpEdgePose.getHeading())
-            .build();
+                .addPath(new BezierLine(shootingPose, hpEdgePose))
+                .setConstantHeadingInterpolation(hpEdgePose.getHeading())
+                .build();
         shootHPEdge = robot.getFollower().pathBuilder()
-            .addPath(new BezierLine(hpEdgePose, shootingPose))
-            .setConstantHeadingInterpolation(shootingPose.getHeading())
-            .build();
+                .addPath(new BezierLine(hpEdgePose, shootingPose))
+                .setConstantHeadingInterpolation(shootingPose.getHeading())
+                .build();
         sweep = robot.getFollower().pathBuilder()
-            .addPath(new BezierCurve(shootingPose, sweepControlPoint, sweepPose))
-            .setLinearHeadingInterpolation(shootingPose.getHeading(), sweepPose.getHeading())
-            .build();
+                .addPath(new BezierCurve(shootingPose, sweepControlPoint, sweepPose))
+                .setLinearHeadingInterpolation(shootingPose.getHeading(), sweepPose.getHeading())
+                .build();
         shootSweep = robot.getFollower().pathBuilder()
-            .addPath(new BezierLine(sweepPose, shootingPose))
-            .setConstantHeadingInterpolation(sweepPose.getHeading())
-            .build();
+                .addPath(new BezierLine(sweepPose, shootingPose))
+                .setTangentHeadingInterpolation()
+                .setReversed()
+                .build();
         park = robot.getFollower().pathBuilder()
-            .addPath(new BezierLine(shootingPose, parkPose))
-            .setConstantHeadingInterpolation(parkPose.getHeading())
-            .build();
+                .addPath(new BezierLine(shootingPose, parkPose))
+//                .setConstantHeadingInterpolation(parkPose.getHeading())
+                .setTangentHeadingInterpolation()
+                .build();
     }
 
     public void initialize() {
