@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.commands.Commands.branch;
+import static com.pedropathing.ivy.commands.Commands.conditional;
 import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.commands.Commands.waitUntil;
@@ -21,6 +23,8 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.States;
 import org.firstinspires.ftc.teamcode.util.telemetry.FastTelemetry;
 
+import java.util.LinkedHashMap;
+
 public abstract class FarAuto extends LinearOpMode {
     Robot robot;
     //default for all poses is blue side
@@ -35,8 +39,8 @@ public abstract class FarAuto extends LinearOpMode {
     protected Pose farPickupControlPoint = new Pose(36 + offsetX, 34 + offsetY);
     protected Pose firstShotPose = new Pose(61 + offsetX, 27 + offsetY, Math.toRadians(180));
     protected Pose shootingPose = new Pose(52.22 + offsetX, 12.93 + offsetY, Math.toRadians(180));
-    protected Pose cornerPickup = new Pose(13.99 + offsetX, 6.81 + offsetY, Math.toRadians(180));
-    protected Pose hpEdgePose = new Pose(13.99 + offsetX, 22 + offsetY, Math.toRadians(180));
+    protected Pose cornerPickup = new Pose(13.25 + offsetX, 6.81 + offsetY, Math.toRadians(180));
+    protected Pose hpEdgePose = new Pose(13.25 + offsetX, 22 + offsetY, Math.toRadians(180));
     protected Pose sweepPose = new Pose(13 + offsetX, 40 + offsetY, Math.toRadians(90));
     protected Pose sweepControlPoint = new Pose(10.9 + offsetX + offsetY, 0);
 //    protected Pose parkPose = new Pose(42 + offsetX, 15 + offsetY, Math.toRadians(180));
@@ -60,7 +64,7 @@ protected Pose parkPose = new Pose(39 + offsetX, 22 + offsetY, Math.toRadians(18
     protected void createAutoCommands() {
         updateShooter = robot.updateShootingSubsystems();
 
-        double shootTime = 200;
+        double shootTime = 350;
 
         schedule(
                 updateShooter,
@@ -108,6 +112,18 @@ protected Pose parkPose = new Pose(39 + offsetX, 22 + offsetY, Math.toRadians(18
                         )
                 ),
                 parallel(
+                        sequential(
+                                waitMs(200),
+                                conditional(
+                                        () -> robot.beamBroken(),
+                                        instant(() -> {}), // do nothing
+                                        sequential(
+                                                robot.setIntakePower(-1),
+                                                waitMs(50),
+                                                robot.setIntakePower(0)
+                                        )
+                                )
+                        ),
                         follow(robot.getFollower(), shootPath),
                         sequential(
                                 waitMs(shootingDelayMs),
