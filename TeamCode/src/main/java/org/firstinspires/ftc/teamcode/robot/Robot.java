@@ -43,6 +43,7 @@ public class Robot {
     private double maxCurrent = 0;
 
     public static int singleShootTimeMillis = 250;
+    public static int BEAM_BROKEN_CONFIRM_MS = 100;
 //    public ServoEx gatePusher;
 //    public static double BLUE_SIDE_OUT = 0.33;
 //    public static double BLUE_SIDE_IN = 0.93;
@@ -53,12 +54,14 @@ public class Robot {
 
     Timer timer = new Timer();
     ElapsedTime telemetryTimer = new ElapsedTime();
+    private final ElapsedTime beamBrokenTimer = new ElapsedTime();
     int totalMillis = 0;
     int numLoops = 0;
     int maxLoopTime = 0;
     int minLoopTime = 9999;
 
     boolean currentlyShooting = false;
+    private boolean beamBrokenTimerRunning = false;
 
     PTO pto;
     Shooter shooter;
@@ -469,5 +472,20 @@ public class Robot {
 
     public double getCurrent() {
         return shooter.getCurrent() + pto.getCurrent() + ((Mecanum) drivetrain).getCurrent();
+    }
+
+    public boolean beamBroken() {
+        if (!pto.isBeamBroken()) {
+            beamBrokenTimerRunning = false;
+            beamBrokenTimer.reset();
+            return false;
+        }
+
+        if (!beamBrokenTimerRunning) {
+            beamBrokenTimerRunning = true;
+            beamBrokenTimer.reset();
+        }
+
+        return beamBrokenTimer.milliseconds() >= BEAM_BROKEN_CONFIRM_MS;
     }
 }
