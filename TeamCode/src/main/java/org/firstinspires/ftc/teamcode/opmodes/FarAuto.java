@@ -16,6 +16,7 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.Scheduler;
 import com.pedropathing.paths.PathChain;
+import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.robot.Constants;
@@ -28,9 +29,8 @@ import java.util.LinkedHashMap;
 public abstract class FarAuto extends LinearOpMode {
     Robot robot;
     //default for all poses is blue side
-
-    public static double offsetX = -0.66;
-    public static double offsetY = -2.325;
+    public static double offsetX = -1.414;
+    public static double offsetY = -0.501;
 
     protected Command updateShooter;
     //originally 46.05, 6.81
@@ -44,7 +44,8 @@ public abstract class FarAuto extends LinearOpMode {
     protected Pose sweepPose = new Pose(13 + offsetX, 40 + offsetY, Math.toRadians(90));
     protected Pose sweepControlPoint = new Pose(10.9 + offsetX + offsetY, 0);
 //    protected Pose parkPose = new Pose(42 + offsetX, 15 + offsetY, Math.toRadians(180));
-protected Pose parkPose = new Pose(39 + offsetX, 22 + offsetY, Math.toRadians(180));
+//    protected Pose parkPose = new Pose(39 + offsetX, 22 + offsetY, Math.toRadians(180));
+    protected Pose parkPose = new Pose(45 + offsetX, 12.93 + offsetY, Math.toRadians(180));
     protected Pose goalPose = Constants.BLUE_GOAL_POSE;
 
     protected PathChain shootPreloads;
@@ -78,7 +79,8 @@ protected Pose parkPose = new Pose(39 + offsetX, 22 + offsetY, Math.toRadians(18
                         runCycle(pickupCorner, shootCorner, shootTime, 700, 400),
                         runCycle(pickupHPEdge, shootHPEdge, shootTime, 700, 400),
                         runCycle(sweep, shootSweep, shootTime, 700, 400),
-                        park(shootTime)
+                        runCycle(pickupCorner, shootCorner, shootTime, 700, 400),
+                       park(shootTime)
                 ));
     }
 
