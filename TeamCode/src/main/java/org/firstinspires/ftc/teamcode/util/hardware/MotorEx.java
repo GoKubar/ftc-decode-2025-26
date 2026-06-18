@@ -34,6 +34,20 @@ public class MotorEx {
         }
     }
 
+    public void setSlewPower(double power, double slewRate) {
+        double currentPower = Double.isNaN(lastPower) ? 0 : lastPower;
+
+        if (Double.isNaN(lastPower) || Math.abs(power - currentPower) > cachingTolerance
+                || (power == 0 && currentPower != 0)) {
+            double delta = power - currentPower;
+
+            double slewPower = currentPower + Math.signum(delta) * Math.min(slewRate, Math.abs(delta));
+
+            motor.setPower(slewPower);
+            lastPower = slewPower;
+        }
+    }
+
     public double getPower() {
         return motor.getPower();
     }

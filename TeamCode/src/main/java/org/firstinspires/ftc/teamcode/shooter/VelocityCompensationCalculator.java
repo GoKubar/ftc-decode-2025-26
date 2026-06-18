@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 
 @Config
 public class VelocityCompensationCalculator {
-    public static double minFarZoneSpeed = 1586;
+    public static double minFarZoneSpeed = 1690;
     public static double maxAutoSpeed = 1450;
 
     public static double kAutoRad = 5;
@@ -25,7 +25,7 @@ public class VelocityCompensationCalculator {
 
     public static double angularVelScaling = 0.07;
 
-    public static boolean useAutoLimit = true;
+    public static boolean useAutoLimit = false;
 
 //    public static double kRadIn = 7;
 //    public static double kRadOut = 15;
@@ -52,6 +52,10 @@ public class VelocityCompensationCalculator {
             new Pose(85.85, 83.55),
             new Pose(97.48, 97.69),
             new Pose(119.96, 116.388),
+            new Pose(65.135, 25.81),
+            new Pose (55.62, 11.185),
+            new Pose(73.7, 9.626),
+            new Pose(97.16, 8.147)
     };
 
     public static double[] flywheelSpeedValues = {
@@ -62,6 +66,10 @@ public class VelocityCompensationCalculator {
             1513,
             1559,
             1611,
+            1694,
+            1722,
+            1793,
+            1927,
     };
 
     public static double[] hoodServoValues      = {
@@ -72,6 +80,10 @@ public class VelocityCompensationCalculator {
             0.07,
             0.13,
             0.15,
+            0.27,
+            0.3,
+            0.36,
+            0.47,
     };
 
     public static double[] distances = IntStream.range(0, tablePositions.length)

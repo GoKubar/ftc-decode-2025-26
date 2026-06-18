@@ -53,8 +53,8 @@ public abstract class Auto extends LinearOpMode {
             new Pose(13.6, 56 + yOffset, Math.toRadians(150)),
             new Pose(13.6, 55.6 + yOffset, Math.toRadians(150)),
             new Pose(13.6, 55.25 + yOffset, Math.toRadians(150)),
-            new Pose(14, 55 + yOffset, Math.toRadians(150)),
             new Pose(14, 54.75 + yOffset, Math.toRadians(150)),
+            new Pose(14, 54.5 + yOffset, Math.toRadians(150)),
     };
     protected Pose farPickupPose = new Pose(11.590, 33.210, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(45, 34);
