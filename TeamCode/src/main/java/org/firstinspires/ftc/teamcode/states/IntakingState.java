@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drivetrains.MecanumHeadingLock;
 import org.firstinspires.ftc.teamcode.drivetrains.SwerveHeadingLock;
@@ -172,12 +171,12 @@ public class IntakingState implements State {
 
 
 
-        if ((/*gamepad1.dpadLeftWasPressed() ||*/ gamepad2.dpadLeftWasPressed()) && !Constants.lastOpModeWasAuto) {
+        if ((gamepad1.dpadLeftWasPressed() || gamepad2.dpadLeftWasPressed()) && !Constants.lastOpModeWasAuto) {
             robot.moveGoalPose(0,
                     (Constants.color == Constants.Color.RED) ? tickingIncrementInches : -tickingIncrementInches);
         }
 
-        if ((/*gamepad1.dpadRightWasPressed() ||*/ gamepad2.dpadRightWasPressed()) && !Constants.lastOpModeWasAuto) {
+        if ((gamepad1.dpadRightWasPressed() || gamepad2.dpadRightWasPressed()) && !Constants.lastOpModeWasAuto) {
             robot.moveGoalPose(0,
                     (Constants.color == Constants.Color.RED) ? -tickingIncrementInches : tickingIncrementInches);
         }
@@ -190,16 +189,6 @@ public class IntakingState implements State {
         if ((/*gamepad1.dpadDownWasPressed() || */gamepad2.dpadDownWasPressed()) && !Constants.lastOpModeWasAuto) {
             robot.moveGoalPose((Constants.color == Constants.Color.RED) ? -tickingIncrementInches : tickingIncrementInches
                     ,0);
-        }
-
-        if (gamepad1.dpadLeftWasPressed()&& !Constants.lastOpModeWasAuto) {
-            if (robot.getLLPose() != null) {
-                gamepad1.rumbleBlips(1);
-                gamepad2.rumbleBlips(1);
-                robot.setPose(robot.getLLPose());
-            } else {
-
-            }
         }
     }
 

@@ -54,15 +54,12 @@ public class Shooter {
     public static double openGatePosition = 0.4;
     public static double closedGatePosition = 0.48;
 
-    Pose LLPose = null;
-
     // Hardware
     Hood hood;
     Flywheel flywheel;
     Turret turret;
     ServoEx gateServo;
     Pose goalPose;
-    Limelight limelight;
 
     public double lastTurretAngle;
 
@@ -71,7 +68,6 @@ public class Shooter {
         flywheel = new Flywheel(hardwareMap, voltageSensor);
         turret = new Turret(hardwareMap);
         gateServo = new ServoEx(hardwareMap, "gate");
-        limelight = new Limelight(hardwareMap);
     }
 
     /**
@@ -91,7 +87,6 @@ public class Shooter {
         flywheel.setTargetAngularVelocity(shotParameters.flywheelTicks);
         hood.setHoodAngle(shotParameters.hoodAngle);
         turret.setTurretAngle(shotParameters.turretAngle);
-        LLPose = limelight.getMT2Pose(pose.getHeading(), turret.getCurrentAngle());
     }
 
     public void setTurretAngle(double angle) {
@@ -145,6 +140,4 @@ public class Shooter {
     public boolean isFlywheelReady() {
         return flywheel.isReady();
     }
-
-    public Pose getLLPose() { return LLPose; }
 }
