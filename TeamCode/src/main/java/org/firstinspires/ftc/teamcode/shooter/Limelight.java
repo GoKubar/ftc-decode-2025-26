@@ -36,13 +36,14 @@ public class Limelight {
         limelight.start();
     }
 
-    public Pose getMT1Pose(double currentTurretAngle, Gamepad gamepad) {
+    public Pose getMT2Pose(double robotAngle, double currentTurretAngle) {
+        limelight.updateRobotOrientation(Math.toDegrees(robotAngle - currentTurretAngle));
         result = limelight.getLatestResult();
 
         Pose2D botPose = null;
         if (result != null && result.isValid()) {
-            Pose3D pose = result.getBotpose();
-            botPose = new Pose2D(DistanceUnit.METER, pose.getPosition().x, pose.getPosition().y, AngleUnit.DEGREES, pose.getOrientation().getYaw());
+            Pose3D pose = result.getBotpose_MT2();
+            botPose = new Pose2D(DistanceUnit.METER, pose.getPosition().x, pose.getPosition().y, AngleUnit.DEGREES, Math.toDegrees(robotAngle - currentTurretAngle));
         }
         Pose pedroPose = null;
         if (botPose != null) {
@@ -69,12 +70,9 @@ public class Limelight {
 
             Drawing.drawRobot(pedroPose);
 
-            if (gamepad.triangle && !gamepad.triangleWasPressed()) {
-                gamepad.rumbleBlips(3);
-                return pedroPose;
-            }
+            return pedroPose;
         }
         return null;
     }
-    
+
 }

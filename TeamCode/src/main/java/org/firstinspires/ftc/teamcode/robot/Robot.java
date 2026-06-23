@@ -405,6 +405,8 @@ public class Robot {
         return shooter.getFlywheeelTargetAngularVelocity();
     }
 
+    public Pose getLLPose() { return shooter.getLLPose();}
+
     public Drivetrain getDrivetrain() {
         return drivetrain;
     }
