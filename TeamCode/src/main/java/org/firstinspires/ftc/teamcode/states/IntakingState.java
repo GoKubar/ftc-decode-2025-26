@@ -92,6 +92,11 @@ public class IntakingState implements State {
 //            );
 //        }
 
+        if(robot.beamBroken()) {
+            gamepad1.rumble(50);
+        }
+
+
         if (gamepad2.leftBumperWasPressed()) {
             Constants.debugTelemetry = !Constants.debugTelemetry;
         }
@@ -156,6 +161,14 @@ public class IntakingState implements State {
 //            Turret.turretOffsetRad -= Math.toRadians(3);
 //        }
 
+        if(gamepad1.dpadUpWasPressed()) {
+            robot.setInvertedDrive(false);
+        }
+
+        if(gamepad1.dpadDownWasPressed()) {
+            robot.setInvertedDrive(true);
+        }
+
 
 
         if ((gamepad1.dpadLeftWasPressed() || gamepad2.dpadLeftWasPressed()) && !Constants.lastOpModeWasAuto) {
@@ -168,12 +181,12 @@ public class IntakingState implements State {
                     (Constants.color == Constants.Color.RED) ? -tickingIncrementInches : tickingIncrementInches);
         }
 
-        if ((gamepad1.dpadUpWasPressed() || gamepad2.dpadUpWasPressed()) && !Constants.lastOpModeWasAuto) {
+        if ((/*gamepad1.dpadUpWasPressed() || */gamepad2.dpadUpWasPressed()) && !Constants.lastOpModeWasAuto) {
             robot.moveGoalPose((Constants.color == Constants.Color.RED) ? tickingIncrementInches : -tickingIncrementInches
                     ,0);
         }
 
-        if ((gamepad1.dpadDownWasPressed() || gamepad2.dpadDownWasPressed()) && !Constants.lastOpModeWasAuto) {
+        if ((/*gamepad1.dpadDownWasPressed() || */gamepad2.dpadDownWasPressed()) && !Constants.lastOpModeWasAuto) {
             robot.moveGoalPose((Constants.color == Constants.Color.RED) ? -tickingIncrementInches : tickingIncrementInches
                     ,0);
         }

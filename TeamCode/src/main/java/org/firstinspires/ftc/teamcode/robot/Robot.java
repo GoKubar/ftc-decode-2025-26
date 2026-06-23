@@ -44,6 +44,7 @@ public class Robot {
 
     public static int singleShootTimeMillis = 250;
     public static int BEAM_BROKEN_CONFIRM_MS = 100;
+    public static int BEAM_BROKEN_CONFIRM_MS_TELE = 10;
 //    public ServoEx gatePusher;
 //    public static double BLUE_SIDE_OUT = 0.33;
 //    public static double BLUE_SIDE_IN = 0.93;
@@ -62,6 +63,9 @@ public class Robot {
 
     boolean currentlyShooting = false;
     private boolean beamBrokenTimerRunning = false;
+
+    private boolean disableDrive = false;
+    private boolean invertedDrive = false;
 
     PTO pto;
     Shooter shooter;
@@ -160,6 +164,24 @@ public class Robot {
         updateTelemetry();
 //        updateLastTurretTicks();
     }
+
+    public Command setDisableDrive(boolean inDisableDrive) {
+        return instant(() ->disableDrive = inDisableDrive);
+    }
+
+    public boolean getDisableDrive() {
+        return disableDrive;
+    }
+
+
+    public void setInvertedDrive(boolean inInvertedDrive) {
+        invertedDrive = inInvertedDrive;
+    }
+
+    public boolean getInvertedDrive() {
+        return invertedDrive;
+    }
+
 
     public void stop(){
         //aprilTagLocalizer.close();
@@ -439,10 +461,13 @@ public class Robot {
         double intakePower = Math.min(1, getVoltage() / 12.5);
 
         return sequential(
+                setDisableDrive(true),
                 openGate(),
                 instant(() -> currentlyShooting = true),
                 setIntakePower(intakePower),
-                waitMs(shootingTime),
+                waitMs((double) shootingTime * .4),
+                setDisableDrive(false),
+                waitMs((double) shootingTime * .6),
                 closeGate(),
                 instant(() -> currentlyShooting = false)
         );
@@ -489,6 +514,6 @@ public class Robot {
             beamBrokenTimer.reset();
         }
 
-        return beamBrokenTimer.milliseconds() >= BEAM_BROKEN_CONFIRM_MS;
+        return beamBrokenTimer.milliseconds() >=  (Constants.currentOpModeIsAuto ? BEAM_BROKEN_CONFIRM_MS : BEAM_BROKEN_CONFIRM_MS_TELE);
     }
 }

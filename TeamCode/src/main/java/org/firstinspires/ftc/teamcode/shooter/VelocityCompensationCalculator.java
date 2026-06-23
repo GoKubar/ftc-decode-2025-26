@@ -31,9 +31,9 @@ public class VelocityCompensationCalculator {
 //    public static double kRadOut = 15;
 //    public static double kTan = 10.5;
 
-    public static double kRadIn = 4;
+    public static double kRadIn = 4.5;
     public static double kRadOut = 4.8;
-    public static double kTan = 5;
+    public static double kTan = 5.5;
 
     public static int NUM_ITERATIONS = 2;
 
