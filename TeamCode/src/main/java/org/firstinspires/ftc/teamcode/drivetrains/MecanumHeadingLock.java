@@ -8,8 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pedroPathing.PedroConstants;
+import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 import org.firstinspires.ftc.teamcode.robot.States;
+import org.firstinspires.ftc.teamcode.util.MathHelpers;
 
 
 public class MecanumHeadingLock extends Mecanum {
@@ -35,24 +37,50 @@ public class MecanumHeadingLock extends Mecanum {
         super(robot, follower, telemetry);
     }
 
+
+
+
     @Override
     public void arcade(double forward, double strafe, double rotateX,double rotateY, double speed, double rotSpeed) {
         //Turn off heading lock while shooting for smoother slowdown.  Otherwise the robot oscillates a little and throws off shooting while  moving.
         //Can also look to fix the heading lock PID, but this is a simpler fix for now.
+
+        double heading = robot != null ? robot.getPose().getHeading() : follower.getHeading();
+
+        if(robot.getInvertedDrive()) {
+
+            double theta = 0;
+
+            if (Constants.color == Constants.Color.RED) {
+                theta = -heading;
+            } else if (Constants.color == Constants.Color.BLUE) {
+                theta = MathHelpers.wrapAngleRadians(-heading + Math.toRadians(180));
+            } else if (Constants.color == Constants.Color.AUDIENCE) {
+                theta = MathHelpers.wrapAngleRadians(-heading + Math.toRadians(90));
+            }
+
+            double cos = Math.cos(theta);
+            double sin = Math.sin(theta);
+            double strafeRot = strafe * cos - forward * sin;
+            double forwardRot = strafe * sin + forward * cos;
+            strafe = strafeRot;
+            forward = forwardRot;
+        }
+
+
+
+
         if(robot != null && robot.getCurrentState() == States.SHOOTING) {
             if(robot.getDisableDrive()) {
                 super.arcade(0, 0, 0, 0, speed, rotSpeed);
             } else {
 
-                int inverter = 1;
-                if(robot.getInvertedDrive()) {
-                    inverter = -1;
-                }
 
-                super.arcade(forward*inverter, strafe*inverter, rotateX, rotateY, speed, rotSpeed);
+
+                super.arcade(forward, strafe, rotateX, rotateY, speed, rotSpeed);
             }
         } else {
-            double heading = robot != null ? robot.getPose().getHeading() : follower.getHeading();
+
             double angularVelocityRadPerSec = robot != null ? robot.getAngularVelocity() : 0.0;
 
             boolean rotateStickActive = Math.abs(rotateX) >= ROTATE_STICK_THRESHOLD;
@@ -70,12 +98,8 @@ public class MecanumHeadingLock extends Mecanum {
                 headingPower = -calculateHeadingPower(targetHeading, heading);
             }
 
-            int inverter = 1;
-            if(robot.getInvertedDrive()) {
-                inverter = -1;
-            }
 
-            super.arcade(forward*inverter, strafe*inverter, headingPower, rotateY, speed, rotSpeed);
+            super.arcade(forward, strafe, headingPower, rotateY, speed, rotSpeed);
         }
 
     }
