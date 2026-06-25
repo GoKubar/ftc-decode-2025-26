@@ -28,7 +28,6 @@ public class Constants {
     }
 
     public static boolean lastOpModeWasAuto = false;
-    public static boolean currentOpModeIsAuto = false;
     public static boolean debugTelemetry = false;
 
     // thresholds for caching wrappers

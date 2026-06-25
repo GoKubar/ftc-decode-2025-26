@@ -59,31 +59,31 @@ public class VelocityCompensationCalculator {
     };
 
     public static double[] flywheelSpeedValues = {
-            1228,
-            1283,
-            1370,
-            1434,
-            1513,
-            1559,
-            1611,
-            1694,
-            1722,
+            1274,
+            1336,
+            1438,
+            1459,
+            1536,
+            1576,
+            1658,
+            1708,
+            1761,
             1793,
-            1927,
+            1941,
     };
 
     public static double[] hoodServoValues      = {
             0,
             0,
-            0.02,
-            0.05,
+            0.04,
             0.07,
-            0.13,
+            0.09,
             0.15,
+            0.17,
             0.27,
             0.3,
-            0.36,
-            0.47,
+            0.38,
+            0.61
     };
 
     public static double[] distances = IntStream.range(0, tablePositions.length)

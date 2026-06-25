@@ -15,7 +15,7 @@ public class Flywheel {
     private MotorEx shooterMotorL;
     private MotorEx shooterMotorR;
 
-    public static double kS = 0.08, kV = 0.000344, kP = 0.003; //TODO: TUNE VALUES
+    public static double kS = 0.08, kV = 0.000375, kP = 0.003; //TODO: TUNE VALUES
 
     private double target = 0;
     private boolean activated = false;

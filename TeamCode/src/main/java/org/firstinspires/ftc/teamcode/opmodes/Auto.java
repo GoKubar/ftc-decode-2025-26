@@ -403,7 +403,6 @@ public abstract class Auto extends LinearOpMode {
         setColor();
         setPoses();
         Constants.lastOpModeWasAuto = true;
-        Constants.currentOpModeIsAuto = true;
         Scheduler.reset();
 
 

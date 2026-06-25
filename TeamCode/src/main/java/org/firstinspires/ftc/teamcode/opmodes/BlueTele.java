@@ -11,7 +11,5 @@ public class BlueTele extends Tele{
         //do nothing
     }
 
-    protected void setColor() {
-        Constants.color = Constants.Color.BLUE;
-    }
+    protected void setColor() { Constants.color = Constants.Color.BLUE; }
 }

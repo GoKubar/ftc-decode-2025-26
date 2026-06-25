@@ -47,7 +47,7 @@ public class MecanumHeadingLock extends Mecanum {
 
         double heading = robot != null ? robot.getPose().getHeading() : follower.getHeading();
 
-        if(robot.getInvertedDrive()) {
+        if(robot != null && robot.getInvertedDrive()) {
 
             double theta = 0;
 

@@ -514,6 +514,6 @@ public class Robot {
             beamBrokenTimer.reset();
         }
 
-        return beamBrokenTimer.milliseconds() >=  (Constants.currentOpModeIsAuto ? BEAM_BROKEN_CONFIRM_MS : BEAM_BROKEN_CONFIRM_MS_TELE);
+        return beamBrokenTimer.milliseconds() >=  (Constants.lastOpModeWasAuto ? BEAM_BROKEN_CONFIRM_MS : BEAM_BROKEN_CONFIRM_MS_TELE);
     }
 }
