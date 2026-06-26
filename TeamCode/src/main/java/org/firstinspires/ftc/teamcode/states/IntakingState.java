@@ -143,8 +143,8 @@ public class IntakingState implements State {
 
         if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof MecanumHeadingLock) {
             double heading = Constants.color == Constants.Color.RED
-                    ? Math.toRadians(34.8)
-                    : Math.toRadians(145);
+                    ? Math.toRadians(32)
+                    : Math.toRadians(148);
             ((MecanumHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
