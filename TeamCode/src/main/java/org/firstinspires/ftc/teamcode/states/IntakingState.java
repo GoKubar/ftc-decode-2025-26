@@ -112,6 +112,8 @@ public class IntakingState implements State {
             } else {
                 robot.setPose((Constants.color == Constants.Color.RED) ? redResetPoseNear : redResetPoseNear.mirror());
             }
+
+            robot.resetGoalPose();
         }
 
 
@@ -141,8 +143,8 @@ public class IntakingState implements State {
 
         if (gamepad1.aWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof MecanumHeadingLock) {
             double heading = Constants.color == Constants.Color.RED
-                    ? Math.toRadians(32)
-                    : Math.toRadians(148);
+                    ? Math.toRadians(34.8)
+                    : Math.toRadians(145);
             ((MecanumHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 
@@ -150,6 +152,14 @@ public class IntakingState implements State {
             double heading = Constants.color == Constants.Color.RED
                     ? Math.toRadians(180)
                     : Math.toRadians(0);
+            ((MecanumHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
+        }
+
+
+        if (gamepad1.yWasPressed() && !Constants.lastOpModeWasAuto && robot.getDrivetrain() instanceof MecanumHeadingLock) {
+            double heading = Constants.color == Constants.Color.RED
+                    ? Math.toRadians(0)
+                    : Math.toRadians(180);
             ((MecanumHeadingLock) robot.getDrivetrain()).setTargetHeading(heading);
         }
 

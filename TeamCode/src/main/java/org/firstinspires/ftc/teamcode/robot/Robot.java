@@ -96,6 +96,8 @@ public class Robot {
     VoltageSensor voltageSensor;
 
     Pose goalPose;
+    Pose originalGoalPose;
+
 
     public Robot(HardwareMap hardwareMap, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry, Pose goalPose, LocalizationMode localizationMode) {
         this.telemetry = telemetry;
@@ -131,6 +133,7 @@ public class Robot {
         setState(States.NONE);
 
         this.goalPose = goalPose;
+        this.originalGoalPose = goalPose;
 //        gatePusher = new ServoEx(hardwareMap, "gatePush");
 //        gatePusher.setPosition(BLUE_SIDE_OUT);
 
@@ -304,6 +307,10 @@ public class Robot {
 
     public void moveGoalPose(double dx, double dy) {
         goalPose = new Pose(goalPose.getX() + dx, goalPose.getY() + dy);
+    }
+
+    public void resetGoalPose() {
+        goalPose = originalGoalPose;
     }
 
     public Command updateShootingSubsystems() {
