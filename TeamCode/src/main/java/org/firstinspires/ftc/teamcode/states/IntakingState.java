@@ -22,7 +22,11 @@ public class IntakingState implements State {
 
 //    private static double dtLength = 276.948;
 //    private static double dtWidth = 346.000;
-    Pose redResetPose = new Pose(11.5179795276, 8.2037401575, Math.toRadians(180));
+    Pose redResetPoseFar = new Pose(10.48422986, 7.360112479, Math.toRadians(180));
+
+    Pose redResetPoseNear = new Pose(123.67967981, 77.472471702756, Math.toRadians(0));
+
+
 
     public static double tickingIncrementInches = 2;
 
@@ -102,7 +106,12 @@ public class IntakingState implements State {
         }
 
         if (gamepad2.aWasPressed())  {
-            robot.setPose((Constants.color == Constants.Color.RED) ? redResetPose : redResetPose.mirror());
+
+            if(robot.getInvertedDrive()) {
+                robot.setPose((Constants.color == Constants.Color.RED) ? redResetPoseFar : redResetPoseFar.mirror());
+            } else {
+                robot.setPose((Constants.color == Constants.Color.RED) ? redResetPoseNear : redResetPoseNear.mirror());
+            }
         }
 
 
