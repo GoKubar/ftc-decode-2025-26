@@ -92,7 +92,7 @@ public class VelocityCompensationCalculator {
             .toArray();
 
     public static double[] adjustedFlywheelSpeedValues = IntStream.range(0, flywheelSpeedValues.length)
-            .mapToDouble(i -> flywheelSpeedValues[i])
+            .mapToDouble(i -> flywheelSpeedValues[i]-20)
             .toArray();
 
 

@@ -48,13 +48,26 @@ public abstract class Auto extends LinearOpMode {
     protected Pose gateClearControlPoint = new Pose(56.090, 59.210);
     protected Pose gateClearPose = new Pose(19.847, 60.5, Math.toRadians(180));
     protected Pose gatePickupControlPoint = new Pose(20.590, 55.260);
-    private double yOffset = -0.5;
+    // red poses
+//    private double yOffset = 0.25;
+//    protected Pose[] gatePickupPoses = {
+//            new Pose(13.3, 56 + yOffset, Math.toRadians(150)),
+//            new Pose(13.3, 57 + yOffset, Math.toRadians(150)),
+//            new Pose(13.3, 57.25 + yOffset, Math.toRadians(150)),
+//            new Pose(13.3, 58 + yOffset, Math.toRadians(150)),
+//            new Pose(13.3, 58.75 + yOffset, Math.toRadians(150)),
+//    };
+    //blue poses
+
+
+    private double xOffset = -0.2;
+    private double yOffset = 1.25;
     protected Pose[] gatePickupPoses = {
-            new Pose(13.6, 56 + yOffset, Math.toRadians(150)),
-            new Pose(13.6, 55.6 + yOffset, Math.toRadians(150)),
-            new Pose(13.6, 55.25 + yOffset, Math.toRadians(150)),
-            new Pose(14, 54.75 + yOffset, Math.toRadians(150)),
-            new Pose(14, 54.5 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
     };
     protected Pose farPickupPose = new Pose(11.590, 33.210, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(45, 34);
@@ -101,7 +114,10 @@ public abstract class Auto extends LinearOpMode {
         schedule(updateShooter,
                 sequential(
                         shootPreloads(),
-                        waitMs(250),
+                        race(
+                                waitUntil(() -> robot.isShooterReady()),
+                                waitMs(500)
+                        ),
                         runCycle(pickupMiddle, shootMiddle, shootTime, 700, 600),
                         gateCycle(shootTime, 1000),
                         gateCycle(shootTime, 1500),
