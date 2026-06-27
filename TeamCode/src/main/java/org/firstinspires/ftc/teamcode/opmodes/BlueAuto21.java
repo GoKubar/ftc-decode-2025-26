@@ -13,6 +13,11 @@ public class BlueAuto21 extends Auto{
         //do nothing
     }
 
+    @Override
+    protected void adjustGoalPose() {
+        robot.moveGoalPose(2, 0);
+    }
+
     protected void setColor() {
         Constants.color = Constants.Color.BLUE;
     }

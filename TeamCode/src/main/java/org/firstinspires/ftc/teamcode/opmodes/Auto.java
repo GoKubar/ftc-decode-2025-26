@@ -439,6 +439,8 @@ public abstract class Auto extends LinearOpMode {
                 .setConstantHeadingInterpolation(cornerBackupPose.getHeading()).build();
     }
 
+    abstract void adjustGoalPose();
+
     public void initialize() {
         telemetry = new FastTelemetry(telemetry);
         Constants.reset();
@@ -455,7 +457,7 @@ public abstract class Auto extends LinearOpMode {
         robot.init();
 
         generatePaths();
-        robot.moveGoalPose(-4, 0);
+        adjustGoalPose();
     }
 
     public void runOpMode() throws InterruptedException {

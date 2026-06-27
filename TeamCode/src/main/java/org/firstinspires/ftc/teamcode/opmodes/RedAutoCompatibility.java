@@ -32,6 +32,10 @@ public class RedAutoCompatibility extends CompatabilityAuto {
         goalPose = Constants.RED_GOAL_POSE;
     }
 
+    @Override
+    protected void adjustGoalPose() {
+        robot.moveGoalPose(-4, 0);
+    }
 
     protected void setColor() {
         Constants.color = Constants.Color.RED;
