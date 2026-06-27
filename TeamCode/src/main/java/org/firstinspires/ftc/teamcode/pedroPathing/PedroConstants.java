@@ -34,9 +34,9 @@ public class PedroConstants {
     public static AprilTagLocalizer getAprilTagLocalizer() { return aprilTagLocalizer; }
     public static MT1Localizer getMT1Localizer() { return mt1Localizer; }
 
-    public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.8, 0, 0.005, 0.025);
+    public static PIDFCoefficients secondaryHeadingCoeffs = new PIDFCoefficients(0.6, 0, 0.005, 0.025);
 
-    public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(2, 0, 0.2, 0.055);
+    public static PIDFCoefficients headingCoeffs = new PIDFCoefficients(1.5, 0, 0.2, 0.055);
 
     public static FollowerConstants followerConstants = new FollowerConstants()
             .forwardZeroPowerAcceleration(-29.286)

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import static com.pedropathing.ivy.Scheduler.schedule;
+import static com.pedropathing.ivy.commands.Commands.conditional;
 import static com.pedropathing.ivy.commands.Commands.instant;
 import static com.pedropathing.ivy.commands.Commands.waitMs;
 import static com.pedropathing.ivy.commands.Commands.waitUntil;
@@ -60,14 +61,14 @@ public abstract class Auto extends LinearOpMode {
     //blue poses
 
 
-    private double xOffset = -0.2;
-    private double yOffset = 1.25;
+    private double xOffset = -0.4;
+    private double yOffset = 1;
     protected Pose[] gatePickupPoses = {
             new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
-            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
-            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
-            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
-            new Pose(13.3 + xOffset, 56 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 56.25 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 56.5 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 56.75 + yOffset, Math.toRadians(150)),
+            new Pose(13.3 + xOffset, 57 + yOffset, Math.toRadians(150)),
     };
     protected Pose farPickupPose = new Pose(11.590, 33.210, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(45, 34);
@@ -143,7 +144,8 @@ public abstract class Auto extends LinearOpMode {
         return sequential(
                 parallel(
                         shootAndSetIntaking(),
-                        sequential(waitMs(shootDelayMs),
+                        sequential(
+                                waitMs(shootDelayMs),
                                 parallel(
                                         follow(robot.getFollower(), pickupPath),
                                         sequential(
@@ -154,11 +156,23 @@ public abstract class Auto extends LinearOpMode {
                         )
                 ),
                 parallel(
-                        follow(robot.getFollower(),
-                                shootPath),
+                        sequential(
+                                waitMs(200),
+                                conditional(
+                                        () -> robot.beamBroken(),
+                                        instant(() -> {}), // do nothing
+                                        sequential(
+                                                robot.setIntakePower(-1),
+                                                waitMs(50),
+                                                robot.setIntakePower(0)
+                                        )
+                                )
+                        ),
+                        follow(robot.getFollower(), shootPath),
                         sequential(
                                 waitMs(shootingDelayMs),
                                 robot.setIntakePower(0)
+//                                setShooting()
                         )
                 )
         );
@@ -179,6 +193,18 @@ public abstract class Auto extends LinearOpMode {
                         waitUntil(() -> robot.beamBroken()) //leave gate early if we have all balls
                 ),
                 parallel(
+                        sequential(
+                                waitMs(200),
+                                conditional(
+                                        () -> robot.beamBroken(),
+                                        instant(() -> {}), // do nothing
+                                        sequential(
+                                                robot.setIntakePower(-1),
+                                                waitMs(50),
+                                                robot.setIntakePower(0)
+                                        )
+                                )
+                        ),
                         follow(robot.getFollower(), shootGates[gateCycleNum]),
                         sequential(
                                 waitMs(200),
@@ -315,8 +341,8 @@ public abstract class Auto extends LinearOpMode {
                     // .addPath(new BezierCurve(gateClearPose, gatePickupControlPoint, gatePickupPose))
 //                .setConstantHeadingInterpolation(gatePickupPose.getHeading())
                     .setHeadingInterpolation(HeadingInterpolator.piecewise(
-                            new HeadingInterpolator.PiecewiseNode(0, 0.5, HeadingInterpolator.tangent),
-                            new HeadingInterpolator.PiecewiseNode(0.5, 1, HeadingInterpolator.constant(gatePickupPoses[i].getHeading()))
+                            new HeadingInterpolator.PiecewiseNode(0, 0.6, HeadingInterpolator.tangent),
+                            new HeadingInterpolator.PiecewiseNode(0.6, 1, HeadingInterpolator.constant(gatePickupPoses[i].getHeading()))
                     ))
                     .build();
 //                .setConstraints(new PathConstraints(0.95, 0.5, 0.5, 0.03, 50, 1, 10, 1)).build();
@@ -429,6 +455,7 @@ public abstract class Auto extends LinearOpMode {
         robot.init();
 
         generatePaths();
+        robot.moveGoalPose(-4, 0);
     }
 
     public void runOpMode() throws InterruptedException {
