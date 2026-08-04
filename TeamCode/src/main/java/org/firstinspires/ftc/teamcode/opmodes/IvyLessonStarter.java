@@ -222,7 +222,6 @@ public class IvyLessonStarter extends LinearOpMode {
      * robot.setIntakePower(...) is already a Command.
      */
     private Command exercise1SequentialIntakePulse() {
-        // TODO: Replace this placeholder.
         return notImplemented("Exercise 1");
     }
 

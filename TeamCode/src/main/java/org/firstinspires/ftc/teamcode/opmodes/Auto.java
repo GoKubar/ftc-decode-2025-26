@@ -43,23 +43,11 @@ public abstract class Auto extends LinearOpMode {
 
     protected Pose shootingPose = new Pose(58, 71, Math.toRadians(180));
     protected Pose middlePickupPose = new Pose(13.990, 55, Math.toRadians(180));
-//    protected Pose middlePickupControlPoint1 = new Pose(110.747, 43.599);
     protected Pose middlePickupControlPoint2 = new Pose(42, 57);
     protected Pose closePickupPose = new Pose(20.590, 81.860, Math.toRadians(180));
     protected Pose gateClearControlPoint = new Pose(56.090, 59.210);
     protected Pose gateClearPose = new Pose(19.847, 60.5, Math.toRadians(180));
     protected Pose gatePickupControlPoint = new Pose(20.590, 55.260);
-    // red poses
-//    private double yOffset = 0.25;
-//    protected Pose[] gatePickupPoses = {
-//            new Pose(13.3, 56 + yOffset, Math.toRadians(150)),
-//            new Pose(13.3, 57 + yOffset, Math.toRadians(150)),
-//            new Pose(13.3, 57.25 + yOffset, Math.toRadians(150)),
-//            new Pose(13.3, 58 + yOffset, Math.toRadians(150)),
-//            new Pose(13.3, 58.75 + yOffset, Math.toRadians(150)),
-//    };
-    //blue poses
-
 
     private double xOffset = -0.4;
     private double yOffset = 1;
@@ -72,10 +60,8 @@ public abstract class Auto extends LinearOpMode {
     };
     protected Pose farPickupPose = new Pose(11.590, 33.210, Math.toRadians(180));
     protected Pose farPickupControlPoint = new Pose(45, 34);
-    // protected Pose cornerPose = new Pose(10.343, 17.111, Math.toRadians(210));
     protected Pose cornerPose = new Pose(13.990, 17.860, Math.toRadians(210));
     protected Pose cornerBackupPose = new Pose(11.690, 8.360, Math.toRadians(180));
-    // protected Pose parkPose = new Pose(56.243, 104.761, Math.toRadians(180));
     protected Pose farShootingPose = new Pose(51.247, 10.099);
     protected Pose parkPose = new Pose(45.747, 15.099);
     protected Pose closeParkPose = new Pose(56.990, 102.860, Math.toRadians(180));
@@ -85,11 +71,9 @@ public abstract class Auto extends LinearOpMode {
     protected PathChain pickupMiddle;
     protected PathChain shootMiddle;
     protected PathChain clearGate;
-    // protected PathChain pickupGate1;
     protected PathChain[] pickupGates;
     protected PathChain[] shootGates;
     protected PathChain shootGateAndPark;
-    // PathChain clearGate2;
     // PathChain shootGate2;
     protected PathChain pickupClose;
     protected PathChain shootClose;
@@ -172,7 +156,6 @@ public abstract class Auto extends LinearOpMode {
                         sequential(
                                 waitMs(shootingDelayMs),
                                 robot.setIntakePower(0)
-//                                setShooting()
                         )
                 )
         );
@@ -274,19 +257,8 @@ public abstract class Auto extends LinearOpMode {
     private void generatePaths() {
         shootPreloads = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(startPose, shootingPose))
-//                .setLinearHeadingInterpolation(startPose.getHeading(), shootingPose.getHeading())
                 .setTangentHeadingInterpolation()
                 .setReversed()
-                // .setConstraints(
-                // new PathConstraints(0.8,
-                // 3,
-                // 3,
-                // 0.03,
-                // 50,
-                // 1,
-                // 10,
-                // 1)
-                // )
                 .build();
 
         pickupMiddle = robot.getFollower().pathBuilder()
@@ -296,39 +268,9 @@ public abstract class Auto extends LinearOpMode {
 
         shootMiddle = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(middlePickupPose, shootingPose))
-//                .setConstantHeadingInterpolation(shootingPose.getHeading()).build();
                 .setTangentHeadingInterpolation()
                 .setReversed()
                 .build();
-
-        // clearGate = robot.getFollower().pathBuilder()
-        // .addPath(new BezierCurve(shootingPose,
-        // gateClearControlPoint,
-        // gateClearPose
-        // )).setConstantHeadingInterpolation(shootingPose.getHeading())
-        // .setConstraints(
-        // new PathConstraints(0.8,
-        // 1,
-        // 0.75,
-        // 0.03,
-        // 50,
-        // 1,
-        // 10,
-        // 1)
-        // )
-        // .build();
-
-        // pickupGate = robot.getFollower().pathBuilder()
-        // .addPath(new BezierCurve(gateClearPose,
-        // gatePickupControlPoint,
-        // gatePickupPose
-        // )).setConstantHeadingInterpolation(gateClearPose.getHeading())
-        // .build();
-
-        // pickupGate1 = robot.getFollower().pathBuilder()
-        // .addPath(new BezierCurve(shootingPose, gatePickupControlPoint, gatePickupPose))
-        // .setLinearHeadingInterpolation(gatePickupPose.getHeading())
-        // .build();
 
         for (int i = 0; i < gatePickupPoses.length; i++) {
             if (i == 0) {
@@ -336,20 +278,15 @@ public abstract class Auto extends LinearOpMode {
                 shootGates = new PathChain[gatePickupPoses.length];
             }
             pickupGates[i] = robot.getFollower().pathBuilder()
-//                .addPath(new BezierCurve(shootingPose, gateClearControlPoint, gatePickupPose))
                     .addPath(new BezierLine(shootingPose, gatePickupPoses[i]))
-                    // .addPath(new BezierCurve(gateClearPose, gatePickupControlPoint, gatePickupPose))
-//                .setConstantHeadingInterpolation(gatePickupPose.getHeading())
                     .setHeadingInterpolation(HeadingInterpolator.piecewise(
                             new HeadingInterpolator.PiecewiseNode(0, 0.6, HeadingInterpolator.tangent),
                             new HeadingInterpolator.PiecewiseNode(0.6, 1, HeadingInterpolator.constant(gatePickupPoses[i].getHeading()))
                     ))
                     .build();
-//                .setConstraints(new PathConstraints(0.95, 0.5, 0.5, 0.03, 50, 1, 10, 1)).build();
 
             shootGates[i] = robot.getFollower().pathBuilder()
                     .addPath(new BezierLine(gatePickupPoses[i], shootingPose))
-//                .setConstantHeadingInterpolation(gatePickupPose.getHeading()).build();
                     .setTangentHeadingInterpolation()
                     .setReversed()
                     .build();
@@ -359,34 +296,13 @@ public abstract class Auto extends LinearOpMode {
 
         shootGateAndPark = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(gatePickupPoses[gatePickupPoses.length-1], closeParkPose))
-//                .setConstantHeadingInterpolation(gatePickupPoses[gatePickupPoses.length-1].getHeading()).build();
                 .setTangentHeadingInterpolation()
                 .setReversed()
                 .build();
 
-        // clearGate2 = robot.getFollower().pathBuilder()
-        // .addPath(new BezierCurve(shootingPose,
-        // gateClearControlPoint,
-        // gateClearPose
-        // )).setConstantHeadingInterpolation(gateClearPose.getHeading())
-        // .setTValueConstraint(0.75)
-        // .build();
-
-        // shootGate2 = robot.getFollower().pathBuilder()
-        // .addPath(new BezierLine(gatePickupPose,
-        // shootingPose
-        // )).setLinearHeadingInterpolation(gatePickupPose.getHeading(), shootingPose.getHeading())
-        // .build();
-
-
         pickupClose = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(shootingPose, closePickupPose))
                 .setConstantHeadingInterpolation(shootingPose.getHeading()).build();
-
-        // clearGate = robot.getFollower().pathBuilder()
-        // .addPath(new BezierCurve(closePickupPose, gateClearControlPoint,gateClearPose))
-        // .setLinearHeadingInterpolation(closePickupPose.getHeading(), gateClearPose.getHeading())
-        // .build();
 
         shootClose = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(closePickupPose, shootingPose))
@@ -401,17 +317,12 @@ public abstract class Auto extends LinearOpMode {
 //                .setConstantHeadingInterpolation(shootingPose.getHeading()).build();
                 .setTangentHeadingInterpolation().build();
 
-        // shootFar = robot.getFollower().pathBuilder()
-        // .addPath(new BezierCurve(farPickupPose, farPickupControlPoint, parkPose))
-        // .setConstantHeadingInterpolation(parkPose.getHeading())
-        // .build();
         shootFar = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(farPickupPose, shootingPose))
                 .setConstantHeadingInterpolation(shootingPose.getHeading()).build();
 
         shootFarAndPark = robot.getFollower().pathBuilder()
                 .addPath(new BezierLine(farPickupPose, closeParkPose))
-//                .setConstantHeadingInterpolation(closeParkPose.getHeading()).build();
                 .setTangentHeadingInterpolation()
                 .setReversed()
                 .build();
@@ -431,7 +342,6 @@ public abstract class Auto extends LinearOpMode {
                 .setConstantHeadingInterpolation(cornerBackupPose.getHeading()).build();
 
         park = robot.getFollower().pathBuilder().addPath(new BezierLine(farShootingPose, parkPose))
-//                .setConstantHeadingInterpolation(cornerBackupPose.getHeading()).build();
                 .setTangentHeadingInterpolation().build();
 
         shootCornerClose = robot.getFollower().pathBuilder()
@@ -451,9 +361,7 @@ public abstract class Auto extends LinearOpMode {
 
 
         robot = new Robot(hardwareMap, gamepad1, gamepad2, telemetry, goalPose, Robot.LocalizationMode.FOLLOWER);
-        // Constants.robot = robot;
         robot.setPose(startPose);
-        //robot.setLocalizationMode(Robot.LocalizationMode.FOLLOWER);
         robot.init();
 
         generatePaths();
@@ -472,6 +380,4 @@ public abstract class Auto extends LinearOpMode {
         }
         robot.stop();
     }
-
-
 }
