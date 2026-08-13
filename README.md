@@ -1,6 +1,6 @@
-# MOEbo-Sapiens — FTC DECODE 2025–26
+# MOE 365 — FTC DECODE 2025–26
 
-Robot software for **MOEbo-Sapiens**, an FTC team, for the 2025–26 DECODE season.
+Robot software for **MOE**, an FTC team, for the 2025–26 DECODE season.
 
 This repository is a standalone portfolio mirror of the team's original development repository, which is a fork of FIRST's official `FtcRobotController` repository.
 
